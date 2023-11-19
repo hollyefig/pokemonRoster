@@ -1,0 +1,144 @@
+:root {
+    --light:#F0F5EF;
+    --mediumLight: #EFF1E6;
+    --regularColor: #E0E2D7;
+    --mediumDark: #D2D2C8;
+    --dark: #B6B7B2;
+    --deepDark: #3c3c3b;
+    --font: 'Bellota Text', sans-serif;
+    --light: 300;
+    --regular: 400;
+    --bold: 700;
+    --topBarHeight: 70px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--mediumLight);
+}
+
+.wrapper {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font)
+}
+
+.wrapper > div {
+    font-weight: var(--regular);
+    font-size:20px;
+    padding: .7em;
+}
+
+/* TOP BAR TOP BAR TOP BAR TOP BAR TOP BAR TOP BAR */
+
+.top {
+    box-shadow: 0 1px 8px var(--dark);
+    width: 100%;
+    height: var(--topBarHeight);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: var(--regularColor);
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;   
+}
+
+.topContent {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.addNewWrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.addNewButtonWrapper {
+    --green: rgb(71, 140, 71);
+    --darkGreen: rgb(28, 93, 55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    padding: .5em 1em;
+    background-color: var(--green);
+    cursor: pointer;
+    border-radius: 5px;
+    flex-direction: row;
+    column-gap:8px;
+    transition: background-color .3s ease-in-out;
+}
+
+.addPlus {
+    --dim: 20px;
+    content: 'h';
+    width: var(--dim);
+    height: var(--dim);
+    background-color: var(--mediumLight);
+    border-radius: calc(var(--dim) / 2);  
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.addPlus span {
+    font-size: 19px;
+    color:var(--green);
+    transition: color 150ms ease-in-out;
+}
+
+.addNewButtonWrapper > * {
+    cursor: pointer;
+}
+
+.addNewButton {
+    font-family: var(--font);
+    border: none;
+    background-color: transparent;
+    color: var(--mediumLight);
+    font-weight: var(--bold);
+    font-size: 18px;
+}
+
+.addNewButtonWrapper:hover {
+    background-color: var(--darkGreen);
+}
+
+.addNewButtonWrapper:hover .addPlus span {
+    color: var(--darkGreen);
+}
+
+.inputDataWrapper {
+    height: 0;
+    overflow: hidden;
+    transform-origin: top;
+}
+
+.inputData {
+    padding:.5em;
+}
+
+/* BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
+
+.bottom {
+    margin: var(--topBarHeight) 0 0 0;
+    width: 100%;
+    height: calc(100dvh - var(--topBarHeight))
+}
