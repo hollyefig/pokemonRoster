@@ -1,5 +1,6 @@
 :root {
-    --light:#F0F5EF;
+    --white: #ffffff;
+    --lightColor:#F0F5EF;
     --mediumLight: #EFF1E6;
     --regularColor: #E0E2D7;
     --mediumDark: #D2D2C8;
@@ -83,7 +84,25 @@ body {
     border-radius: 5px;
     flex-direction: row;
     column-gap:8px;
-    transition: background-color .3s ease-in-out;
+    /* transition: background-color .3s ease-in-out; */
+}
+
+.btnBlink {
+    background-color: var(--green);
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0% {
+        background-color: var(--green);
+    }
+    50% {
+        background-color: var(--darkGreen);
+    }
+    100% {
+        background-color: var(--green);
+    }
+    
 }
 
 .addPlus {
@@ -141,4 +160,24 @@ body {
     margin: var(--topBarHeight) 0 0 0;
     width: 100%;
     height: calc(100dvh - var(--topBarHeight))
+}
+
+.rosterWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    height: auto;
+}
+
+.rosterWrapper > div {
+    --shadowBlur: 3px;
+    padding: .5em;
+    background-color: var(--mediumLight);
+    border-radius: 10px;
+    box-shadow: 2px 2px var(--shadowBlur) var(--dark), -2px -2px var(--shadowBlur) var(--white);
+}
+
+.rosterWrapper span {
+    display: block;
 }
