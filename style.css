@@ -19,6 +19,10 @@
     box-sizing: border-box;
 }
 
+*:focus {
+    outline: none;
+  }
+
 body {
     background-color: var(--mediumLight);
 }
@@ -85,6 +89,41 @@ body {
     flex-direction: row;
     column-gap:8px;
     /* transition: background-color .3s ease-in-out; */
+}
+
+.inputData {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.inputData > div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.inputData label {
+    font-size: 18px;
+}
+
+.inputData input, .inputData select {
+    padding: 0.3em;
+    border-radius: 5px;
+    border: none;
+    color: var(--deepDark);
+}
+
+.inputData select {
+    text-transform: capitalize;
+}
+
+#name {
+    font-size: 20px;
+}
+
+.required {
+    border: 2px solid #da0000!important;
 }
 
 .btnBlink {
@@ -165,6 +204,7 @@ body {
 .rosterWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    justify-items: center;
     gap: 20px;
     width: 100%;
     height: auto;
@@ -176,8 +216,18 @@ body {
     background-color: var(--mediumLight);
     border-radius: 10px;
     box-shadow: 2px 2px var(--shadowBlur) var(--dark), -2px -2px var(--shadowBlur) var(--white);
+    max-width: 420px;
+    width: 100%;
+    position:relative;
 }
 
 .rosterWrapper span {
     display: block;
+    text-transform: capitalize;
 }
+
+.rosterWrapper span.spanName {
+    font-size: 30px;
+    font-weight: var(--bold);
+}
+

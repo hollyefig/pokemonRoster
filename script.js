@@ -10,7 +10,7 @@ const tlDrop = gsap.timeline({
 
 // ADD NEW ROSTER
 const addNew = () => {
-  let allInputs = new Array(...document.querySelectorAll(".inputData > input"));
+  let allInputs = new Array(...document.querySelectorAll(".inputData input"));
   allInputs.forEach((e, index) => {
     allInputs[index] = e.value !== "";
   });
@@ -24,7 +24,13 @@ const addNew = () => {
     addBtn.classList.add("btnBlink");
   } else {
     if (allInputs.includes(false)) {
-      alert("enter in all data");
+      let chkInputs = new Array(
+        ...document.querySelectorAll(".inputData input")
+      );
+
+      chkInputs.forEach((e) => {
+        e.value === "" && e.classList.add("required");
+      });
     } else {
       gsap
         .timeline({ defaults: { delay: 1 } })
@@ -42,6 +48,10 @@ const addNew = () => {
       confirmData();
     }
   }
+};
+
+const removeReq = (e) => {
+  e.value !== "" && e.classList.remove("required");
 };
 
 // close the add slide
@@ -98,31 +108,52 @@ const storeToArray = () => {
     let toObj = JSON.parse(value);
     typeof toObj !== "number" && dataArray.push(toObj);
   });
+
+  // Sort the array
+  dataArray.sort(sortByKeyNumber);
   populateDivs();
 };
 
-// CREATE DIV OF INFO
+// ARRAY SORT
+const sortByKeyNumber = (a, b) => {
+  const keyA = parseInt(a.key.slice(3));
+  const keyB = parseInt(b.key.slice(3));
+
+  // Compare based on the numeric part
+  return keyA - keyB;
+};
+
+// CREATE DIVS OF INFO
 const populateDivs = () => {
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
   dataArray.forEach((obj) => {
     const div = document.createElement("div"),
+      settings = document.createElement("div"),
+      close = document.createElement("div"),
       name = document.createElement("span"),
       game = document.createElement("span");
     for (const k in obj) {
-      if (k === "key") {
-        div.classList.add(obj[k]);
-      } else if (k === "name") {
-        name.classList.add(obj[k]);
-        name.textContent = obj[k];
-      } else if (k === "game") {
-        game.classList.add(obj[k]);
-        game.textContent = obj[k];
+      if (k !== "") {
+        if (k === "key") {
+          div.classList.add(obj[k]);
+        } else if (k === "name") {
+          name.classList.add(obj[k].replace(" ", "-"));
+          name.classList.add("spanName");
+          name.textContent = obj[k];
+        } else if (k === "game") {
+          game.classList.add(obj[k].replace(" ", "-"));
+          game.classList.add("gameName");
+          game.textContent = adjustText(obj[k]);
+        }
       }
     }
+    settings.classList.add("settings");
+    close.classList.add("close");
+    settings.appendChild(close);
 
-    div.append(name, game);
+    div.append(settings, name, game);
     rosterWrapper.appendChild(div);
   });
 };
@@ -132,6 +163,3 @@ const clearStorage = () => {
   document.getElementById("rosterWrapper").innerHTML = "";
   dataArray = [];
 };
-
-// Call the storeToArray function when the page loads
-window.onload = storeToArray;

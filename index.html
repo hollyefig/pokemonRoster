@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Pokemon Roster</title>
     <link rel="stylesheet" href="style.css">
 
@@ -22,11 +22,16 @@
         <!-- input data wrapper -->
         <div class="inputDataWrapper">
             <form class="inputData">
-                <label for="name">Name</label>
-                <input type="text" id="name" />
-                
-                <label for="Name">Game</label>
-                <input type="text" id="game" />
+                <div>
+                    <label for="name">Roster Name</label>
+                    <input type="text" id="name" onchange="removeReq(this)" />
+                </div>
+
+                <div>
+                    <label for="game">Game</label>
+                    <select id="game">
+                    </select>
+                </div>
                 
             </form>
         </div>
@@ -54,6 +59,8 @@
 
 <!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- some poke API stuff -->
+<script src="pokeAPI.js" defer></script>
 <!-- my script -->
 <script src="script.js"></script>
 </body>
