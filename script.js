@@ -44,8 +44,9 @@ const addNew = () => {
           });
         }, ">1");
 
+      const rosterColor = document.getElementById("rosterColor").value;
       addBtn.classList.remove("btnBlink");
-      confirmData();
+      confirmData(rosterColor);
     }
   }
 };
@@ -77,12 +78,16 @@ let dataArray = [];
 // Initialize the counter from localStorage or set it to 1 if not present
 let counter = parseInt(localStorage.getItem("counter")) || 1;
 
-const confirmData = () => {
+const confirmData = (color) => {
   const inputs = {
     name: document.getElementById("name").value,
     game: document.getElementById("game").value,
     key: `key${counter}`,
+    color: color,
+    textColor: null,
   };
+
+  inputs.textColor = setTextColor(inputs.color);
 
   // to string
   const JSONstring = JSON.stringify(inputs);
@@ -139,13 +144,18 @@ const populateDivs = () => {
         if (k === "key") {
           div.classList.add(obj[k]);
         } else if (k === "name") {
-          name.classList.add(obj[k].replace(" ", "-"));
+          name.classList.add(obj[k].replace(/ /g, "-"));
           name.classList.add("spanName");
           name.textContent = obj[k];
         } else if (k === "game") {
-          game.classList.add(obj[k].replace(" ", "-"));
+          game.classList.add(obj[k].replace(/ /g, "-"));
           game.classList.add("gameName");
           game.textContent = adjustText(obj[k]);
+        } else if (k === "color") {
+          name.style.backgroundColor = obj[k];
+          div.style.border = `3px solid ${obj[k]}`;
+        } else if (k === "textColor") {
+          name.style.color = obj[k];
         }
       }
     }
@@ -153,7 +163,7 @@ const populateDivs = () => {
     close.classList.add("close");
     settings.appendChild(close);
 
-    div.append(settings, name, game);
+    div.append(name, settings, game);
     rosterWrapper.appendChild(div);
   });
 };
@@ -162,4 +172,29 @@ const clearStorage = () => {
   localStorage.clear();
   document.getElementById("rosterWrapper").innerHTML = "";
   dataArray = [];
+};
+
+// ADJUST TEXT COLOR BASED ON BG
+const getBrightness = (color) => {
+  // Convert the color to RGB components
+  const r = parseInt(color.substring(1, 3), 16);
+  const g = parseInt(color.substring(3, 5), 16);
+  const b = parseInt(color.substring(5, 7), 16);
+
+  // Calculate perceived brightness
+  return (r * 299 + g * 587 + b * 114) / 1000;
+};
+const setTextColor = (color) => {
+  // Calculate brightness
+  const brightness = getBrightness(color);
+
+  // Set text color based on brightness
+  let finalColor = brightness > 128 ? "#353535" : "#F0F5EF";
+  return finalColor;
+};
+
+// Call the fetchData function when the page loads
+window.onload = () => {
+  storeToArray();
+  fetchGame();
 };

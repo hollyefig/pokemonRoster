@@ -24,7 +24,8 @@
             <form class="inputData">
                 <div>
                     <label for="name">Roster Name</label>
-                    <input type="text" id="name" onchange="removeReq(this)" />
+                    <input type="text" id="name" maxlength="28" placeholder="Max 28 characters" onchange="removeReq(this)" />
+                    <input type="color" id="rosterColor" class="rosterColor" name="rosterColor" value="#393232">
                 </div>
 
                 <div>
@@ -60,7 +61,7 @@
 <!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <!-- some poke API stuff -->
-<script src="pokeAPI.js" defer></script>
+<script src="pokeAPI.js"></script>
 <!-- my script -->
 <script src="script.js"></script>
 </body>

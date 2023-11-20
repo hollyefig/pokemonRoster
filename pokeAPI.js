@@ -75,9 +75,3 @@ const adjustText = (e) => {
       "lets go pikachu / lets go eevee"
     );
 };
-
-// Call the fetchData function when the page loads
-window.onload = () => {
-  storeToArray();
-  fetchGame();
-};

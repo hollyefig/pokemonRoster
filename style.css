@@ -103,6 +103,28 @@ body {
     row-gap: 5px;
 }
 
+.inputData > div:first-child {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto 1fr;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+.name {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+#name {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+.rosterColor {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
 .inputData label {
     font-size: 18px;
 }
@@ -196,7 +218,8 @@ body {
 /* BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
 
 .bottom {
-    margin: var(--topBarHeight) 0 0 0;
+    --nameTagSpacing: 25px;
+    margin: calc(var(--topBarHeight) + var(--nameTagSpacing)) 0 0 0;
     width: 100%;
     height: calc(100dvh - var(--topBarHeight))
 }
@@ -205,7 +228,8 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-items: center;
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 40px;
     width: 100%;
     height: auto;
 }
@@ -219,15 +243,25 @@ body {
     max-width: 420px;
     width: 100%;
     position:relative;
+    --leftMarg: 10px;
 }
 
 .rosterWrapper span {
-    display: block;
+    display: inline-block;
     text-transform: capitalize;
 }
 
 .rosterWrapper span.spanName {
     font-size: 30px;
     font-weight: var(--bold);
+    padding: 5px 10px;
+    border-radius: 10px;
+    position: absolute;
+    top: calc(var(--nameTagSpacing) * -1);
+    margin: 0 0 0 var(--leftMarg);
+}
+
+.gameName {
+    margin: 15px 0 0 var(--leftMarg);
 }
 
