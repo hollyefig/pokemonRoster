@@ -8,8 +8,8 @@
 
     <!-- import google font -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bellota+Text:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
-    </style>
+        @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300;400;700&display=swap');
+      </style>
     <!-- import google icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -19,24 +19,7 @@
     <!-- top bar -->
     <div class="top">
         <div class="topContent">
-        <!-- input data wrapper -->
-        <div class="inputDataWrapper">
-            <form class="inputData">
-                <div>
-                    <label for="name">Roster Name</label>
-                    <input type="text" id="name" maxlength="28" placeholder="Max 28 characters" onchange="removeReq(this)" />
-                    <input type="color" id="rosterColor" class="rosterColor" name="rosterColor" value="#393232">
-                </div>
-
-                <div>
-                    <label for="game">Game</label>
-                    <select id="game">
-                    </select>
-                </div>
-                
-            </form>
-        </div>
-        <!-- add new button section -->
+        <!-- ! add new button section -->
         <div class="addNewWrapper">
             <div class="addNewButtonWrapper" onclick="addNew()">
                 <div class="addPlus">
@@ -51,11 +34,36 @@
         </div>
         </div>
     </div>
-    <!-- bottom section -->
+    <!-- ! bottom section -->
     <div class="bottom">
         <div class="rosterWrapper" id="rosterWrapper"></div>
         <div class="clearButton" onclick="clearStorage()">Clear</div>
     </div>
+</div>
+
+<div class="fadeBg"></div>
+<!-- ! input data wrapper -->
+<div class="inputDataWrapper">
+    <form class="inputData">
+        <div>
+            <label for="name">Roster Name</label>
+            <input type="text" id="name" maxlength="19" class="selection" placeholder="Max 19 characters" oninput="removeReq(this)" />
+            <input type="color" id="rosterColor" class="rosterColor" name="rosterColor" value="#393232">
+        </div>
+
+        <div>
+            <label for="game">Game</label>
+            <select id="game" class="selection" oninput="removeReq(this)">
+                <option value="choose">Choose a game</option>
+            </select>
+        </div> 
+
+    </form>
+    <div class="addMonsWrapper">
+        <div class="addMonsDivs" onclick="checkForNameGame()">
+        </div>
+    </div>
+    <button type="button" class="create" onclick="addNew()">CREATE</button>
 </div>
 
 <!-- GSAP -->

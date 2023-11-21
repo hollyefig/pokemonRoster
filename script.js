@@ -4,41 +4,39 @@ const addBtn = document.querySelector(".addNewButtonWrapper"),
     green: "rgb(71, 140, 71)",
     darkGreen: "rgb(28, 93, 55)",
   };
-const tlDrop = gsap.timeline({
-  defaults: { ease: "power2.inOut", duration: 0.7 },
-});
 
-// ADD NEW ROSTER
+const fadeInOut = gsap.timeline({ defaults: { ease: "power2.out" } });
+const addMonsDivs = document.querySelector(".addMonsDivs");
+
+let gameOption = document.getElementById("game");
+
+// & ADD NEW ROSTER
 const addNew = () => {
-  let allInputs = new Array(...document.querySelectorAll(".inputData input"));
+  let allInputs = new Array(...document.querySelectorAll(".selection"));
   allInputs.forEach((e, index) => {
-    allInputs[index] = e.value !== "";
+    allInputs[index] = e.value !== "" && gameOption.value !== "choose";
   });
 
   if (!inputsOpen) {
-    tlDrop
-      .to(".top", { height: "55dvh" })
-      .to(".inputDataWrapper", { height: "100%" }, "<");
-
     inputsOpen = true;
-    addBtn.classList.add("btnBlink");
+    fadeInOut
+      .to(".inputDataWrapper, .fadeBg", { display: "flex" })
+      .to(".inputDataWrapper, .fadeBg", { opacity: 1, delay: 0 }, "<.1");
   } else {
     if (allInputs.includes(false)) {
-      let chkInputs = new Array(
-        ...document.querySelectorAll(".inputData input")
-      );
+      let chkInputs = new Array(...document.querySelectorAll(".selection"));
 
       chkInputs.forEach((e) => {
-        e.value === "" && e.classList.add("required");
+        if (e.value === "" || e.value === "choose") {
+          e.classList.add("required");
+        }
       });
     } else {
       gsap
         .timeline({ defaults: { delay: 1 } })
         .add(() => closeAdd())
         .add(() => {
-          allInputs = new Array(
-            ...document.querySelectorAll(".inputData > input")
-          );
+          allInputs = new Array(...document.querySelectorAll(".selection"));
           allInputs.forEach((e) => {
             e.value = "";
           });
@@ -51,27 +49,54 @@ const addNew = () => {
   }
 };
 
-const removeReq = (e) => {
-  e.value !== "" && e.classList.remove("required");
+// && REMOVE REQUIRED
+const removeReq = () => {
+  const elements = document.querySelectorAll(".selection.required");
+
+  elements.forEach((element) => {
+    if (element.id === "name" && element.value !== "") {
+      element.classList.remove("required");
+    } else if (element.id === "game" && element.value !== "choose") {
+      element.classList.remove("required");
+    }
+  });
+
+  if (document.querySelectorAll(".selection.required").length === 0) {
+    gsap.to(".addMonsDivs", { opacity: 1, duration: 0.3 });
+  }
+};
+
+const checkForNameGame = () => {
+  let arr = [];
+
+  arr.push(...document.querySelectorAll(".selection"));
+
+  arr.forEach((e) => {
+    if (e.id === "name" && e.value === "") {
+      e.classList.add("required");
+    } else if (e.id === "game" && e.value === "choose") {
+      e.classList.add("required");
+    }
+  });
 };
 
 // close the add slide
 const closeAdd = () => {
-  tlDrop
-    .to(".top", { height: 70.5 })
-    .to(".inputDataWrapper", { height: 0 }, "<");
+  fadeInOut
+    .to(".inputDataWrapper, .fadeBg", { opacity: 0, delay: 0 })
+    .to(".inputDataWrapper, .fadeBg", { display: "none" }, "<");
   inputsOpen = false;
   addBtn.classList.remove("btnBlink");
 };
 window.addEventListener("keydown", (e) => {
-  e.key === "Escape" && inputsOpen && closeAdd;
+  e.key === "Escape" && inputsOpen && closeAdd();
   e.key === "Enter" && inputsOpen && addNew();
 });
-document.querySelector(".bottom").addEventListener("click", (e) => {
+document.querySelector(".fadeBg").addEventListener("click", (e) => {
   inputsOpen && closeAdd();
 });
 
-// CONFIRM ENTERED DATA
+// & CONFIRM ENTERED DATA
 const rosterWrapper = document.querySelector(".rosterWrapper");
 let dataArray = [];
 
@@ -106,7 +131,7 @@ const confirmData = (color) => {
   storeToArray();
 };
 
-// store data to array
+// & store data to array
 const storeToArray = () => {
   dataArray = [];
   Object.entries(localStorage).forEach(([key, value]) => {
@@ -128,7 +153,7 @@ const sortByKeyNumber = (a, b) => {
   return keyA - keyB;
 };
 
-// CREATE DIVS OF INFO
+// & CREATE DIVS OF INFO
 const populateDivs = () => {
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
@@ -174,7 +199,33 @@ const clearStorage = () => {
   dataArray = [];
 };
 
-// ADJUST TEXT COLOR BASED ON BG
+// & Pokemon Select button
+const addMonsWrapper = document.querySelector(".addMonsWrapper");
+
+let monSelect = false,
+  partyLimit = 6;
+
+const createSlots = () => {
+  console.log("create slots");
+  for (let i = 0; i < partyLimit; i++) {
+    const div = document.createElement("div");
+    div.classList.add(`slot${1}`);
+    const innerDiv = document.createElement("div");
+    const plusIcon = document.createElement("div");
+    plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
+    plusIcon.textContent = "add";
+    const msg = document.createElement("div");
+    msg.textContent = "Add Pokemon";
+
+    innerDiv.append(plusIcon, msg);
+    div.appendChild(innerDiv);
+    addMonsDivs.appendChild(div);
+  }
+};
+
+createSlots();
+
+// & ADJUST TEXT COLOR BASED ON BG
 const getBrightness = (color) => {
   // Convert the color to RGB components
   const r = parseInt(color.substring(1, 3), 16);
@@ -193,7 +244,7 @@ const setTextColor = (color) => {
   return finalColor;
 };
 
-// Call the fetchData function when the page loads
+// ^ Call the fetchData function when the page loads
 window.onload = () => {
   storeToArray();
   fetchGame();

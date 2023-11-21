@@ -1,6 +1,6 @@
 // Function to fetch data from PokeAPI using async/await
 
-// Grab the games
+// & Grab the games
 async function fetchGame() {
   try {
     let dataArr = [];
