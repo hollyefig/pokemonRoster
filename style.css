@@ -6,6 +6,7 @@
     --regularColor: #E0E2D7;
     --mediumDark: #D2D2C8;
     --dark: #a2a39f;
+    --grey: #7f7f7f;
     --deepDark: #3c3c3b;
     --font: 'Signika Negative', sans-serif;;
     --light: 300;
@@ -250,7 +251,7 @@ input[type="color"] {
     background-color: var(--darkRed);
 }
 
-/* ? add mons section  */
+/* & add mons section  */
 
 .addMonsWrapper {
     width: 100%;
@@ -259,16 +260,17 @@ input[type="color"] {
 }
 
 .addMonsDivs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows:1fr 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
     padding: 0 1em;
-    opacity: .3;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
 }
 
 .addMonsDivs > div {
-    border: 2px solid var(--deepDark);
+    border: 2px solid var(--grey);
     padding:10px;
     border-radius: 10px;
     min-height: 115px;
@@ -277,6 +279,7 @@ input[type="color"] {
     justify-items: center;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .addMonsDivs > div > div {
@@ -284,7 +287,7 @@ input[type="color"] {
     grid-template-columns: 20px 1fr;
     column-gap: 10px;
     align-items: center;
-    color: var(--deepDark)
+    color: var(--grey)
 }
 
 .addMonsDivs .plusSlot {
@@ -299,7 +302,7 @@ input[type="color"] {
     width: var(--dim);
     height: var(--dim);
     border-radius: var(--dim);
-    border:2px solid var(--deepDark);
+    border:2px solid var(--grey);
     position: absolute;
 }
 
@@ -351,7 +354,7 @@ input[type="color"] {
 /* & BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
 
 .bottom {
-    --nameTagSpacing: 25px;
+    --nameTagSpacing: 33px;
     margin: calc(var(--topBarHeight) + var(--nameTagSpacing)) 0 0 0;
     width: 100%;
     height: calc(100dvh - var(--topBarHeight))
@@ -368,11 +371,12 @@ input[type="color"] {
 }
 
 .rosterWrapper > div {
-    --shadowBlur: 3px;
+    --shadowBlur: 6px;
+    --shadowAxis: 4px;
     padding: .5em;
     background-color: var(--mediumLight);
     border-radius: 10px;
-    /* box-shadow: 2px 2px var(--shadowBlur) var(--dark), -2px -2px var(--shadowBlur) var(--white); */
+    /* box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) var(--dark), calc(var(--shadowAxis) * -1) calc(var(--shadowAxis) * -1) var(--shadowBlur) var(--white); */
     max-width: 420px;
     width: 100%;
     position:relative;

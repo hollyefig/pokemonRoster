@@ -44,13 +44,13 @@ const addNew = () => {
 
       const rosterColor = document.getElementById("rosterColor").value;
       addBtn.classList.remove("btnBlink");
-      confirmData(rosterColor);
+      confirmData(rosterColor, dataArray.length - 1);
     }
   }
 };
 
 // && REMOVE REQUIRED
-const removeReq = () => {
+const inputShift = (e) => {
   const elements = document.querySelectorAll(".selection.required");
 
   elements.forEach((element) => {
@@ -61,12 +61,24 @@ const removeReq = () => {
     }
   });
 
-  if (document.querySelectorAll(".selection.required").length === 0) {
-    gsap.to(".addMonsDivs", { opacity: 1, duration: 0.3 });
+  if (e.value === "choose") {
+    gsap
+      .timeline()
+      .to(".addMonsDivs", { opacity: 0, duration: 0.2 })
+      .to(".addMonsDivs", { height: 0 });
+  } else {
+    gsap
+      .timeline()
+      .to(".addMonsDivs", { height: "auto", duration: 0.1 })
+      .to(".addMonsDivs", { opacity: 1, duration: 0.2 });
   }
+
+  console.log("input shift", e.value);
 };
 
-const checkForNameGame = () => {
+document.getElementById("game").addEventListener("click", (e) => {});
+
+const checkForNameGame = (e) => {
   let arr = [];
 
   arr.push(...document.querySelectorAll(".selection"));
@@ -103,13 +115,16 @@ let dataArray = [];
 // Initialize the counter from localStorage or set it to 1 if not present
 let counter = parseInt(localStorage.getItem("counter")) || 1;
 
-const confirmData = (color) => {
-  const inputs = {
+const confirmData = (color, num) => {
+  let inputs = {
     name: document.getElementById("name").value,
     game: document.getElementById("game").value,
     key: `key${counter}`,
     color: color,
     textColor: null,
+    gameData: `https://pokeapi.co/api/v2/version/${
+      document.getElementById("game").value
+    }`,
   };
 
   inputs.textColor = setTextColor(inputs.color);
@@ -155,6 +170,7 @@ const sortByKeyNumber = (a, b) => {
 
 // & CREATE DIVS OF INFO
 const populateDivs = () => {
+  console.log(dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
@@ -175,10 +191,10 @@ const populateDivs = () => {
         } else if (k === "game") {
           game.classList.add(obj[k].replace(/ /g, "-"));
           game.classList.add("gameName");
-          game.textContent = adjustText(obj[k]);
+          game.textContent = obj[k];
         } else if (k === "color") {
           name.style.backgroundColor = obj[k];
-          div.style.border = `3px solid ${obj[k]}`;
+          div.style.borderTop = `18px solid ${obj[k]}`;
         } else if (k === "textColor") {
           name.style.color = obj[k];
         }
@@ -203,13 +219,13 @@ const clearStorage = () => {
 const addMonsWrapper = document.querySelector(".addMonsWrapper");
 
 let monSelect = false,
-  partyLimit = 6;
+  partyLimit = 1;
 
 const createSlots = () => {
-  console.log("create slots");
   for (let i = 0; i < partyLimit; i++) {
     const div = document.createElement("div");
     div.classList.add(`slot${1}`);
+    div.setAttribute("onclick", "selectMon(this)");
     const innerDiv = document.createElement("div");
     const plusIcon = document.createElement("div");
     plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
@@ -224,6 +240,12 @@ const createSlots = () => {
 };
 
 createSlots();
+
+// & SELECT MON
+
+const selectMon = (e) => {
+  console.log("clicked", e);
+};
 
 // & ADJUST TEXT COLOR BASED ON BG
 const getBrightness = (color) => {
@@ -247,5 +269,4 @@ const setTextColor = (color) => {
 // ^ Call the fetchData function when the page loads
 window.onload = () => {
   storeToArray();
-  fetchGame();
 };

@@ -47,13 +47,13 @@
     <form class="inputData">
         <div>
             <label for="name">Roster Name</label>
-            <input type="text" id="name" maxlength="19" class="selection" placeholder="Max 19 characters" oninput="removeReq(this)" />
+            <input type="text" id="name" maxlength="19" class="selection" placeholder="Max 19 characters" oninput="inputShift(this)" />
             <input type="color" id="rosterColor" class="rosterColor" name="rosterColor" value="#393232">
         </div>
 
         <div>
             <label for="game">Game</label>
-            <select id="game" class="selection" oninput="removeReq(this)">
+            <select id="game" class="selection" oninput="inputShift(this)">
                 <option value="choose">Choose a game</option>
             </select>
         </div> 
@@ -66,6 +66,8 @@
     <button type="button" class="create" onclick="addNew()">CREATE</button>
 </div>
 
+<!-- AXIOS -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <!-- some poke API stuff -->
