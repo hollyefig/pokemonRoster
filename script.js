@@ -9,6 +9,7 @@ const fadeInOut = gsap.timeline({ defaults: { ease: "power2.out" } });
 const addMonsDivs = document.querySelector(".addMonsDivs");
 
 let gameOption = document.getElementById("game");
+let currentGameSelect;
 
 // & ADD NEW ROSTER
 const addNew = () => {
@@ -49,7 +50,10 @@ const addNew = () => {
   }
 };
 
-// && REMOVE REQUIRED
+// && INPUT SHIFT
+document.getElementById("game").addEventListener("click", (e) => {
+  currentGameSelect = e.target.value;
+});
 const inputShift = (e) => {
   const elements = document.querySelectorAll(".selection.required");
 
@@ -61,6 +65,7 @@ const inputShift = (e) => {
     }
   });
 
+  // make add mon button appear
   if (e.value === "choose") {
     gsap
       .timeline()
@@ -73,10 +78,17 @@ const inputShift = (e) => {
       .to(".addMonsDivs", { opacity: 1, duration: 0.2 });
   }
 
-  console.log("input shift", e.value);
+  console.log(
+    "prev",
+    currentGameSelect,
+    "current",
+    gameOption.value,
+    addMonsDivs.childElementCount
+  );
+  if (addMonsDivs.childElementCount !== 0 && currentGameSelect !== "choose") {
+    addMonsDivs.innerHTML = "";
+  }
 };
-
-document.getElementById("game").addEventListener("click", (e) => {});
 
 const checkForNameGame = (e) => {
   let arr = [];
@@ -109,6 +121,7 @@ document.querySelector(".fadeBg").addEventListener("click", (e) => {
 });
 
 // & CONFIRM ENTERED DATA
+// * CONFIRM ENTERED DATA
 const rosterWrapper = document.querySelector(".rosterWrapper");
 let dataArray = [];
 
@@ -125,6 +138,7 @@ const confirmData = (color, num) => {
     gameData: `https://pokeapi.co/api/v2/version/${
       document.getElementById("game").value
     }`,
+    party: [],
   };
 
   inputs.textColor = setTextColor(inputs.color);
@@ -168,9 +182,63 @@ const sortByKeyNumber = (a, b) => {
   return keyA - keyB;
 };
 
-// & CREATE DIVS OF INFO
+// & Pokemon Select button
+const addMonsWrapper = document.querySelector(".addMonsWrapper");
+
+let monSelect = false,
+  partyLimit = 1;
+
+const createSlots = () => {
+  for (let i = 0; i < partyLimit; i++) {
+    const div = document.createElement("div");
+    div.setAttribute("id", `slot${1}`);
+    div.setAttribute("onclick", "selectMon(this)");
+    const innerDiv = document.createElement("div");
+    const plusIcon = document.createElement("div");
+    plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
+    plusIcon.textContent = "add";
+    const msg = document.createElement("div");
+    msg.textContent = "Add Pokemon";
+
+    innerDiv.append(plusIcon, msg);
+    div.appendChild(innerDiv);
+    addMonsDivs.appendChild(div);
+  }
+};
+
+createSlots();
+
+// & SELECT MON
+const selectMon = async (e) => {
+  const selected = document.getElementById("game").value;
+  const loadPokedex = await getSelectedGameURL(selected);
+
+  pokedexDropdown(loadPokedex, e);
+
+  let slot = parseInt(e.id.replace("slot", ""));
+};
+
+// * Create inputs for Pokemon Creation
+const pokedexDropdown = (e, slotNum) => {
+  if (slotNum.children.length > 0) {
+    slotNum.children[0].remove();
+    slotNum.removeAttribute("onclick");
+  }
+
+  const selectName = document.createElement("select");
+
+  e.forEach((p) => {
+    const option = document.createElement("option");
+    option.value = p.pokemon_species.name;
+    option.textContent = p.pokemon_species.name;
+    selectName.appendChild(option);
+  });
+
+  slotNum.appendChild(selectName);
+};
+
+// & CREATE FINAL DIV OF INFO ENTERED
 const populateDivs = () => {
-  console.log(dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
@@ -213,38 +281,6 @@ const clearStorage = () => {
   localStorage.clear();
   document.getElementById("rosterWrapper").innerHTML = "";
   dataArray = [];
-};
-
-// & Pokemon Select button
-const addMonsWrapper = document.querySelector(".addMonsWrapper");
-
-let monSelect = false,
-  partyLimit = 1;
-
-const createSlots = () => {
-  for (let i = 0; i < partyLimit; i++) {
-    const div = document.createElement("div");
-    div.classList.add(`slot${1}`);
-    div.setAttribute("onclick", "selectMon(this)");
-    const innerDiv = document.createElement("div");
-    const plusIcon = document.createElement("div");
-    plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
-    plusIcon.textContent = "add";
-    const msg = document.createElement("div");
-    msg.textContent = "Add Pokemon";
-
-    innerDiv.append(plusIcon, msg);
-    div.appendChild(innerDiv);
-    addMonsDivs.appendChild(div);
-  }
-};
-
-createSlots();
-
-// & SELECT MON
-
-const selectMon = (e) => {
-  console.log("clicked", e);
 };
 
 // & ADJUST TEXT COLOR BASED ON BG

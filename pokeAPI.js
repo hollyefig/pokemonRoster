@@ -28,4 +28,45 @@ const loadVersions = async () => {
   });
 };
 
+// & GRAB SELECTED GAME
+const getSelectedGameURL = async (game) => {
+  try {
+    const response = await axios.get(
+      `https://pokeapi.co/api/v2/version/${game}`
+    );
+
+    const url = response.data.version_group.url;
+
+    return getPokedex(url);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+// * GRAB POKEDEX URL
+const getPokedex = async (url) => {
+  try {
+    const response = await axios.get(url);
+
+    let spread = [...response.data.pokedexes];
+
+    dexUrl = spread[0].url;
+
+    return openPokedex(dexUrl);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+// & LOAD POKEDEX
+const openPokedex = async (url) => {
+  try {
+    const response = await axios.get(url);
+
+    return response.data.pokemon_entries;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
 loadVersions();
