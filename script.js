@@ -78,15 +78,10 @@ const inputShift = (e) => {
       .to(".addMonsDivs", { opacity: 1, duration: 0.2 });
   }
 
-  console.log(
-    "prev",
-    currentGameSelect,
-    "current",
-    gameOption.value,
-    addMonsDivs.childElementCount
-  );
   if (addMonsDivs.childElementCount !== 0 && currentGameSelect !== "choose") {
     addMonsDivs.innerHTML = "";
+    createSlots();
+    partyLimit = 1;
   }
 };
 
@@ -189,7 +184,7 @@ let monSelect = false,
   partyLimit = 1;
 
 const createSlots = () => {
-  for (let i = 0; i < partyLimit; i++) {
+  if (partyLimit <= 6) {
     const div = document.createElement("div");
     div.setAttribute("id", `slot${1}`);
     div.setAttribute("onclick", "selectMon(this)");
@@ -204,6 +199,7 @@ const createSlots = () => {
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
   }
+  partyLimit++;
 };
 
 createSlots();
@@ -215,6 +211,7 @@ const selectMon = async (e) => {
 
   pokedexDropdown(loadPokedex, e);
 
+  createSlots();
   let slot = parseInt(e.id.replace("slot", ""));
 };
 
