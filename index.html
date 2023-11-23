@@ -53,14 +53,14 @@
 
         <div>
             <label for="game">Game</label>
-            <select id="game" class="selection" oninput="inputShift(this)">
+            <select id="game" class="selection" oninput="gameDropdown(this)">
                 <option value="choose">Choose a game</option>
             </select>
         </div> 
 
     </form>
     <div class="addMonsWrapper">
-        <div class="addMonsDivs" onclick="checkForNameGame()">
+        <div class="addMonsDivs">
         </div>
     </div>
     <button type="button" class="create" onclick="addNew()">CREATE</button>

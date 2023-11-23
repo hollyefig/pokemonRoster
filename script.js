@@ -50,20 +50,22 @@ const addNew = () => {
   }
 };
 
-// && INPUT SHIFT
+// & NAME INPUT CHANGE, removing the 'required' class
+const inputShift = (e) => {
+  if (e.value !== "" || e.id !== "choose") {
+    e.classList.remove("required");
+  }
+};
+
+// && GAME DROPDOWN
 document.getElementById("game").addEventListener("click", (e) => {
   currentGameSelect = e.target.value;
 });
-const inputShift = (e) => {
-  const elements = document.querySelectorAll(".selection.required");
-
-  elements.forEach((element) => {
-    if (element.id === "name" && element.value !== "") {
-      element.classList.remove("required");
-    } else if (element.id === "game" && element.value !== "choose") {
-      element.classList.remove("required");
-    }
-  });
+const gameDropdown = (e) => {
+  inputShift(e);
+  addMonsDivs.innerHTML = "";
+  partyLimit = 1;
+  createSlots();
 
   // make add mon button appear
   if (e.value === "choose") {
@@ -77,26 +79,6 @@ const inputShift = (e) => {
       .to(".addMonsDivs", { height: "auto", duration: 0.1 })
       .to(".addMonsDivs", { opacity: 1, duration: 0.2 });
   }
-
-  if (addMonsDivs.childElementCount !== 0 && currentGameSelect !== "choose") {
-    addMonsDivs.innerHTML = "";
-    createSlots();
-    partyLimit = 1;
-  }
-};
-
-const checkForNameGame = (e) => {
-  let arr = [];
-
-  arr.push(...document.querySelectorAll(".selection"));
-
-  arr.forEach((e) => {
-    if (e.id === "name" && e.value === "") {
-      e.classList.add("required");
-    } else if (e.id === "game" && e.value === "choose") {
-      e.classList.add("required");
-    }
-  });
 };
 
 // close the add slide
@@ -180,14 +162,13 @@ const sortByKeyNumber = (a, b) => {
 // & Pokemon Select button
 const addMonsWrapper = document.querySelector(".addMonsWrapper");
 
-let monSelect = false,
-  partyLimit = 1;
+partyLimit = 1;
 
 const createSlots = () => {
   if (partyLimit <= 6) {
     const div = document.createElement("div");
-    div.setAttribute("id", `slot${1}`);
-    div.setAttribute("onclick", "selectMon(this)");
+    div.setAttribute("id", `slot${partyLimit}`);
+    div.setAttribute("onclick", "loadPokedex(this)");
     const innerDiv = document.createElement("div");
     const plusIcon = document.createElement("div");
     plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
@@ -202,10 +183,9 @@ const createSlots = () => {
   partyLimit++;
 };
 
-createSlots();
-
-// & SELECT MON
-const selectMon = async (e) => {
+// & GRAB POKEDEX DATA
+const loadPokedex = async (e) => {
+  e.style.cursor = "default";
   const selected = document.getElementById("game").value;
   const loadPokedex = await getSelectedGameURL(selected);
 
@@ -229,9 +209,22 @@ const pokedexDropdown = (e, slotNum) => {
     option.value = p.pokemon_species.name;
     option.textContent = p.pokemon_species.name;
     selectName.appendChild(option);
+    selectName.setAttribute("oninput", "monSelect(this)");
   });
 
   slotNum.appendChild(selectName);
+};
+
+// * Mon Selected
+const monSelect = async (e) => {
+  let mon = e.value;
+  const loadMon = await getPokemonData(mon);
+  let arr = [loadMon.abilities, loadMon.moves, loadMon.types];
+  arr.forEach((d, index) => {
+    for (const key in d) {
+      console.log(d[key]);
+    }
+  });
 };
 
 // & CREATE FINAL DIV OF INFO ENTERED
