@@ -11,7 +11,6 @@ const noAbilities = ["red", "blue", "yellow", "gold", "silver", "crystal"],
 
 let gameOption = document.getElementById("game");
 let currentGameSelect;
-let movepool = [];
 
 // & ADD NEW ROSTER
 const addNew = () => {
@@ -108,68 +107,6 @@ document.querySelector(".fadeBg").addEventListener("click", (e) => {
   inputsOpen && closeAdd();
 });
 
-// & CONFIRM ENTERED DATA
-// * CONFIRM ENTERED DATA
-const rosterWrapper = document.querySelector(".rosterWrapper");
-let dataArray = [];
-
-// Initialize the counter from localStorage or set it to 1 if not present
-let counter = parseInt(localStorage.getItem("counter")) || 1;
-
-const confirmData = (color, num) => {
-  let inputs = {
-    name: document.getElementById("name").value,
-    game: document.getElementById("game").value,
-    key: `key${counter}`,
-    color: color,
-    textColor: null,
-    gameData: `https://pokeapi.co/api/v2/version/${
-      document.getElementById("game").value
-    }`,
-    party: [],
-  };
-
-  inputs.textColor = setTextColor(inputs.color);
-
-  // to string
-  const JSONstring = JSON.stringify(inputs);
-
-  // Create  key
-  const key = `key${counter}`;
-  localStorage.setItem(key, JSONstring);
-
-  // Increment the counter for the next unique key
-  counter++;
-
-  // Save the updated counter to localStorage
-  localStorage.setItem("counter", counter.toString());
-
-  // Display the stored value
-  storeToArray();
-};
-
-// & store data to array
-const storeToArray = () => {
-  dataArray = [];
-  Object.entries(localStorage).forEach(([key, value]) => {
-    let toObj = JSON.parse(value);
-    typeof toObj !== "number" && dataArray.push(toObj);
-  });
-
-  // Sort the array
-  dataArray.sort(sortByKeyNumber);
-  populateDivs();
-};
-
-// ARRAY SORT
-const sortByKeyNumber = (a, b) => {
-  const keyA = parseInt(a.key.slice(3));
-  const keyB = parseInt(b.key.slice(3));
-
-  // Compare based on the numeric part
-  return keyA - keyB;
-};
-
 // & Pokemon Select button
 const addMonsWrapper = document.querySelector(".addMonsWrapper");
 
@@ -232,9 +169,6 @@ const pokedexDropdown = (e, slotNum) => {
   // create select to house abilities dropdown
   let selectAbilityDiv = document.createElement("div");
   selectAbilityDiv.classList.add("selectAbilityDiv");
-  let selectAbility = document.createElement("select");
-  selectAbility.classList.add("selectAbility");
-  selectAbilityDiv.appendChild(selectAbility);
 
   // create select to house move pool dropdown
   let selectMovesDiv = document.createElement("div");
@@ -242,7 +176,6 @@ const pokedexDropdown = (e, slotNum) => {
 
   // append divs based on whether game includes abilities or not
   if (!noAbilities.includes(slotNum.getAttribute("class"))) {
-    selectAbilityDiv.appendChild(selectAbility);
     slotNum.append(selectName, typeDiv, selectAbilityDiv, selectMovesDiv);
   } else {
     slotNum.append(selectName, typeDiv, selectMovesDiv);
@@ -251,7 +184,6 @@ const pokedexDropdown = (e, slotNum) => {
 
 // * Pokemon Selected from dropdown
 const monSelect = async (e, id) => {
-  movepool = [];
   // grab data
   let currentSlot = id;
   let currentGame = document.getElementById("game").value;
@@ -262,11 +194,15 @@ const monSelect = async (e, id) => {
   let typeDiv = currentSlot.querySelector(".typeDiv");
   typeDiv.innerHTML = "";
 
-  let selectAbility = currentSlot.querySelector(".selectAbility");
-  typeDiv.innerHTML = "";
+  let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
+  selectAbilityDiv.innerHTML = "";
+  let selectAbility = document.createElement("select");
+  selectAbility.classList.add("selectAbility");
+  selectAbilityDiv.appendChild(selectAbility);
 
   let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
   let moveArr = [];
+  selectMovesDiv.innerHTML = "";
 
   let arr = [loadMon.types, loadMon.abilities, loadMon.moves];
   arr.forEach((d) => {
@@ -297,20 +233,95 @@ const monSelect = async (e, id) => {
 
 // ? create moves dropdown
 const createMovesDropdown = (arr, selectDiv) => {
-  let selectMoves = document.createElement("select");
-  selectMoves.classList.add("selectMoves");
-  arr.forEach((e) => {
-    let option = document.createElement("option");
-    option.value = e.replace("-", " ");
-    option.textContent = e.replace("-", " ");
-    selectMoves.setAttribute("oninput", `moveSelect(this)`);
-    selectMoves.appendChild(option);
-  });
-  selectDiv.appendChild(selectMoves);
+  let movepool = [];
+  for (let i = 0; i < 4; i++) {
+    let selectMoves = document.createElement("select");
+    selectMoves.classList.add("selectMoves");
+    selectMoves.setAttribute(
+      "oninput",
+      `moveSelect(this, ${JSON.stringify(movepool)}, ${JSON.stringify(arr)})`
+    );
+
+    arr.forEach((e) => {
+      let option = document.createElement("option");
+      option.value = e.replace("-", " ");
+      option.textContent = e.replace("-", " ");
+
+      selectMoves.appendChild(option);
+    });
+    selectDiv.appendChild(selectMoves);
+  }
 };
 // ? when a move is selected
-const moveSelect = (move) => {
+const moveSelect = (move, movepool, moveArr) => {
   movepool.push(move.value);
+
+  // remove selected move from movepool
+  moveArr = moveArr.filter((e) => e !== move.value);
+  console.log(moveArr);
+};
+
+// & CONFIRM ENTERED DATA
+// ^ CONFIRM ENTERED DATA
+// * CONFIRM ENTERED DATA
+const rosterWrapper = document.querySelector(".rosterWrapper");
+let dataArray = [];
+
+// Initialize the counter from localStorage or set it to 1 if not present
+let counter = parseInt(localStorage.getItem("counter")) || 1;
+
+const confirmData = (color, num) => {
+  let inputs = {
+    name: document.getElementById("name").value,
+    game: document.getElementById("game").value,
+    key: `key${counter}`,
+    color: color,
+    textColor: null,
+    gameData: `https://pokeapi.co/api/v2/version/${
+      document.getElementById("game").value
+    }`,
+    party: [],
+  };
+
+  inputs.textColor = setTextColor(inputs.color);
+
+  // to string
+  const JSONstring = JSON.stringify(inputs);
+
+  // Create  key
+  const key = `key${counter}`;
+  localStorage.setItem(key, JSONstring);
+
+  // Increment the counter for the next unique key
+  counter++;
+
+  // Save the updated counter to localStorage
+  localStorage.setItem("counter", counter.toString());
+
+  // Display the stored value
+  storeToArray();
+};
+
+// & store data to array
+const storeToArray = () => {
+  dataArray = [];
+  Object.entries(localStorage).forEach(([key, value]) => {
+    let toObj = JSON.parse(value);
+    typeof toObj !== "number" && dataArray.push(toObj);
+  });
+
+  // Sort the array
+  dataArray.sort(sortByKeyNumber);
+  populateDivs();
+};
+
+// ARRAY SORT
+const sortByKeyNumber = (a, b) => {
+  const keyA = parseInt(a.key.slice(3));
+  const keyB = parseInt(b.key.slice(3));
+
+  // Compare based on the numeric part
+  return keyA - keyB;
 };
 
 // & CREATE FINAL DIV OF INFO ENTERED
