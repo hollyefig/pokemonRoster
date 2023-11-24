@@ -71,7 +71,6 @@ const openPokedex = async (url) => {
 };
 
 // * GRAB SELECTED POKEMON
-
 const getPokemonData = async (mon) => {
   try {
     const response = await axios.get(

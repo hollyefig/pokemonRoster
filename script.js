@@ -71,13 +71,22 @@ const gameDropdown = (e) => {
   if (e.value === "choose") {
     gsap
       .timeline()
-      .to(".addMonsDivs", { opacity: 0, duration: 0.2 })
+      .to(".addMonsDivs", {
+        opacity: 0,
+        duration: 0.2,
+      })
       .to(".addMonsDivs", { height: 0 });
   } else {
     gsap
       .timeline()
-      .to(".addMonsDivs", { height: "auto", duration: 0.1 })
-      .to(".addMonsDivs", { opacity: 1, duration: 0.2 });
+      .to(".addMonsDivs", {
+        height: "auto",
+        duration: 0.1,
+      })
+      .to(".addMonsDivs, .addMonsDivs > div", {
+        opacity: 1,
+        duration: 0.2,
+      });
   }
 };
 
@@ -179,6 +188,7 @@ const createSlots = () => {
     innerDiv.append(plusIcon, msg);
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
+    gsap.to(div, { opacity: 1 });
   }
   partyLimit++;
 };
