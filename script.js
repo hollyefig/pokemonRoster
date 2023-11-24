@@ -445,7 +445,7 @@ const setTextColor = (color) => {
   const brightness = getBrightness(color);
 
   // Set text color based on brightness
-  let finalColor = brightness > 128 ? "#353535" : "#F0F5EF";
+  let finalColor = brightness > 128 ? "#353535" : "#ffffff";
   return finalColor;
 };
 

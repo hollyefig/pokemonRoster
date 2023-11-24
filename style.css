@@ -1,11 +1,8 @@
 :root {
     --white: #ffffff;
-    --deepLight:#f7faf7;
-    --lightColor:#F0F5EF;
-    --mediumLight: #EFF1E6;
-    --regularColor: #E0E2D7;
-    --mediumDark: #D2D2C8;
-    --dark: #a2a39f;
+    --light: #efefef;
+    --lightMedium: #bbbbbb;
+    --medium: #a39f9f;
     --grey: #7f7f7f;
     --deepDark: #3c3c3b;
     --font: 'Signika Negative', sans-serif;;
@@ -28,8 +25,10 @@
   }
 
 body {
-    background-color: var(--mediumLight);
-    font-family: var(--font)
+    background-color: var(--white);
+    font-family: var(--font);
+    background-image: url(./IMGs/pokeBallBG.png);
+    background-size: 160px;
 }
 
 .wrapper {
@@ -56,7 +55,7 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: var(--regularColor);
+    background-color: var(--mediumLight);
     position:absolute;
     top: 0;
     left: 0;
@@ -184,7 +183,7 @@ body {
     height: 90dvh;
     max-width: 810px;
     width: 95%;
-    background-color: var(--deepLight);
+    background-color: var(--white);
     display: none;
     opacity: 0;
     overflow: hidden;
@@ -275,6 +274,7 @@ body {
     border-top:2px solid transparent;
     border-left:2px solid transparent;
     border-right:2px solid transparent;
+    font-family: var(--font);
 }
 
 input[type="color"] {
@@ -338,7 +338,7 @@ input[type="color"] {
 }
 
 .addMonsDivs > div {
-    border: 2px solid var(--grey);
+    border: 2px solid var(--lightMedium);
     padding:10px;
     border-radius: 10px;
     min-height: 115px;
@@ -358,7 +358,7 @@ input[type="color"] {
     column-gap: 10px;
     align-items: center;
     justify-content: center;
-    color: var(--grey);
+    color: var(--lightMedium);
     width: 100%;
     height: 100%;
     min-height: 100px;
@@ -376,7 +376,7 @@ input[type="color"] {
     width: var(--dim);
     height: var(--dim);
     border-radius: var(--dim);
-    border:2px solid var(--grey);
+    border:2px solid var(--lightMedium);
     position: absolute;
 }
 
