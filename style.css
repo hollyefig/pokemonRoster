@@ -386,10 +386,15 @@ input[type="color"] {
 
 /* ! WITH POKEMON SELECTED, ADDING ATTRIBUTES */
 
+.addMonsDivs select {
+    text-transform: capitalize;
+}
+
 .typeDiv {
     display: flex;
     width: auto;
     column-gap: 10px;
+    text-transform: capitalize;
 }
 
 
