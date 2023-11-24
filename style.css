@@ -1,8 +1,7 @@
 :root {
     --white: #ffffff;
-    --light: #efefef;
-    --lightMedium: #bbbbbb;
-    --medium: #a39f9f;
+    --mediumLight: #efefef;
+    --dark: #a39f9f;
     --grey: #7f7f7f;
     --deepDark: #3c3c3b;
     --font: 'Signika Negative', sans-serif;;
@@ -338,7 +337,7 @@ input[type="color"] {
 }
 
 .addMonsDivs > div {
-    border: 2px solid var(--lightMedium);
+    border: 2px solid var(--grey);
     padding:10px;
     border-radius: 10px;
     min-height: 115px;
@@ -358,7 +357,7 @@ input[type="color"] {
     column-gap: 10px;
     align-items: center;
     justify-content: center;
-    color: var(--lightMedium);
+    color: var(--grey);
     width: 100%;
     height: 100%;
     min-height: 100px;
@@ -376,7 +375,7 @@ input[type="color"] {
     width: var(--dim);
     height: var(--dim);
     border-radius: var(--dim);
-    border:2px solid var(--lightMedium);
+    border:2px solid var(--grey);
     position: absolute;
 }
 
