@@ -129,7 +129,7 @@ const createSlots = (game) => {
     innerDiv.append(plusIcon, msg);
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
-    gsap.to(div, { opacity: 1 });
+    gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
   }
   partyLimit++;
 };
@@ -162,6 +162,12 @@ const pokedexDropdown = (e, slotNum) => {
     selectName.setAttribute("oninput", `monSelect(this, ${slotNum.id})`);
   });
 
+  // inputs and load divs
+  let inputsDiv = document.createElement("div");
+  inputsDiv.classList.add("inputsDiv");
+  let loadDiv = document.createElement("div");
+  loadDiv.classList.add("loadDiv");
+
   // create DIV to house selected Pokemon type(s)
   let typeDiv = document.createElement("div");
   typeDiv.classList.add("typeDiv");
@@ -174,72 +180,90 @@ const pokedexDropdown = (e, slotNum) => {
   let selectMovesDiv = document.createElement("div");
   selectMovesDiv.classList.add("selectMovesDiv");
 
-  // append divs based on whether game includes abilities or not
+  // ? append divs based on whether game includes abilities or not
   if (!noAbilities.includes(slotNum.getAttribute("class"))) {
-    slotNum.append(selectName, typeDiv, selectAbilityDiv, selectMovesDiv);
+    inputsDiv.append(typeDiv, selectAbilityDiv, selectMovesDiv);
+    slotNum.append(selectName, inputsDiv, loadDiv);
   } else {
-    slotNum.append(selectName, typeDiv, selectMovesDiv);
+    inputsDiv.append(typeDiv, selectMovesDiv);
+    slotNum.append(selectName, inputsDiv, loadDiv);
   }
 };
 
 // * Pokemon Selected from dropdown
 const monSelect = async (e, id) => {
   // grab data
-  let currentSlot = id;
-  let currentGame = document.getElementById("game").value;
-  let mon = e.value;
+  let currentSlot = id,
+    currentGame = document.getElementById("game").value,
+    mon = e.value,
+    loadDiv = currentSlot.querySelector(".loadDiv");
+
+  loadDiv.textContent = "loading";
 
   const loadMon = await getPokemonData(mon);
 
+  // set up input slots for selected pokemon
   let typeDiv = currentSlot.querySelector(".typeDiv");
   typeDiv.innerHTML = "";
 
   let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
-  selectAbilityDiv.innerHTML = "";
-  let selectAbility = document.createElement("select");
-  selectAbility.classList.add("selectAbility");
-  selectAbilityDiv.appendChild(selectAbility);
 
   let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
   let moveArr = [];
   selectMovesDiv.innerHTML = "";
 
   let arr = [loadMon.types, loadMon.abilities, loadMon.moves];
-  arr.forEach((d) => {
-    // console.log("keys", d);
-    for (const key in d) {
-      // ? define the type(s) of the selected Pokemon
-      if (d[key].type !== undefined) {
-        let span = document.createElement("span");
-        span.classList.add(d[key].type.name);
-        span.textContent = d[key].type.name;
-        typeDiv.appendChild(span);
-      }
-      // ? select the abilities of the selected Pokemon
-      if (d[key].ability !== undefined && !noAbilities.includes(currentGame)) {
-        let option = document.createElement("option");
-        option.value = d[key].ability.name;
-        option.textContent = d[key].ability.name;
-        selectAbility.appendChild(option);
-      }
-      // ? select the moves of the selected Pokemon
-      if (d[key].move !== undefined) {
-        moveArr.push(d[key].move.name);
-      }
+
+  // set timeout to allow for load
+  setTimeout(() => {
+    //end load
+    loadDiv.textContent = "";
+    // if game has abilities, setup input
+    if (!noAbilities.includes(currentGame)) {
+      selectAbilityDiv.innerHTML = "";
+      let selectAbility = document.createElement("select");
+      selectAbility.classList.add("selectAbility");
+      selectAbilityDiv.appendChild(selectAbility);
     }
-  });
-  createMovesDropdown(moveArr, selectMovesDiv);
+
+    arr.forEach((d) => {
+      // console.log("keys", d);
+      for (const key in d) {
+        // ? define the type(s) of the selected Pokemon
+        if (d[key].type !== undefined) {
+          let span = document.createElement("span");
+          span.classList.add(d[key].type.name);
+          span.textContent = d[key].type.name;
+          typeDiv.appendChild(span);
+        }
+        // ? select the abilities of the selected Pokemon
+        if (
+          d[key].ability !== undefined &&
+          !noAbilities.includes(currentGame)
+        ) {
+          let option = document.createElement("option");
+          option.value = d[key].ability.name;
+          option.textContent = d[key].ability.name;
+          selectAbilityDiv.querySelector(".selectAbility").appendChild(option);
+        }
+        // ? select the moves of the selected Pokemon
+        if (d[key].move !== undefined) {
+          moveArr.push(d[key].move.name);
+        }
+      }
+    });
+    createMovesDropdown(moveArr, selectMovesDiv);
+  }, 1500);
 };
 
 // ? create moves dropdown
 const createMovesDropdown = (arr, selectDiv) => {
-  let movepool = [];
   for (let i = 0; i < 4; i++) {
     let selectMoves = document.createElement("select");
     selectMoves.classList.add("selectMoves");
     selectMoves.setAttribute(
       "oninput",
-      `moveSelect(this, ${JSON.stringify(movepool)}, ${JSON.stringify(arr)})`
+      `moveSelect(this, ${JSON.stringify(arr)}, ${JSON.stringify(selectDiv)})`
     );
 
     arr.forEach((e) => {
@@ -253,12 +277,9 @@ const createMovesDropdown = (arr, selectDiv) => {
   }
 };
 // ? when a move is selected
-const moveSelect = (move, movepool, moveArr) => {
-  movepool.push(move.value);
-
+const moveSelect = (move, moveArr, selectDiv) => {
   // remove selected move from movepool
   moveArr = moveArr.filter((e) => e !== move.value);
-  console.log(moveArr);
 };
 
 // & CONFIRM ENTERED DATA
