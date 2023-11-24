@@ -179,6 +179,7 @@ const createSlots = () => {
     div.setAttribute("id", `slot${partyLimit}`);
     div.setAttribute("onclick", "loadPokedex(this)");
     const innerDiv = document.createElement("div");
+    innerDiv.classList.add("addPokemonTextArea");
     const plusIcon = document.createElement("div");
     plusIcon.setAttribute("class", "material-symbols-outlined plusSlot");
     plusIcon.textContent = "add";
@@ -219,20 +220,57 @@ const pokedexDropdown = (e, slotNum) => {
     option.value = p.pokemon_species.name;
     option.textContent = p.pokemon_species.name;
     selectName.appendChild(option);
-    selectName.setAttribute("oninput", "monSelect(this)");
+    selectName.setAttribute("oninput", `monSelect(this, ${slotNum.id})`);
   });
 
-  slotNum.appendChild(selectName);
+  // create DIV to house selected Pokemon type(s)
+  let typeDiv = document.createElement("div");
+  typeDiv.classList.add("typeDiv");
+
+  // create select to house abilities dropdown
+  let selectAbilityDiv = document.createElement("div");
+  selectAbilityDiv.classList.add("selectAbilityDiv");
+  let selectAbility = document.createElement("select");
+  selectAbility.classList.add("selectAbility");
+
+  selectAbilityDiv.appendChild(selectAbility);
+
+  slotNum.append(selectName, typeDiv, selectAbilityDiv);
 };
 
-// * Mon Selected
-const monSelect = async (e) => {
+// * Pokemon Selected from dropdown
+const monSelect = async (e, id) => {
+  // grab data
+  let currentSlot = id;
   let mon = e.value;
   const loadMon = await getPokemonData(mon);
-  let arr = [loadMon.abilities, loadMon.moves, loadMon.types];
-  arr.forEach((d, index) => {
+
+  let typeDiv = currentSlot.querySelector(".typeDiv");
+  typeDiv.innerHTML = "";
+
+  let selectAbility = currentSlot.querySelector(".selectAbility");
+  selectAbility.innerHTML = "";
+
+  let arr = [loadMon.types, loadMon.abilities, loadMon.moves];
+  arr.forEach((d) => {
+    // console.log("keys", d);
     for (const key in d) {
-      console.log(d[key]);
+      // ? define the type(s) of the selected Pokemon
+      if (d[key].type !== undefined) {
+        let span = document.createElement("span");
+        span.classList.add(d[key].type.name);
+        span.textContent = d[key].type.name;
+        typeDiv.appendChild(span);
+      }
+      // ? select the abilities of the selected Pokemon
+      if (d[key].ability !== undefined) {
+        console.log(d[key].ability.name);
+        let option = document.createElement("option");
+        option.value = d[key].ability.name;
+        option.textContent = d[key].ability.name;
+
+        selectAbility.appendChild(option);
+      }
     }
   });
 };
