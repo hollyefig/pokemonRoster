@@ -205,7 +205,7 @@ const loadPokedex = async (e) => {
 
   pokedexDropdown(loadPokedex, e);
 
-  createSlots();
+  createSlots(selected);
 };
 
 // * Create inputs for Pokemon Creation
