@@ -160,6 +160,7 @@ const pokedexDropdown = (e, slotNum) => {
     option.textContent = p.pokemon_species.name;
     selectName.appendChild(option);
     selectName.setAttribute("oninput", `monSelect(this, ${slotNum.id})`);
+    selectName.classList.add("selectPokemon");
   });
 
   // inputs and load divs
@@ -190,17 +191,17 @@ const pokedexDropdown = (e, slotNum) => {
   }
 };
 
-// * Pokemon Selected from dropdown
+// && Pokemon Selected from dropdown
 const monSelect = async (e, id) => {
   // grab data
   let currentSlot = id,
     currentGame = document.getElementById("game").value,
     mon = e.value,
     loadDiv = currentSlot.querySelector(".loadDiv");
-
-  loadDiv.textContent = "loading";
-
   const loadMon = await getPokemonData(mon);
+
+  // ? set up loading
+  loadDiv.textContent = "loading";
 
   // set up input slots for selected pokemon
   let typeDiv = currentSlot.querySelector(".typeDiv");
@@ -214,10 +215,11 @@ const monSelect = async (e, id) => {
 
   let arr = [loadMon.types, loadMon.abilities, loadMon.moves];
 
-  // set timeout to allow for load
+  // ! set timeout to allow for load
   setTimeout(() => {
-    //end load
+    // ? end load
     loadDiv.textContent = "";
+
     // if game has abilities, setup input
     if (!noAbilities.includes(currentGame)) {
       selectAbilityDiv.innerHTML = "";
@@ -282,6 +284,45 @@ const moveSelect = (move, moveArr, selectDiv) => {
   moveArr = moveArr.filter((e) => e !== move.value);
 };
 
+// * Get party data upon confirmation
+const getPartyData = () => {
+  let partyArr = [];
+  for (const slots of addMonsDivs.children) {
+    let obj = { name: null, type: null, ability: null, moves: [] };
+    for (let i = 0; i < slots.children.length; i++) {
+      let value = slots.children[i];
+      if (
+        !value.classList.contains("addPokemonTextArea") &&
+        !value.classList.contains("loadDiv")
+      ) {
+        // ? get pokemon name
+        if (value.classList.contains("selectPokemon")) {
+          obj.name = value.value;
+        }
+        // ? get inputs
+        if (value.classList.contains("inputsDiv")) {
+          for (let i = 0; i < value.children.length; i++) {
+            const inputs = value.children[i];
+            // ? get type
+            if (inputs.classList.contains("typeDiv")) {
+              obj.type = value.value;
+            }
+            // ? get moveset
+            else if (inputs.classList.contains("selectMovesDiv")) {
+              let moveArr = new Array(...inputs.children);
+              moveArr.forEach((e) => {
+                obj.moves.push(e.value);
+              });
+            }
+          }
+        }
+      }
+    }
+    partyArr.push(obj);
+  }
+  return partyArr;
+};
+
 // & CONFIRM ENTERED DATA
 // ^ CONFIRM ENTERED DATA
 // * CONFIRM ENTERED DATA
@@ -298,10 +339,7 @@ const confirmData = (color, num) => {
     key: `key${counter}`,
     color: color,
     textColor: null,
-    gameData: `https://pokeapi.co/api/v2/version/${
-      document.getElementById("game").value
-    }`,
-    party: [],
+    party: getPartyData(),
   };
 
   inputs.textColor = setTextColor(inputs.color);
@@ -347,6 +385,7 @@ const sortByKeyNumber = (a, b) => {
 
 // & CREATE FINAL DIV OF INFO ENTERED
 const populateDivs = () => {
+  console.log(dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
