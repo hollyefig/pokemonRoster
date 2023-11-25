@@ -143,16 +143,29 @@ const loadPokedex = async (e) => {
   pokedexDropdown(loadPokedex, e);
 
   createSlots(selected);
+
+  // hide other divs except name dropdown
+  for (let i = 0; i < e.children.length; i++) {
+    if (!e.children[i].classList.contains("nameAndType")) {
+      e.children[i].classList.add("displayNone");
+    } else if (e.children[i].classList.contains("shinySwitch")) {
+      e.children[i].classList.remove("displayNone");
+    }
+  }
 };
 
 // * Create inputs for Pokemon Creation
-const pokedexDropdown = (e, slotNum) => {
+const pokedexDropdown = async (e, slotNum) => {
   if (slotNum.children.length > 0) {
     slotNum.children[0].remove();
     slotNum.removeAttribute("onclick");
   }
 
   const selectName = document.createElement("select");
+  const option = document.createElement("option");
+  option.value = "chooseMon";
+  option.textContent = "Select Pokemon";
+  selectName.appendChild(option);
 
   e.forEach((p) => {
     const option = document.createElement("option");
@@ -169,6 +182,14 @@ const pokedexDropdown = (e, slotNum) => {
   let loadDiv = document.createElement("div");
   loadDiv.classList.add("loadDiv");
 
+  // create DIV to hold sprite
+  let spriteDiv = document.createElement("div");
+  spriteDiv.classList.add("spriteDiv");
+
+  // create DIV for shiny switch
+  let shinySwitch = document.createElement("div");
+  shinySwitch.setAttribute("class", "shinySwitch displayNone");
+
   // create DIV to house selected Pokemon type(s)
   let typeDiv = document.createElement("div");
   typeDiv.classList.add("typeDiv");
@@ -181,13 +202,19 @@ const pokedexDropdown = (e, slotNum) => {
   let selectMovesDiv = document.createElement("div");
   selectMovesDiv.classList.add("selectMovesDiv");
 
+  // create DIV to house name dropdown and type
+  let nameAndType = document.createElement("div");
+  nameAndType.classList.add("nameAndType");
+
   // ? append divs based on whether game includes abilities or not
   if (!noAbilities.includes(slotNum.getAttribute("class"))) {
     inputsDiv.append(typeDiv, selectAbilityDiv, selectMovesDiv);
-    slotNum.append(selectName, inputsDiv, loadDiv);
+    nameAndType.append(selectName, typeDiv);
+    slotNum.append(spriteDiv, nameAndType, shinySwitch, inputsDiv, loadDiv);
   } else {
     inputsDiv.append(typeDiv, selectMovesDiv);
-    slotNum.append(selectName, inputsDiv, loadDiv);
+    nameAndType.append(selectName, typeDiv);
+    slotNum.append(spriteDiv, nameAndType, shinySwitch, inputsDiv, loadDiv);
   }
 };
 
@@ -196,14 +223,47 @@ const monSelect = async (e, id) => {
   // grab data
   let currentSlot = id,
     currentGame = document.getElementById("game").value,
-    mon = e.value,
     loadDiv = currentSlot.querySelector(".loadDiv");
-  const loadMon = await getPokemonData(mon);
+
+  // show/hide during load
+  for (let i = 0; i < currentSlot.children.length; i++) {
+    if (!currentSlot.children[i].classList.contains("loadDiv")) {
+      currentSlot.children[i].classList.add("displayNone");
+    } else {
+      currentSlot.children[i].classList.remove("displayNone");
+    }
+  }
+
+  let mon = "";
+  let loadMon = "";
+  if (e.value !== "chooseMon") {
+    mon = e.value;
+    loadMon = await getPokemonData(mon);
+  }
+
+  let sprites = [
+    {
+      default: loadMon.sprites.front_default,
+      shiny: loadMon.sprites.front_shiny,
+    },
+  ];
 
   // ? set up loading
   loadDiv.textContent = "loading";
+  loadDiv.style.height = "100%";
+  currentSlot.classList.remove("pokemonDataDisplayGrid");
 
   // set up input slots for selected pokemon
+  let spriteDiv = currentSlot.querySelector(".spriteDiv");
+  spriteDiv.innerHTML = "";
+
+  let shinySwitch = currentSlot.querySelector(".shinySwitch");
+  shinySwitch.setAttribute(
+    "onclick",
+    `shinySwitchFunc(this, ${JSON.stringify(sprites)}, ${currentSlot.id})`
+  );
+  shinySwitch.textContent = "";
+
   let typeDiv = currentSlot.querySelector(".typeDiv");
   typeDiv.innerHTML = "";
 
@@ -213,12 +273,22 @@ const monSelect = async (e, id) => {
   let moveArr = [];
   selectMovesDiv.innerHTML = "";
 
-  let arr = [loadMon.types, loadMon.abilities, loadMon.moves];
+  let arr = [sprites, loadMon.types, loadMon.abilities, loadMon.moves];
 
   // ! set timeout to allow for load
   setTimeout(() => {
     // ? end load
     loadDiv.textContent = "";
+    currentSlot.classList.add("pokemonDataDisplayGrid");
+
+    // bring back divs after load
+    for (let i = 0; i < currentSlot.children.length; i++) {
+      if (currentSlot.children[i].classList.contains("loadDiv")) {
+        currentSlot.children[i].classList.add("displayNone");
+      } else {
+        currentSlot.children[i].classList.remove("displayNone");
+      }
+    }
 
     // if game has abilities, setup input
     if (!noAbilities.includes(currentGame)) {
@@ -228,9 +298,17 @@ const monSelect = async (e, id) => {
       selectAbilityDiv.appendChild(selectAbility);
     }
 
+    shinySwitch.textContent = "Shiny Off";
+
     arr.forEach((d) => {
-      // console.log("keys", d);
       for (const key in d) {
+        // console.log(d[key]);
+        // ? apply sprite image
+        if (d[key].default !== undefined) {
+          let img = document.createElement("img");
+          img.setAttribute("src", d[key].default);
+          spriteDiv.appendChild(img);
+        }
         // ? define the type(s) of the selected Pokemon
         if (d[key].type !== undefined) {
           let span = document.createElement("span");
@@ -255,18 +333,59 @@ const monSelect = async (e, id) => {
       }
     });
     createMovesDropdown(moveArr, selectMovesDiv);
-  }, 1500);
+  }, 2000);
 };
 
 // ? create moves dropdown
 const createMovesDropdown = (arr, selectDiv) => {
+  let slotNum = selectDiv.parentNode.parentNode.id;
   for (let i = 0; i < 4; i++) {
+    // create divs for moves accordian
+    let moveDiv = document.createElement("div");
+    moveDiv.classList.add(`moveDiv${i + 1}`);
+
+    let className = moveDiv.getAttribute("class");
+
+    let moveDivTop = document.createElement("div");
+    moveDivTop.classList.add("moveDivTop");
+    moveDivTop.setAttribute(
+      "onclick",
+      `moveSelectExpand(this, ${JSON.stringify(className)}, ${JSON.stringify(
+        slotNum
+      )})`
+    );
+    let moveDivArrow = document.createElement("div");
+    moveDivArrow.setAttribute(
+      "class",
+      "moveDivArrow material-symbols-outlined"
+    );
+    moveDivArrow.textContent = "keyboard_arrow_right";
+
+    let moveDivTitle = document.createElement("div");
+    moveDivTitle.classList.add("moveDivTitle");
+    moveDivTitle.textContent = "Select Move";
+
+    let moveDivBottom = document.createElement("div");
+    moveDivBottom.classList.add("moveDivBottom");
+    let moveDivDesc = document.createElement("div");
+    moveDivDesc.classList.add("moveDivDesc");
+
+    // create select and options
     let selectMoves = document.createElement("select");
     selectMoves.classList.add("selectMoves");
     selectMoves.setAttribute(
       "oninput",
-      `moveSelect(this, ${JSON.stringify(arr)}, ${JSON.stringify(selectDiv)})`
+      `moveSelect(this, ${JSON.stringify(arr)}, ${JSON.stringify(slotNum)})`
     );
+    const moveOption = document.createElement("option");
+    moveOption.value = "selectMove";
+    moveOption.textContent = "Select Move";
+
+    //append
+    selectMoves.appendChild(moveOption);
+    moveDivTop.append(moveDivArrow, moveDivTitle);
+    moveDivBottom.append(selectMoves, moveDivDesc);
+    moveDiv.append(moveDivTop, moveDivBottom);
 
     arr.forEach((e) => {
       let option = document.createElement("option");
@@ -275,13 +394,52 @@ const createMovesDropdown = (arr, selectDiv) => {
 
       selectMoves.appendChild(option);
     });
-    selectDiv.appendChild(selectMoves);
+    selectDiv.appendChild(moveDiv);
+  }
+};
+
+// ? dropdown clicked
+const moveSelectExpand = (e, div, slotNum) => {
+  let slot = document.getElementById(slotNum);
+
+  let parent = slot.querySelector(`.${div}`);
+  let arrow = e.querySelector(".moveDivArrow");
+  let bottom = parent.querySelector(".moveDivBottom");
+
+  if (!arrow.classList.contains("arrowSpin")) {
+    arrow.classList.add("arrowSpin");
+    gsap.to(bottom, { minHeight: "115px" });
+  } else {
+    arrow.classList.remove("arrowSpin");
+    gsap.to(bottom, { minHeight: "0" });
   }
 };
 // ? when a move is selected
-const moveSelect = (move, moveArr, selectDiv) => {
+const moveSelect = (move, moveArr, slotNum) => {
+  // get exact div to replace title with move
+  let parent = document.getElementById(slotNum);
+  let moveSlot = parent.querySelector(
+    `.${move.parentNode.parentNode.getAttribute("class")}`
+  );
+  let title = moveSlot.querySelector(".moveDivTitle");
+
+  title.textContent = move.value;
   // remove selected move from movepool
   moveArr = moveArr.filter((e) => e !== move.value);
+};
+// ? shiny switching
+const shinySwitchFunc = (e, sprites, par) => {
+  let spriteImg = par.querySelector(".spriteDiv > img");
+
+  if (e.textContent === "Shiny Off") {
+    e.textContent = "Shiny On";
+    e.classList.add("shinyOn");
+    spriteImg.setAttribute("src", sprites[0].shiny);
+  } else {
+    e.textContent = "Shiny Off";
+    spriteImg.setAttribute("src", sprites[0].default);
+    e.classList.remove("shinyOn");
+  }
 };
 
 // * Get party data upon confirmation
@@ -385,7 +543,7 @@ const sortByKeyNumber = (a, b) => {
 
 // & CREATE FINAL DIV OF INFO ENTERED
 const populateDivs = () => {
-  console.log(dataArray);
+  // console.log(dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 

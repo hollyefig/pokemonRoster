@@ -1,8 +1,8 @@
 :root {
     --white: #ffffff;
     --mediumLight: #efefef;
+    --grey: #cbcbcb;
     --dark: #a39f9f;
-    --grey: #7f7f7f;
     --deepDark: #3c3c3b;
     --font: 'Signika Negative', sans-serif;;
     --light: 300;
@@ -171,6 +171,17 @@ body {
     display: none;
 }
 
+/* & INPUTS FOR PARTY CREATION  */
+
+select {
+    background:transparent;
+}
+
+select option {
+    text-transform: capitalize;
+}
+
+
 .inputDataWrapper {
     position: fixed;
     top: 50%;
@@ -296,6 +307,142 @@ input[type="color"] {
     font-size: 20px;
 }
 
+.selectPokemon {
+    border: 0;
+    border-bottom: 2px solid var(--red);
+    padding: 7px 7px 3px 0;
+    font-size: 25px;
+    font-family: var(--font);
+    width: 100%;
+}
+
+/*  * NEW GRID FOR WHEN POKEMON INPUT DATA DISPLAYS  */
+.pokemonDataDisplayGrid {
+    grid-template-columns: 145px 1fr;
+    grid-template-rows: 80px 30px 1fr;
+}
+
+.spriteDiv {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.shinySwitch {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    cursor: pointer;
+    color: var(--dark);
+    border: 2px solid var(--dark);
+    width: 85px;
+    aspect-ratio: 1 / .3;
+    padding: 3px 5px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shinyOn {
+    --yellow: rgb(220, 192, 33);
+    background-color: var(--yellow);
+    border: 2px solid var(--yellow);
+    color: #fff;
+}
+
+.nameAndType {
+    width: 100%;
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+}
+
+.inputsDiv {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    width: 100%;
+    height: 100%;
+    display: grid;
+
+    padding: 10px 0 0 0;
+}
+
+/* ^ MOVE DIV STUFF  */
+
+.selectMovesDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    
+}
+
+.selectMovesDiv div {
+    background: transparent;
+}
+
+.selectMovesDiv > div {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    cursor: pointer;
+}
+
+.selectMovesDiv > div:not(:first-child) {
+    border-top: 1px solid var(--grey);
+}
+
+.moveDivTop {
+    display:grid;
+    grid-template-columns: 50px 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.moveDivArrow {
+    transition: transform .2s ease-out;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+}
+
+.arrowSpin {
+    transform: rotate(90deg);
+}
+
+.moveDivTitle {
+    font-size: 18px;
+    padding: 10px 0;
+    text-transform: capitalize;
+}
+
+
+.moveDivBottom {
+    height: 0;
+    overflow: hidden;
+}
+
+.selectMovesDiv > select {
+    padding: 5px;
+    border:0;
+    border-bottom: 1px solid var(--dark);
+}
+
+.selectMoves > option:nth-child(1) {
+    color: var(--dark);
+}
+
+.loadDiv {
+    grid-column: 1 / 4;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.displayNone {
+    display: none!important;
+}
+
 .required {
     border: 2px solid var(--red)!important;
 }
@@ -337,9 +484,9 @@ input[type="color"] {
 }
 
 .addMonsDivs > div {
-    border: 2px solid var(--grey);
+    /* border: 2px solid var(--grey); */
+    /* border-radius: 10px; */
     padding:10px;
-    border-radius: 10px;
     min-height: 115px;
     width: auto;
     display: grid;
@@ -357,7 +504,7 @@ input[type="color"] {
     column-gap: 10px;
     align-items: center;
     justify-content: center;
-    color: var(--grey);
+    color: var(--dark);
     width: 100%;
     height: 100%;
     min-height: 100px;
@@ -375,7 +522,7 @@ input[type="color"] {
     width: var(--dim);
     height: var(--dim);
     border-radius: var(--dim);
-    border:2px solid var(--grey);
+    border:2px solid var(--dark);
     position: absolute;
 }
 
