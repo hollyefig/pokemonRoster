@@ -541,6 +541,14 @@ input[type="color"] {
     width: auto;
     column-gap: 10px;
     text-transform: capitalize;
+    padding:5px 0 0 0;
+}
+
+.typeDiv > span {
+    padding: 5px 10px;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
 }
 
 

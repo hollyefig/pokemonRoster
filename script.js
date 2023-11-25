@@ -9,6 +9,27 @@ const noAbilities = ["red", "blue", "yellow", "gold", "silver", "crystal"],
   fadeInOut = gsap.timeline({ defaults: { ease: "power2.out" } }),
   addMonsDivs = document.querySelector(".addMonsDivs");
 
+const typeColors = {
+  normal: "#A8A878",
+  fire: "#F08030",
+  fighting: "#C03028",
+  water: "#6890F0",
+  flying: "#A890F0",
+  grass: "#78C850",
+  poison: "#A040A0",
+  electric: "#F8D030",
+  ground: "#E0C068",
+  psychic: "#F85888",
+  rock: "##B8A038",
+  ice: "##98D8D8",
+  bug: "#A8B820",
+  dragon: "#7038F8",
+  ghost: "#705898",
+  dark: "#705848",
+  steel: "#B8B8D0",
+  fairy: "#EE99AC",
+};
+
 let gameOption = document.getElementById("game");
 let currentGameSelect;
 
@@ -311,9 +332,16 @@ const monSelect = async (e, id) => {
         }
         // ? define the type(s) of the selected Pokemon
         if (d[key].type !== undefined) {
+          let color = d[key].type.name;
+          let colorKey = Object.keys(typeColors);
           let span = document.createElement("span");
           span.classList.add(d[key].type.name);
           span.textContent = d[key].type.name;
+          for (const c in colorKey) {
+            if (colorKey[c] === color) {
+              span.style.backgroundColor = typeColors[colorKey[c]];
+            }
+          }
           typeDiv.appendChild(span);
         }
         // ? select the abilities of the selected Pokemon
