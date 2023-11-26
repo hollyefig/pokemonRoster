@@ -495,7 +495,7 @@ input[type="color"] {
     display: flex;
     flex-direction: row-reverse;
     justify-content: flex-end;
-    column-gap: 15px;
+    align-items: center;
     font-size: 14px;
 }
 
@@ -506,6 +506,9 @@ input[type="color"] {
 }
 .moveDamageClass {
     padding: 3px 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .moveEffect {
@@ -595,6 +598,10 @@ input[type="color"] {
     justify-content: center;
     cursor: pointer;
     opacity: 0;
+}
+
+.addMonsDivs > div:nth-child(even) {
+    background-color: var(--mediumLight);
 }
 
 /* ! WHEN CLICKING ADD POKEMON  */

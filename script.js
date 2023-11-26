@@ -167,7 +167,6 @@ const loadPokedex = async (e) => {
 
   // hide other divs except name dropdown
   for (let i = 0; i < e.children.length; i++) {
-    console.log(e.children[i]);
     if (!e.children[i].classList.contains("nameAndType")) {
       e.children[i].classList.add("displayNone");
       gsap.to(e.children[i], { opacity: 0 });
@@ -457,6 +456,7 @@ const loadMoveData = async (move, moveSlot) => {
 
   // organize move details into divs
   for (const key in loadMove) {
+    // ? move power
     if (key === "power") {
       let div = document.createElement("div");
       div.classList.add("movePower");
@@ -464,19 +464,25 @@ const loadMoveData = async (move, moveSlot) => {
         ? (div.textContent = loadMove[key])
         : (div.textContent = "-");
       moveDivStats.append(div);
-    } else if (key === "accuracy") {
+    }
+    // ? move accuracy
+    else if (key === "accuracy") {
       let div = document.createElement("div");
       div.classList.add("moveAccuracy");
       loadMove[key] !== null
         ? (div.textContent = loadMove[key])
         : (div.textContent = "-");
       moveDivStats.append(div);
-    } else if (key === "pp") {
+    }
+    // ? move PP
+    else if (key === "pp") {
       let div = document.createElement("div");
       div.classList.add("movePp");
       div.textContent = loadMove[key];
       moveDivStats.append(div);
-    } else if (key === "type") {
+    }
+    // ? move type
+    else if (key === "type") {
       let div = document.createElement("div");
       let color = loadMove[key].name;
       let colorKey = Object.keys(typeColors);
@@ -489,12 +495,23 @@ const loadMoveData = async (move, moveSlot) => {
         }
       }
       typeAndDamageClass.append(div);
-    } else if (key === "damage_class") {
+    }
+    // ? move dmg class (physical, special or status)
+    else if (key === "damage_class") {
       let div = document.createElement("div");
       div.classList.add("moveDamageClass");
-      div.textContent = loadMove[key].name;
+      // if SVG applies
+      if (loadMove[key].name !== "status") {
+        const SVG = createSVG(loadMove[key].name);
+        div.appendChild(SVG);
+      } else {
+        div.textContent = loadMove[key].name;
+      }
+
       typeAndDamageClass.append(div);
-    } else if (key === "effect_entries") {
+    }
+    // ? move info
+    else if (key === "effect_entries") {
       let div = document.createElement("div");
       div.classList.add("moveEffect");
       div.textContent = loadMove[key][0].effect;
@@ -502,6 +519,57 @@ const loadMoveData = async (move, moveSlot) => {
     }
   }
   moveDivDesc.appendChild(typeAndDamageClass);
+};
+
+// * create SVG
+const createSVG = (n) => {
+  let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.classList.add("effectSvg");
+  svg.setAttribute("width", "25");
+  svg.setAttribute("height", "25");
+  svg.setAttribute("viewBox", "0 0 30 30");
+  svg.setAttribute("fill", "none");
+
+  // if physical
+  if (n === "physical") {
+    let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute(
+      "d",
+      "M15.5 7.63759L17.0146 10.5774L17.3053 11.1416L17.9099 10.9482L21.0596 9.94044L20.0518 13.0901L19.8584 13.6947L20.4226 13.9854L23.3624 15.5L20.4226 17.0146L19.8584 17.3053L20.0518 17.9099L21.0596 21.0596L17.9099 20.0518L17.3053 19.8584L17.0146 20.4226L15.5 23.3624L13.9854 20.4226L13.6947 19.8584L13.0901 20.0518L9.94044 21.0596L10.9482 17.9099L11.1416 17.3053L10.5774 17.0146L7.63759 15.5L10.5774 13.9854L11.1416 13.6947L10.9482 13.0901L9.94044 9.94044L13.0901 10.9482L13.6947 11.1416L13.9854 10.5774L15.5 7.63759Z"
+    );
+
+    path.setAttribute("stroke", "black");
+    path.setAttribute("stroke-width", "2");
+    svg.appendChild(path);
+    return svg;
+  }
+  // if special
+  else if (n === "special") {
+    let circ1 = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle"
+    );
+    let circ2 = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle"
+    );
+
+    circ1.setAttribute("cx", "12.5");
+    circ1.setAttribute("cy", "12.5");
+    circ1.setAttribute("r", "4");
+    circ1.setAttribute("stroke", "black");
+    circ1.setAttribute("stroke-width", "2");
+
+    circ2.setAttribute("cx", "12.5");
+    circ2.setAttribute("cy", "12.5");
+    circ2.setAttribute("r", "9");
+    circ2.setAttribute("stroke", "black");
+    circ2.setAttribute("stroke-width", "2");
+
+    svg.append(circ1, circ2);
+
+    return svg;
+  }
 };
 
 // ? shiny switching
