@@ -1,6 +1,6 @@
 :root {
     --white: #ffffff;
-    --mediumLight: #efefef;
+    --mediumLight: #f4f4f4;
     --grey: #cbcbcb;
     --dark: #a39f9f;
     --deepDark: #3c3c3b;
@@ -205,12 +205,14 @@ select option {
 .inputData {
     display: grid;
     column-gap: 10%;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     grid-template-rows: auto auto;
     justify-content: center;
     align-items: center;
-    padding:.5em;
+    padding: 0.5em;
     row-gap: 10px;
+    width: 100%;
+    justify-items: start;
 }
 
 .inputData > div {
@@ -228,6 +230,7 @@ select option {
     align-items: center;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+    width: 100%;
 }
 
 .inputData > div:nth-child(2) {
@@ -363,8 +366,11 @@ input[type="color"] {
     width: 100%;
     height: 100%;
     display: grid;
-
     padding: 10px 0 0 0;
+}
+
+.inputsDivAbilities {
+    grid-template-columns: 1fr 2fr;
 }
 
 /* ^ MOVE DIV STUFF  */
@@ -373,8 +379,7 @@ input[type="color"] {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    width: 100%;
-    
+    width: 100%;   
 }
 
 .selectMovesDiv div {
@@ -393,32 +398,40 @@ input[type="color"] {
 
 .moveDivTop {
     display:grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 1.5fr 2fr;
     justify-content: center;
     align-items: center;
+    grid-column: 1 / 2;
 }
 
-
-.moveDivArrow {
-    transition: transform .2s ease-out;
-    width: 24px;
-    aspect-ratio: 1 / 1;
+.moveDivStats {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
-.arrowSpin {
-    transform: rotate(90deg);
+.darkText {
+    color: var(--deepDark)
 }
-
-.moveDivTitle {
-    font-size: 18px;
-    padding: 10px 0;
-    text-transform: capitalize;
-}
-
 
 .moveDivBottom {
     height: 0;
     overflow: hidden;
+    width: 100%;
+}
+
+.moveDivBottom > * {
+    margin: 0 20px 10px 20px;
+}
+
+.selectMoves {
+    padding: 7px;
+    border: 0;
+    font-size: 18px;
+    font-family: var(--font);
 }
 
 .selectMovesDiv > select {
@@ -430,6 +443,82 @@ input[type="color"] {
 .selectMoves > option:nth-child(1) {
     color: var(--dark);
 }
+
+/* ? for move desc */
+
+.moveDivDesc {
+    display:flex;
+    flex-direction: column-reverse;
+    row-gap: 10px;
+    justify-items: start;
+    align-items: flex-start;
+    justify-content: center;
+    height: 0;
+    width: 90%;
+    position: relative;
+    bottom: 10px;
+    left: 10px;
+}
+
+.movePower, .moveAccuracy, .movePp {
+    font-size: 30px;
+}
+
+.movePower::before {
+    content: 'Power';
+    font-size: 14px;
+    display: block;
+    position:relative;
+    top: 5px;
+    color: var(--dark);
+}
+
+.moveAccuracy::before {
+    content: 'Accuracy';
+    font-size: 14px;
+    display: block;
+    position:relative;
+    top: 5px;
+    color: var(--dark);
+}
+
+.movePp::before {
+    content: 'PP';
+    font-size: 14px;
+    display: block;
+    position:relative;
+    top: 5px;
+    color: var(--dark);
+}
+
+.typeAndDamageClass {
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    column-gap: 15px;
+    font-size: 14px;
+}
+
+.moveType {
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 20px;
+}
+.moveDamageClass {
+    padding: 3px 7px;
+}
+
+.moveEffect {
+    grid-column: 1 / 4;
+    grid-row: 3 / 4;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+/* ! LOAD section  */
 
 .loadDiv {
     grid-column: 1 / 4;

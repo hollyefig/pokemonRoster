@@ -244,7 +244,8 @@ const monSelect = async (e, id) => {
   // grab data
   let currentSlot = id,
     currentGame = document.getElementById("game").value,
-    loadDiv = currentSlot.querySelector(".loadDiv");
+    loadDiv = currentSlot.querySelector(".loadDiv"),
+    inputsDiv = currentSlot.querySelector(".inputsDiv");
 
   // show/hide during load
   for (let i = 0; i < currentSlot.children.length; i++) {
@@ -302,6 +303,16 @@ const monSelect = async (e, id) => {
     loadDiv.textContent = "";
     currentSlot.classList.add("pokemonDataDisplayGrid");
 
+    // if game has abilities, setup input
+    if (!noAbilities.includes(currentGame)) {
+      selectAbilityDiv.innerHTML = "";
+      let selectAbility = document.createElement("select");
+      selectAbility.classList.add("selectAbility");
+      selectAbilityDiv.appendChild(selectAbility);
+      // setup grid
+      inputsDiv.classList.add("inputsDivAbilities");
+    }
+
     // bring back divs after load
     for (let i = 0; i < currentSlot.children.length; i++) {
       if (currentSlot.children[i].classList.contains("loadDiv")) {
@@ -309,14 +320,6 @@ const monSelect = async (e, id) => {
       } else {
         currentSlot.children[i].classList.remove("displayNone");
       }
-    }
-
-    // if game has abilities, setup input
-    if (!noAbilities.includes(currentGame)) {
-      selectAbilityDiv.innerHTML = "";
-      let selectAbility = document.createElement("select");
-      selectAbility.classList.add("selectAbility");
-      selectAbilityDiv.appendChild(selectAbility);
     }
 
     shinySwitch.textContent = "Shiny Off";
@@ -372,29 +375,12 @@ const createMovesDropdown = (arr, selectDiv) => {
     let moveDiv = document.createElement("div");
     moveDiv.classList.add(`moveDiv${i + 1}`);
 
-    let className = moveDiv.getAttribute("class");
-
     let moveDivTop = document.createElement("div");
     moveDivTop.classList.add("moveDivTop");
-    moveDivTop.setAttribute(
-      "onclick",
-      `moveSelectExpand(this, ${JSON.stringify(className)}, ${JSON.stringify(
-        slotNum
-      )})`
-    );
-    let moveDivArrow = document.createElement("div");
-    moveDivArrow.setAttribute(
-      "class",
-      "moveDivArrow material-symbols-outlined"
-    );
-    moveDivArrow.textContent = "keyboard_arrow_right";
 
-    let moveDivTitle = document.createElement("div");
-    moveDivTitle.classList.add("moveDivTitle");
-    moveDivTitle.textContent = "Select Move";
+    let moveDivStats = document.createElement("div");
+    moveDivStats.classList.add("moveDivStats");
 
-    let moveDivBottom = document.createElement("div");
-    moveDivBottom.classList.add("moveDivBottom");
     let moveDivDesc = document.createElement("div");
     moveDivDesc.classList.add("moveDivDesc");
 
@@ -411,9 +397,8 @@ const createMovesDropdown = (arr, selectDiv) => {
 
     //append
     selectMoves.appendChild(moveOption);
-    moveDivTop.append(moveDivArrow, moveDivTitle);
-    moveDivBottom.append(selectMoves, moveDivDesc);
-    moveDiv.append(moveDivTop, moveDivBottom);
+    moveDivTop.append(selectMoves, moveDivStats);
+    moveDiv.append(moveDivTop, moveDivDesc);
 
     arr.forEach((e) => {
       let option = document.createElement("option");
@@ -426,22 +411,6 @@ const createMovesDropdown = (arr, selectDiv) => {
   }
 };
 
-// ? dropdown clicked
-const moveSelectExpand = (e, div, slotNum) => {
-  let slot = document.getElementById(slotNum);
-
-  let parent = slot.querySelector(`.${div}`);
-  let arrow = e.querySelector(".moveDivArrow");
-  let bottom = parent.querySelector(".moveDivBottom");
-
-  if (!arrow.classList.contains("arrowSpin")) {
-    arrow.classList.add("arrowSpin");
-    gsap.to(bottom, { minHeight: "115px" });
-  } else {
-    arrow.classList.remove("arrowSpin");
-    gsap.to(bottom, { minHeight: "0" });
-  }
-};
 // ? when a move is selected
 const moveSelect = (move, moveArr, slotNum) => {
   // get exact div to replace title with move
@@ -449,12 +418,83 @@ const moveSelect = (move, moveArr, slotNum) => {
   let moveSlot = parent.querySelector(
     `.${move.parentNode.parentNode.getAttribute("class")}`
   );
-  let title = moveSlot.querySelector(".moveDivTitle");
 
-  title.textContent = move.value;
+  let desc = moveSlot.querySelector(".moveDivDesc");
+  gsap.to(desc, {
+    height: "auto",
+    duration: 0.5,
+    onComplete: () => {
+      gsap.set(desc, { height: "auto" });
+    },
+  });
+
+  loadMoveData(move.value.replace(" ", "-"), moveSlot);
+
   // remove selected move from movepool
   moveArr = moveArr.filter((e) => e !== move.value);
 };
+
+// ? Load move data
+const loadMoveData = async (move, moveSlot) => {
+  let loadMove = await getMoveData(move);
+  let moveDivTop = moveSlot.querySelector(".moveDivTop");
+  let moveDivStats = moveDivTop.querySelector(".moveDivStats");
+  let moveDivDesc = moveSlot.querySelector(".moveDivDesc");
+  let typeAndDamageClass = document.createElement("div");
+  typeAndDamageClass.classList.add("typeAndDamageClass");
+
+  moveDivStats.innerHTML = "";
+  moveDivDesc.innerHTML = "";
+
+  // organize move details into divs
+  for (const key in loadMove) {
+    if (key === "power") {
+      let div = document.createElement("div");
+      div.classList.add("movePower");
+      loadMove[key] !== null
+        ? (div.textContent = loadMove[key])
+        : (div.textContent = "-");
+      moveDivStats.append(div);
+    } else if (key === "accuracy") {
+      let div = document.createElement("div");
+      div.classList.add("moveAccuracy");
+      loadMove[key] !== null
+        ? (div.textContent = loadMove[key])
+        : (div.textContent = "-");
+      moveDivStats.append(div);
+    } else if (key === "pp") {
+      let div = document.createElement("div");
+      div.classList.add("movePp");
+      div.textContent = loadMove[key];
+      moveDivStats.append(div);
+    } else if (key === "type") {
+      let div = document.createElement("div");
+      let color = loadMove[key].name;
+      let colorKey = Object.keys(typeColors);
+
+      div.classList.add("moveType");
+      div.textContent = loadMove[key].name;
+      for (const c in colorKey) {
+        if (colorKey[c] === color) {
+          div.style.backgroundColor = typeColors[colorKey[c]];
+        }
+      }
+      typeAndDamageClass.append(div);
+    } else if (key === "damage_class") {
+      let div = document.createElement("div");
+      div.classList.add("moveDamageClass");
+      div.textContent = loadMove[key].name;
+      typeAndDamageClass.append(div);
+    } else if (key === "effect_entries") {
+      let div = document.createElement("div");
+      div.classList.add("moveEffect");
+      div.textContent = loadMove[key][0].effect;
+      moveDivDesc.append(div);
+    }
+  }
+  moveDivDesc.appendChild(typeAndDamageClass);
+};
+
 // ? shiny switching
 const shinySwitchFunc = (e, sprites, par) => {
   let spriteImg = par.querySelector(".spriteDiv > img");

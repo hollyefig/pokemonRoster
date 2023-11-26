@@ -83,4 +83,15 @@ const getPokemonData = async (mon) => {
   }
 };
 
+// * GRAB SELECTED MOVE
+const getMoveData = async (move) => {
+  try {
+    const response = await axios.get(`https://pokeapi.co/api/v2/move/${move}/`);
+    // console.log("response", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
 loadVersions();
