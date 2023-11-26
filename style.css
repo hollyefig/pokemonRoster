@@ -461,6 +461,18 @@ input[type="color"] {
     font-size: 23px;
 }
 
+.moveAccuracy {
+    order: 2;
+  }
+  
+  .movePower {
+    order: 1;
+  }
+  
+  .movePp {
+    order: 3;
+  }
+
 .movePower::before {
     content: 'Power';
     font-size: 14px;
