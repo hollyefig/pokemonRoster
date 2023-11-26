@@ -454,14 +454,12 @@ input[type="color"] {
     align-items: flex-start;
     justify-content: center;
     height: 0;
+    max-height: 50dvh;
     width: 90%;
-    position: relative;
-    bottom: 10px;
-    left: 10px;
 }
 
 .movePower, .moveAccuracy, .movePp {
-    font-size: 30px;
+    font-size: 23px;
 }
 
 .movePower::before {

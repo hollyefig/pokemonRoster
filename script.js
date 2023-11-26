@@ -420,13 +420,14 @@ const moveSelect = (move, moveArr, slotNum) => {
   );
 
   let desc = moveSlot.querySelector(".moveDivDesc");
-  gsap.to(desc, {
-    height: "auto",
-    duration: 0.5,
-    onComplete: () => {
-      gsap.set(desc, { height: "auto" });
-    },
-  });
+  desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+  // gsap.to(desc, {
+  //   height: "auto",
+  //   duration: 0.5,
+  //   onComplete: () => {
+  //     gsap.set(desc, { height: "auto" });
+  //   },
+  // });
 
   loadMoveData(move.value.replace(" ", "-"), moveSlot);
 
