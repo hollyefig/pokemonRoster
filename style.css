@@ -204,15 +204,15 @@ select option {
 
 .inputData {
     display: grid;
-    column-gap: 10%;
+    column-gap: 5%;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: auto auto;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     padding: 0.5em;
     row-gap: 10px;
     width: 100%;
-    justify-items: start;
+    justify-items: stretch;
 }
 
 .inputData > div {
@@ -223,10 +223,10 @@ select option {
 
 .inputData > div:first-child {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 35px;
     grid-template-rows: auto 1fr;
     gap: 5px;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
