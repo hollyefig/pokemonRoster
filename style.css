@@ -389,7 +389,6 @@ input[type="color"] {
 .selectMovesDiv > div {
     display: grid;
     grid-template-rows: auto 1fr;
-    cursor: pointer;
 }
 
 .selectMovesDiv > div:not(:first-child) {
@@ -524,6 +523,20 @@ input[type="color"] {
     width: 100%;
     display: flex;
     align-items: center;
+}
+
+.pokeballLoad {
+    animation: spin 1s infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+    
 }
 
 .displayNone {

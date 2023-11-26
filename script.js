@@ -167,8 +167,10 @@ const loadPokedex = async (e) => {
 
   // hide other divs except name dropdown
   for (let i = 0; i < e.children.length; i++) {
+    console.log(e.children[i]);
     if (!e.children[i].classList.contains("nameAndType")) {
       e.children[i].classList.add("displayNone");
+      gsap.to(e.children[i], { opacity: 0 });
     } else if (e.children[i].classList.contains("shinySwitch")) {
       e.children[i].classList.remove("displayNone");
     }
@@ -251,8 +253,10 @@ const monSelect = async (e, id) => {
   for (let i = 0; i < currentSlot.children.length; i++) {
     if (!currentSlot.children[i].classList.contains("loadDiv")) {
       currentSlot.children[i].classList.add("displayNone");
+      gsap.to(currentSlot.children[i], { opacity: 0 });
     } else {
       currentSlot.children[i].classList.remove("displayNone");
+      currentSlot.children[i].style.opacity = 1;
     }
   }
 
@@ -271,7 +275,10 @@ const monSelect = async (e, id) => {
   ];
 
   // ? set up loading
-  loadDiv.textContent = "loading";
+  let pokeballLoad = document.createElement("img");
+  pokeballLoad.classList.add("pokeballLoad");
+  pokeballLoad.src = "./IMGs/pokeballIcon.png";
+  loadDiv.appendChild(pokeballLoad);
   loadDiv.style.height = "100%";
   currentSlot.classList.remove("pokemonDataDisplayGrid");
 
@@ -319,6 +326,7 @@ const monSelect = async (e, id) => {
         currentSlot.children[i].classList.add("displayNone");
       } else {
         currentSlot.children[i].classList.remove("displayNone");
+        gsap.to(currentSlot.children[i], { opacity: 1, delay: 0.5 });
       }
     }
 
