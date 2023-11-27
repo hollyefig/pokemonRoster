@@ -9,27 +9,6 @@ const noAbilities = ["red", "blue", "yellow", "gold", "silver", "crystal"],
   fadeInOut = gsap.timeline({ defaults: { ease: "power2.out" } }),
   addMonsDivs = document.querySelector(".addMonsDivs");
 
-const typeColors = {
-  normal: "#A8A878",
-  fire: "#F08030",
-  fighting: "#C03028",
-  water: "#6890F0",
-  flying: "#A890F0",
-  grass: "#78C850",
-  poison: "#A040A0",
-  electric: "#F8D030",
-  ground: "#E0C068",
-  psychic: "#F85888",
-  rock: "#B8A038",
-  ice: "#98D8D8",
-  bug: "#A8B820",
-  dragon: "#7038F8",
-  ghost: "#705898",
-  dark: "#705848",
-  steel: "#B8B8D0",
-  fairy: "#EE99AC",
-};
-
 let gameOption = document.getElementById("game");
 let currentGameSelect;
 
@@ -164,18 +143,6 @@ const loadPokedex = async (e) => {
   pokedexDropdown(loadPokedex, e);
 
   createSlots(selected);
-
-  // hide other divs except name dropdown
-  for (let i = 0; i < e.children.length; i++) {
-    if (!e.children[i].classList.contains("nameAndType")) {
-      e.children[i].classList.add("displayNone");
-      gsap.to(e.children[i], { opacity: 0 });
-    }
-    for (let n = 0; n < e.children[i].children.length; n++) {
-      e.children[i].children[n].classList.contains("typeDiv") &&
-        e.children[i].children[n].classList.add("displayNone");
-    }
-  }
 };
 
 // * Create inputs for Pokemon Creation
@@ -201,41 +168,17 @@ const pokedexDropdown = async (e, slotNum) => {
   });
 
   // inputs and load divs
-  let inputsDiv = document.createElement("div");
-  inputsDiv.classList.add("inputsDiv");
   let loadDiv = document.createElement("div");
   loadDiv.classList.add("loadDiv");
 
-  // create DIV to hold sprite
-  let spriteDiv = document.createElement("div");
-  spriteDiv.classList.add("spriteDiv");
+  slotNum.append(selectName, loadDiv);
+};
 
-  // create DIV to house selected Pokemon type(s)
-  let typeDiv = document.createElement("div");
-  typeDiv.setAttribute("class", "typeDiv");
-
-  // create select to house abilities dropdown
-  let selectAbilityDiv = document.createElement("div");
-  selectAbilityDiv.classList.add("selectAbilityDiv");
-
-  // create select to house move pool dropdown
-  let selectMovesDiv = document.createElement("div");
-  selectMovesDiv.classList.add("selectMovesDiv");
-
-  // create DIV to house name dropdown and type
-  let nameAndType = document.createElement("div");
-  nameAndType.classList.add("nameAndType");
-
-  // ? append divs based on whether game includes abilities or not
-  if (!noAbilities.includes(slotNum.getAttribute("class"))) {
-    inputsDiv.append(typeDiv, selectAbilityDiv, selectMovesDiv);
-    nameAndType.append(selectName, typeDiv);
-    slotNum.append(spriteDiv, nameAndType, inputsDiv, loadDiv);
-  } else {
-    inputsDiv.append(typeDiv, selectMovesDiv);
-    nameAndType.append(selectName, typeDiv);
-    slotNum.append(spriteDiv, nameAndType, inputsDiv, loadDiv);
-  }
+// ~ CREATE DIVS
+const divCreator = (e) => {
+  let div = document.createElement(e.element);
+  div.classList.add(e.name);
+  return div;
 };
 
 // && Pokemon Selected from dropdown
@@ -244,24 +187,40 @@ const monSelect = async (e, id) => {
   let currentSlot = id,
     currentGame = document.getElementById("game").value,
     loadDiv = currentSlot.querySelector(".loadDiv"),
-    inputsDiv = currentSlot.querySelector(".inputsDiv");
+    selectPokemon = currentSlot.querySelector(".selectPokemon");
 
-  // show/hide during load
-  for (let i = 0; i < currentSlot.children.length; i++) {
-    if (!currentSlot.children[i].classList.contains("loadDiv")) {
-      currentSlot.children[i].classList.add("displayNone");
-      gsap.to(currentSlot.children[i], { opacity: 0 });
-    } else {
-      currentSlot.children[i].classList.remove("displayNone");
-      currentSlot.children[i].style.opacity = 1;
-    }
+  // ? reset all elements
+  const elementReset = [
+    "inputsDiv",
+    "spriteDiv",
+    "typeAndShiny",
+    "selectAbilityDiv",
+  ];
+  if (currentSlot.children.length > 2) {
+    elementReset.forEach((e) => {
+      currentSlot.querySelector(`.${e}`).remove();
+    });
   }
 
-  let mon = "";
+  // ? create divs for mon customization
+  for (let i = 0; i < monInputDivs.length; i++) {
+    currentSlot.append(divCreator(monInputDivs[i]));
+  }
+  inputsDiv = currentSlot.querySelector(".inputsDiv");
+  spriteDiv = currentSlot.querySelector(".spriteDiv");
+  typeAndShiny = currentSlot.querySelector(".typeAndShiny");
+  typeDiv = currentSlot.querySelector(".typeDiv");
+  selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
+  selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
+  // append child divs
+  inputsDiv.appendChild(selectMovesDiv);
+  typeAndShiny.appendChild(typeDiv);
+  currentSlot.appendChild(loadDiv);
+
+  // ? load up pokemon data
   let loadMon = "";
   if (e.value !== "chooseMon") {
-    mon = e.value;
-    loadMon = await getPokemonData(mon);
+    loadMon = await getPokemonData(e.value);
   }
 
   let sprites = [
@@ -270,21 +229,6 @@ const monSelect = async (e, id) => {
       shiny: loadMon.sprites.front_shiny,
     },
   ];
-
-  // ? set up loading
-  let pokeballLoad = document.createElement("img");
-  pokeballLoad.classList.add("pokeballLoad");
-  pokeballLoad.src = "./IMGs/pokeballIcon.png";
-  loadDiv.appendChild(pokeballLoad);
-  loadDiv.style.height = "100%";
-  currentSlot.classList.remove("pokemonDataDisplayGrid");
-
-  // set up input slots for selected pokemon
-  let spriteDiv = currentSlot.querySelector(".spriteDiv");
-  spriteDiv.innerHTML = "";
-
-  let typeDiv = currentSlot.querySelector(".typeDiv");
-  typeDiv.innerHTML = "";
 
   // create DIV for shiny switch
   let shinySwitch = document.createElement("div");
@@ -296,12 +240,19 @@ const monSelect = async (e, id) => {
     `shinySwitchFunc(this, ${JSON.stringify(sprites)}, ${currentSlot.id})`
   );
 
-  let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
+  // ? set up loading
+  let pokeballLoad = document.createElement("img");
+  pokeballLoad.classList.add("pokeballLoad");
+  pokeballLoad.src = "./IMGs/pokeballIcon.png";
+  loadDiv.appendChild(pokeballLoad);
+  loadDiv.style.height = "100%";
+  currentSlot.classList.remove("pokemonDataDisplayGrid");
+  // display none
+  selectPokemon.classList.add("displayNone");
+  typeDiv.classList.add("displayNone");
 
-  let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
+  // create scoped variables for moves, mon data
   let moveArr = [];
-  selectMovesDiv.innerHTML = "";
-
   let arr = [sprites, loadMon.types, loadMon.abilities, loadMon.moves];
 
   // ! set timeout to allow for load
@@ -309,6 +260,8 @@ const monSelect = async (e, id) => {
     // ? end load
     loadDiv.textContent = "";
     currentSlot.classList.add("pokemonDataDisplayGrid");
+    selectPokemon.classList.remove("displayNone");
+    typeDiv.classList.remove("displayNone");
 
     // if game has abilities, setup input
     if (!noAbilities.includes(currentGame)) {
@@ -316,22 +269,9 @@ const monSelect = async (e, id) => {
       let selectAbility = document.createElement("select");
       selectAbility.classList.add("selectAbility");
       selectAbilityDiv.appendChild(selectAbility);
+      inputsDiv.append(selectAbilityDiv);
       // setup grid
       inputsDiv.classList.add("inputsDivAbilities");
-    }
-
-    // bring back divs after load
-    for (let i = 0; i < currentSlot.children.length; i++) {
-      if (currentSlot.children[i].classList.contains("loadDiv")) {
-        currentSlot.children[i].classList.add("displayNone");
-      } else {
-        currentSlot.children[i].classList.remove("displayNone");
-        gsap.to(currentSlot.children[i], { opacity: 1, delay: 0.5 });
-        for (let n = 0; n < currentSlot.children[i].children.length; n++) {
-          currentSlot.children[i].children[n].classList.contains("typeDiv") &&
-            currentSlot.children[i].children[n].classList.remove("displayNone");
-        }
-      }
     }
 
     arr.forEach((d) => {
@@ -355,7 +295,8 @@ const monSelect = async (e, id) => {
               span.style.backgroundColor = typeColors[colorKey[c]];
             }
           }
-          typeDiv.appendChild(span);
+          typeDiv.append(span);
+          typeDiv.appendChild(shinySwitch);
         }
         // ? select the abilities of the selected Pokemon
         if (
@@ -374,7 +315,6 @@ const monSelect = async (e, id) => {
       }
     });
 
-    typeDiv.append(shinySwitch);
     createMovesDropdown(moveArr, selectMovesDiv);
   }, 2000);
 };
@@ -433,13 +373,6 @@ const moveSelect = (move, moveArr, slotNum) => {
 
   let desc = moveSlot.querySelector(".moveDivDesc");
   desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
-  // gsap.to(desc, {
-  //   height: "auto",
-  //   duration: 0.5,
-  //   onComplete: () => {
-  //     gsap.set(desc, { height: "auto" });
-  //   },
-  // });
 
   loadMoveData(move.value.replace(" ", "-"), moveSlot);
 

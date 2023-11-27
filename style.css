@@ -321,7 +321,7 @@ input[type="color"] {
 /*  * NEW GRID FOR WHEN POKEMON INPUT DATA DISPLAYS  */
 .pokemonDataDisplayGrid {
     grid-template-columns: 145px 1fr;
-    grid-template-rows: 80px 30px 1fr;
+    grid-template-rows: 65px 30px 1fr;
 }
 
 .spriteDiv {
@@ -342,12 +342,10 @@ input[type="color"] {
     fill: var(--yellow);
 }
 
-.nameAndType {
-    width: 100%;
+.typeAndShiny {
     grid-column: 2 / 3;
-    display: flex;
-    flex-direction: column;
-    row-gap: 6px;
+    grid-row: 2 / 3;
+    width: 100%; 
 }
 
 .inputsDiv {
@@ -361,6 +359,11 @@ input[type="color"] {
 
 .inputsDivAbilities {
     grid-template-columns: 1fr 2fr;
+    grid-row: none!important;
+}
+
+.inputsDivAbilities .selectMovesDiv {
+    grid-column: 2 / 3;
 }
 
 /* ^ MOVE DIV STUFF  */
@@ -496,6 +499,11 @@ input[type="color"] {
     font-size: 14px;
 }
 
+.selectAbilityDiv {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
 .moveType {
     color: #fff;
     padding: 3px 7px;
@@ -584,10 +592,7 @@ input[type="color"] {
 }
 
 .addMonsDivs > div {
-    /* border: 2px solid var(--grey); */
-    /* border-radius: 10px; */
     padding:10px;
-    min-height: 115px;
     width: auto;
     display: grid;
     justify-items: center;
@@ -776,10 +781,7 @@ input[type="color"] {
         grid-column: 1 / 3;
     }
 
-    .nameAndType {
-        grid-column: 1 / 3;
-        grid-row: 3 / 4;
-    }
+    
 
     .moveDivTop {
         display: flex;
