@@ -761,7 +761,7 @@ input[type="color"] {
 
     .pokemonDataDisplayGrid {
         grid-template-columns: 145px 1fr;
-        grid-template-rows: 80px 30px 80px 1fr;
+        grid-template-rows: 80px 0 80px 1fr;
     }
 
     .inputsDiv {

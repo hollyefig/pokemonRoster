@@ -170,8 +170,10 @@ const loadPokedex = async (e) => {
     if (!e.children[i].classList.contains("nameAndType")) {
       e.children[i].classList.add("displayNone");
       gsap.to(e.children[i], { opacity: 0 });
-    } else if (e.children[i].classList.contains("shinySwitch")) {
-      e.children[i].classList.remove("displayNone");
+    }
+    for (let n = 0; n < e.children[i].children.length; n++) {
+      e.children[i].children[n].classList.contains("typeDiv") &&
+        e.children[i].children[n].classList.add("displayNone");
     }
   }
 };
@@ -325,6 +327,10 @@ const monSelect = async (e, id) => {
       } else {
         currentSlot.children[i].classList.remove("displayNone");
         gsap.to(currentSlot.children[i], { opacity: 1, delay: 0.5 });
+        for (let n = 0; n < currentSlot.children[i].children.length; n++) {
+          currentSlot.children[i].children[n].classList.contains("typeDiv") &&
+            currentSlot.children[i].children[n].classList.remove("displayNone");
+        }
       }
     }
 
