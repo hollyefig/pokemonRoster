@@ -21,7 +21,20 @@
 
 *:focus {
     outline: none;
+}
+
+select {
+    background:transparent;
+}
+
+/* Safari 10.1+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  /* Safari 10.1+ specific CSS here */
+  select {
+    -webkit-appearance: none!important;
   }
+}}
 
 body {
     background-color: var(--white);
@@ -171,16 +184,47 @@ body {
     display: none;
 }
 
-/* & INPUTS FOR PARTY CREATION  */
-
-select {
-    background:transparent;
+/* ! WHEN CLICKING ADD POKEMON  */
+.addPokemonTextArea {
+    display: grid;
+    grid-template-columns: 20px auto;
+    column-gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
+    width: 100%;
+    height: auto;
+    min-height: 100px;
 }
+
+.addMonsDivs .plusSlot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.addMonsDivs .plusSlot::after {
+    --dim: 20px;
+    content: '';
+    width: var(--dim);
+    height: var(--dim);
+    border-radius: var(--dim);
+    border:2px solid var(--dark);
+    position: absolute;
+}
+
+.plusSlot ~ div {
+    font-size: 20px;
+}
+
+
+
 
 select option {
     text-transform: capitalize;
 }
 
+/* & INPUTS FOR PARTY CREATION  */
 
 .inputDataWrapper {
     position: fixed;
@@ -318,6 +362,66 @@ input[type="color"] {
     width: 100%;
 }
 
+/* & add mons section  */
+
+.addMonsWrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.addMonsDivs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 1em;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    
+}
+
+.addMonsDivs > div {
+    padding:10px;
+    width: auto;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.addMonsDivs > div:nth-child(even) {
+    background-color: var(--mediumLight);
+}
+
+/* ! WITH POKEMON SELECTED, ADDING ATTRIBUTES */
+
+.addMonsDivs select {
+    text-transform: capitalize;
+}
+
+.typeDiv {
+    display: flex;
+    width: auto;
+    column-gap: 10px;
+    text-transform: capitalize;
+    align-items: center;
+    padding: 7px 0 0 0;
+}
+
+.typeDiv > span {
+    padding: 5px 10px;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.typeDiv svg {
+    cursor: pointer;
+}
+
 /*  * NEW GRID FOR WHEN POKEMON INPUT DATA DISPLAYS  */
 .pokemonDataDisplayGrid {
     grid-template-columns: 145px 1fr;
@@ -335,6 +439,16 @@ input[type="color"] {
     align-items: center;
     align-content: center;
     width: 100%;
+    position: relative;
+}
+
+.shinySwitch::before {
+    content: 'Shiny';
+    position: absolute;
+    top: -7px;
+    right: 3px;
+    font-size: 12px;
+    color: var(--dark);
 }
 
 .shinyOn {
@@ -373,6 +487,7 @@ input[type="color"] {
     flex-direction: column;
     align-items: stretch;
     width: 100%;   
+    color: var(--deepDark);
 }
 
 .selectMovesDiv div {
@@ -526,7 +641,7 @@ input[type="color"] {
 
 .loadDiv {
     grid-column: 1 / 4;
-    height: 100%;
+    /* height: 100%; */
     width: 100%;
     display: flex;
     align-items: center;
@@ -569,109 +684,6 @@ input[type="color"] {
 
 .create:hover {
     background-color: var(--darkRed);
-}
-
-/* & add mons section  */
-
-.addMonsWrapper {
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-}
-
-.addMonsDivs {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 1em;
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    
-}
-
-.addMonsDivs > div {
-    padding:10px;
-    width: auto;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-}
-
-.addMonsDivs > div:nth-child(even) {
-    background-color: var(--mediumLight);
-}
-
-/* ! WHEN CLICKING ADD POKEMON  */
-.addPokemonTextArea {
-    display: grid;
-    grid-template-columns: 20px auto;
-    column-gap: 10px;
-    align-items: center;
-    justify-content: center;
-    color: var(--dark);
-    width: 100%;
-    height: 100%;
-    min-height: 100px;
-}
-
-.addMonsDivs .plusSlot {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.addMonsDivs .plusSlot::after {
-    --dim: 20px;
-    content: '';
-    width: var(--dim);
-    height: var(--dim);
-    border-radius: var(--dim);
-    border:2px solid var(--dark);
-    position: absolute;
-}
-
-.plusSlot ~ div {
-    font-size: 20px;
-}
-
-/* ! WITH POKEMON SELECTED, ADDING ATTRIBUTES */
-
-.addMonsDivs select {
-    text-transform: capitalize;
-}
-
-.typeDiv {
-    display: flex;
-    width: auto;
-    column-gap: 10px;
-    text-transform: capitalize;
-    align-items: center;
-    position: relative;
-    padding: 7px 0 0 0;
-}
-
-.typeDiv > span {
-    padding: 5px 10px;
-    color: #fff;
-    border-radius: 20px;
-    font-size: 14px;
-}
-
-.typeDiv svg {
-    cursor: pointer;
-}
-
-.typeDiv::before {
-    content: 'Shiny';
-    position: absolute;
-    top: 0;
-    right: 3px;
-    font-size: 12px;
-    color: var(--dark);
 }
 
 
@@ -729,12 +741,14 @@ input[type="color"] {
 
 
 /* & REPONSIVE  */
-
+/* & MAX WIDTH 680  */
 @media only screen and (max-width: 680px) {
     
     .inputsDivAbilities {
-        grid-template-rows: 1fr 2fr;
+        display: flex;
+        flex-direction: column-reverse;
         grid-template-columns: none;
+        grid-template-rows: none;
     }
 
     .inputData {
@@ -757,6 +771,7 @@ input[type="color"] {
     }
 }
 
+/* & MAX WIDTH 500  */
 @media only screen and (max-width: 500px) {
     
     .addMonsDivs {
@@ -764,8 +779,18 @@ input[type="color"] {
     }
 
     .pokemonDataDisplayGrid {
-        grid-template-columns: 145px 1fr;
-        grid-template-rows: 80px 0 80px 1fr;
+        grid-template-rows: 85px 80px 40px 1fr;
+        grid-template-columns: 100%;
+    }
+
+    .selectPokemon {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+    }
+
+    .typeAndShiny {
+        grid-column: 1 / 2;
+        grid-row: 3/ 4;
     }
 
     .inputsDiv {
@@ -779,8 +804,6 @@ input[type="color"] {
     .spriteDiv {
         grid-column: 1 / 3;
     }
-
-    
 
     .moveDivTop {
         display: flex;

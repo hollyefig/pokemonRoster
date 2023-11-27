@@ -174,7 +174,7 @@ const pokedexDropdown = async (e, slotNum) => {
   slotNum.append(selectName, loadDiv);
 };
 
-// ~ CREATE DIVS
+// & CREATE DIVS
 const divCreator = (e) => {
   let div = document.createElement(e.element);
   div.classList.add(e.name);
