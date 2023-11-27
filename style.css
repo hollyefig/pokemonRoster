@@ -206,7 +206,6 @@ select option {
     display: grid;
     column-gap: 5%;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto;
     justify-content: center;
     align-items: start;
     padding: 0.5em;
@@ -331,25 +330,16 @@ input[type="color"] {
 }
 
 .shinySwitch {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    cursor: pointer;
-    color: var(--dark);
-    border: 2px solid var(--dark);
-    width: 85px;
-    aspect-ratio: 1 / .3;
-    padding: 3px 5px;
-    border-radius: 20px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+    align-content: center;
+    width: 100%;
 }
 
 .shinyOn {
-    --yellow: rgb(220, 192, 33);
-    background-color: var(--yellow);
-    border: 2px solid var(--yellow);
-    color: #fff;
+    --yellow: #DFAB0A;
+    fill: var(--yellow);
 }
 
 .nameAndType {
@@ -409,7 +399,8 @@ input[type="color"] {
     flex-direction: row;
     width: 100%;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
+    column-gap: 15%;
 }
 
 .darkText {
@@ -473,26 +464,20 @@ input[type="color"] {
     order: 3;
   }
 
+
 .movePower::before {
     content: 'Power';
-    font-size: 14px;
-    display: block;
-    position:relative;
-    top: 5px;
-    color: var(--dark);
 }
 
 .moveAccuracy::before {
     content: 'Accuracy';
-    font-size: 14px;
-    display: block;
-    position:relative;
-    top: 5px;
-    color: var(--dark);
 }
 
 .movePp::before {
     content: 'PP';
+}
+
+.movePower::before, .moveAccuracy::before, .movePp::before {
     font-size: 14px;
     display: block;
     position:relative;
@@ -660,7 +645,9 @@ input[type="color"] {
     width: auto;
     column-gap: 10px;
     text-transform: capitalize;
-    padding:5px 0 0 0;
+    align-items: center;
+    position: relative;
+    padding: 7px 0 0 0;
 }
 
 .typeDiv > span {
@@ -668,6 +655,19 @@ input[type="color"] {
     color: #fff;
     border-radius: 20px;
     font-size: 14px;
+}
+
+.typeDiv svg {
+    cursor: pointer;
+}
+
+.typeDiv::before {
+    content: 'Shiny';
+    position: absolute;
+    top: 0;
+    right: 3px;
+    font-size: 12px;
+    color: var(--dark);
 }
 
 
@@ -723,3 +723,85 @@ input[type="color"] {
     margin: 15px 0 0 var(--leftMarg);
 }
 
+
+/* & REPONSIVE  */
+
+@media only screen and (max-width: 680px) {
+    
+    .inputsDivAbilities {
+        grid-template-rows: 1fr 2fr;
+        grid-template-columns: none;
+    }
+
+    .inputData {
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: none;
+        justify-content: normal;
+        align-items: normal;
+        /* row-gap: 10px; */
+        justify-items: normal;
+    }
+
+    .inputData > div:first-child {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2; 
+    }
+    
+    .inputData > div:nth-child(2) {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    
+    .addMonsDivs {
+        padding: 0;
+    }
+
+    .pokemonDataDisplayGrid {
+        grid-template-columns: 145px 1fr;
+        grid-template-rows: 80px 30px 80px 1fr;
+    }
+
+    .inputsDiv {
+        grid-row: 4 / 5;
+    }
+
+    .addMonsDivs > div {
+        justify-content: normal;
+    }
+
+    .spriteDiv {
+        grid-column: 1 / 3;
+    }
+
+    .nameAndType {
+        grid-column: 1 / 3;
+        grid-row: 3 / 4;
+    }
+
+    .moveDivTop {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .selectMoves {
+        width: 100%;
+    }
+
+    .moveDivStats {
+        padding: 0 0 0 10px;
+        justify-content: flex-start;
+        column-gap: 13%;
+    }
+
+    .movePower::before, .moveAccuracy::before, .movePp::before {
+        font-size: 10px;
+        display: block;
+        position:relative;
+        top: 5px;
+        color: var(--dark);
+    }
+}

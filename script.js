@@ -208,13 +208,9 @@ const pokedexDropdown = async (e, slotNum) => {
   let spriteDiv = document.createElement("div");
   spriteDiv.classList.add("spriteDiv");
 
-  // create DIV for shiny switch
-  let shinySwitch = document.createElement("div");
-  shinySwitch.setAttribute("class", "shinySwitch displayNone");
-
   // create DIV to house selected Pokemon type(s)
   let typeDiv = document.createElement("div");
-  typeDiv.classList.add("typeDiv");
+  typeDiv.setAttribute("class", "typeDiv");
 
   // create select to house abilities dropdown
   let selectAbilityDiv = document.createElement("div");
@@ -232,11 +228,11 @@ const pokedexDropdown = async (e, slotNum) => {
   if (!noAbilities.includes(slotNum.getAttribute("class"))) {
     inputsDiv.append(typeDiv, selectAbilityDiv, selectMovesDiv);
     nameAndType.append(selectName, typeDiv);
-    slotNum.append(spriteDiv, nameAndType, shinySwitch, inputsDiv, loadDiv);
+    slotNum.append(spriteDiv, nameAndType, inputsDiv, loadDiv);
   } else {
     inputsDiv.append(typeDiv, selectMovesDiv);
     nameAndType.append(selectName, typeDiv);
-    slotNum.append(spriteDiv, nameAndType, shinySwitch, inputsDiv, loadDiv);
+    slotNum.append(spriteDiv, nameAndType, inputsDiv, loadDiv);
   }
 };
 
@@ -285,15 +281,18 @@ const monSelect = async (e, id) => {
   let spriteDiv = currentSlot.querySelector(".spriteDiv");
   spriteDiv.innerHTML = "";
 
-  let shinySwitch = currentSlot.querySelector(".shinySwitch");
+  let typeDiv = currentSlot.querySelector(".typeDiv");
+  typeDiv.innerHTML = "";
+
+  // create DIV for shiny switch
+  let shinySwitch = document.createElement("div");
+  shinySwitch.setAttribute("class", "shinySwitch");
+  shinySwitch.appendChild(createSVG("shiny"));
+
   shinySwitch.setAttribute(
     "onclick",
     `shinySwitchFunc(this, ${JSON.stringify(sprites)}, ${currentSlot.id})`
   );
-  shinySwitch.textContent = "";
-
-  let typeDiv = currentSlot.querySelector(".typeDiv");
-  typeDiv.innerHTML = "";
 
   let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
 
@@ -328,8 +327,6 @@ const monSelect = async (e, id) => {
         gsap.to(currentSlot.children[i], { opacity: 1, delay: 0.5 });
       }
     }
-
-    shinySwitch.textContent = "Shiny Off";
 
     arr.forEach((d) => {
       for (const key in d) {
@@ -370,6 +367,8 @@ const monSelect = async (e, id) => {
         }
       }
     });
+
+    typeDiv.append(shinySwitch);
     createMovesDropdown(moveArr, selectMovesDiv);
   }, 2000);
 };
@@ -451,6 +450,8 @@ const loadMoveData = async (move, moveSlot) => {
   let typeAndDamageClass = document.createElement("div");
   typeAndDamageClass.classList.add("typeAndDamageClass");
 
+  let effectChance = loadMove.effect_chance;
+
   moveDivStats.innerHTML = "";
   moveDivDesc.innerHTML = "";
 
@@ -514,7 +515,11 @@ const loadMoveData = async (move, moveSlot) => {
     else if (key === "effect_entries") {
       let div = document.createElement("div");
       div.classList.add("moveEffect");
-      div.textContent = loadMove[key][0].effect;
+      div.textContent = loadMove[key][0].effect.replace(
+        /\$effect_chance/g,
+        effectChance
+      );
+
       moveDivDesc.append(div);
     }
   }
@@ -524,49 +529,70 @@ const loadMoveData = async (move, moveSlot) => {
 // * create SVG
 const createSVG = (n) => {
   let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.classList.add("effectSvg");
-  svg.setAttribute("width", "25");
-  svg.setAttribute("height", "25");
-  svg.setAttribute("viewBox", "0 0 30 30");
   svg.setAttribute("fill", "none");
 
-  // if physical
-  if (n === "physical") {
+  if (n === "physical" || n === "special") {
+    svg.classList.add("effectSvg");
+    svg.setAttribute("width", "25");
+    svg.setAttribute("height", "25");
+
+    // if physical
+    if (n === "physical") {
+      svg.setAttribute("viewBox", "0 0 30 30");
+      let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute(
+        "d",
+        "M15.5 7.63759L17.0146 10.5774L17.3053 11.1416L17.9099 10.9482L21.0596 9.94044L20.0518 13.0901L19.8584 13.6947L20.4226 13.9854L23.3624 15.5L20.4226 17.0146L19.8584 17.3053L20.0518 17.9099L21.0596 21.0596L17.9099 20.0518L17.3053 19.8584L17.0146 20.4226L15.5 23.3624L13.9854 20.4226L13.6947 19.8584L13.0901 20.0518L9.94044 21.0596L10.9482 17.9099L11.1416 17.3053L10.5774 17.0146L7.63759 15.5L10.5774 13.9854L11.1416 13.6947L10.9482 13.0901L9.94044 9.94044L13.0901 10.9482L13.6947 11.1416L13.9854 10.5774L15.5 7.63759Z"
+      );
+
+      path.setAttribute("stroke", "black");
+      path.setAttribute("stroke-width", "2");
+      svg.appendChild(path);
+      return svg;
+    }
+    // if special
+    else if (n === "special") {
+      svg.setAttribute("viewBox", "0 0 25 25");
+      let circ1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle"
+      );
+      let circ2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle"
+      );
+
+      circ1.setAttribute("cx", "12.5");
+      circ1.setAttribute("cy", "12.5");
+      circ1.setAttribute("r", "3");
+      circ1.setAttribute("stroke", "black");
+      circ1.setAttribute("stroke-width", "2");
+
+      circ2.setAttribute("cx", "12.5");
+      circ2.setAttribute("cy", "12.5");
+      circ2.setAttribute("r", "8");
+      circ2.setAttribute("stroke", "black");
+      circ2.setAttribute("stroke-width", "2");
+
+      svg.append(circ1, circ2);
+
+      return svg;
+    }
+  } else if (n === "shiny") {
+    svg.classList.add("shinySvg");
+    svg.setAttribute("width", "35");
+    svg.setAttribute("height", "35");
+    svg.setAttribute("viewBox", "0 0 30 30");
+
     let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute(
       "d",
-      "M15.5 7.63759L17.0146 10.5774L17.3053 11.1416L17.9099 10.9482L21.0596 9.94044L20.0518 13.0901L19.8584 13.6947L20.4226 13.9854L23.3624 15.5L20.4226 17.0146L19.8584 17.3053L20.0518 17.9099L21.0596 21.0596L17.9099 20.0518L17.3053 19.8584L17.0146 20.4226L15.5 23.3624L13.9854 20.4226L13.6947 19.8584L13.0901 20.0518L9.94044 21.0596L10.9482 17.9099L11.1416 17.3053L10.5774 17.0146L7.63759 15.5L10.5774 13.9854L11.1416 13.6947L10.9482 13.0901L9.94044 9.94044L13.0901 10.9482L13.6947 11.1416L13.9854 10.5774L15.5 7.63759Z"
+      "M15.5 7.56644L17.8011 11.7857L17.9715 12.0983L18.3214 12.1638L23.0453 13.0484L19.7436 16.5406L19.499 16.7994L19.5448 17.1524L20.1632 21.9184L15.8216 19.8575L15.5 19.7048L15.1784 19.8575L10.8368 21.9184L11.4552 17.1524L11.501 16.7994L11.2564 16.5406L7.95473 13.0484L12.6786 12.1638L13.0285 12.0983L13.1989 11.7857L15.5 7.56644Z"
     );
+    path.setAttribute("stroke", "#DFAB0A");
+    path.setAttribute("stroke-width", "1.5");
 
-    path.setAttribute("stroke", "black");
-    path.setAttribute("stroke-width", "2");
-    svg.appendChild(path);
-    return svg;
-  }
-  // if special
-  else if (n === "special") {
-    let circ1 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "circle"
-    );
-    let circ2 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "circle"
-    );
-
-    circ1.setAttribute("cx", "12.5");
-    circ1.setAttribute("cy", "12.5");
-    circ1.setAttribute("r", "4");
-    circ1.setAttribute("stroke", "black");
-    circ1.setAttribute("stroke-width", "2");
-
-    circ2.setAttribute("cx", "12.5");
-    circ2.setAttribute("cy", "12.5");
-    circ2.setAttribute("r", "9");
-    circ2.setAttribute("stroke", "black");
-    circ2.setAttribute("stroke-width", "2");
-
-    svg.append(circ1, circ2);
+    svg.append(path);
 
     return svg;
   }
@@ -574,16 +600,15 @@ const createSVG = (n) => {
 
 // ? shiny switching
 const shinySwitchFunc = (e, sprites, par) => {
+  let svg = e.children[0];
   let spriteImg = par.querySelector(".spriteDiv > img");
 
-  if (e.textContent === "Shiny Off") {
-    e.textContent = "Shiny On";
-    e.classList.add("shinyOn");
+  if (!svg.classList.contains("shinyOn")) {
     spriteImg.setAttribute("src", sprites[0].shiny);
+    svg.classList.add("shinyOn");
   } else {
-    e.textContent = "Shiny Off";
     spriteImg.setAttribute("src", sprites[0].default);
-    e.classList.remove("shinyOn");
+    svg.classList.remove("shinyOn");
   }
 };
 
