@@ -175,11 +175,7 @@ const pokedexDropdown = async (e, slotNum) => {
     selectName.classList.add("selectPokemon");
   });
 
-  // inputs and load divs
-  let loadDiv = document.createElement("div");
-  loadDiv.classList.add("loadDiv");
-
-  slotNum.append(selectName, loadDiv);
+  slotNum.append(selectName);
 };
 
 // & CREATE DIVS
@@ -194,10 +190,10 @@ const monSelect = async (e, id) => {
   // grab data
   let currentSlot = id,
     currentGame = document.getElementById("game").value,
-    loadDiv = currentSlot.querySelector(".loadDiv"),
     selectPokemon = currentSlot.querySelector(".selectPokemon");
 
-  currentSlot.classList.remove("addFlex");
+  !currentSlot.classList.contains("addFlex") &&
+    currentSlot.classList.add("addFlex");
 
   // ? reset all elements
   const elementReset = ["inputsDiv", "spriteDiv", "typeAndShiny"];
@@ -219,7 +215,7 @@ const monSelect = async (e, id) => {
   // append child divs
   inputsDiv.appendChild(selectMovesDiv);
   typeAndShiny.appendChild(typeDiv);
-  currentSlot.appendChild(loadDiv);
+
   // ? Create divs for all other input slots : END
 
   // ? load up pokemon data
@@ -245,14 +241,18 @@ const monSelect = async (e, id) => {
     `shinySwitchFunc(this, ${JSON.stringify(sprites)}, ${currentSlot.id})`
   );
 
-  // ? set up loading
+  // ? set up loading, animation
+  let loadDiv = document.createElement("div");
+  loadDiv.classList.add("loadDiv");
+  currentSlot.appendChild(loadDiv);
   let pokeballLoad = document.createElement("img");
   pokeballLoad.classList.add("pokeballLoad");
   pokeballLoad.src = "./IMGs/pokeballIcon.png";
   loadDiv.appendChild(pokeballLoad);
   loadDiv.style.height = "auto";
   currentSlot.classList.remove("pokemonDataDisplayGrid");
-  // display none
+
+  // display none during load
   selectPokemon.classList.add("displayNone");
   typeDiv.classList.add("displayNone");
 
@@ -263,7 +263,8 @@ const monSelect = async (e, id) => {
   // ! set timeout to allow for load : START
   setTimeout(() => {
     // ? end load
-    loadDiv.textContent = "";
+    loadDiv.remove();
+    currentSlot.classList.remove("addFlex");
     currentSlot.classList.add("pokemonDataDisplayGrid");
     selectPokemon.classList.remove("displayNone");
     typeDiv.classList.remove("displayNone");

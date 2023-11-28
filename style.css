@@ -854,7 +854,7 @@ input[type="color"] {
     }
 
     .addMonsDivs > div {
-        justify-content: normal;
+        /* justify-content: normal; */
     }
 
     .spriteDiv {
