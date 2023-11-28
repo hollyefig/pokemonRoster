@@ -482,6 +482,10 @@ input[type="color"] {
     column-gap: 15px;
 }
 
+.selectAbilityDiv {
+    overflow: hidden;
+}
+
 .inputsDivAbilities .selectMovesDiv {
     grid-column: 2 / 3;
 }

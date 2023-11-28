@@ -190,37 +190,27 @@ const monSelect = async (e, id) => {
     selectPokemon = currentSlot.querySelector(".selectPokemon");
 
   // ? reset all elements
-  const elementReset = [
-    "inputsDiv",
-    "spriteDiv",
-    "typeAndShiny",
-    // "selectAbilityDiv",
-  ];
+  const elementReset = ["inputsDiv", "spriteDiv", "typeAndShiny"];
   if (currentSlot.children.length > 2) {
     elementReset.forEach((e) => {
       currentSlot.querySelector(`.${e}`).remove();
     });
   }
 
-  // ? create divs for mon customization, depending on whether game has abilities
+  // ? Create divs for all other input slots : START
   for (let i = 0; i < monInputDivs.length; i++) {
-    if (!noAbilities.includes(currentGame)) {
-      currentSlot.append(divCreator(monInputDivs[i]));
-    } else {
-      if (monInputDivs[i].name !== "selectAbilityDiv") {
-        currentSlot.append(divCreator(monInputDivs[i]));
-      }
-    }
+    currentSlot.append(divCreator(monInputDivs[i]));
   }
-  inputsDiv = currentSlot.querySelector(".inputsDiv");
-  spriteDiv = currentSlot.querySelector(".spriteDiv");
-  typeAndShiny = currentSlot.querySelector(".typeAndShiny");
-  typeDiv = currentSlot.querySelector(".typeDiv");
-  selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
+  let inputsDiv = currentSlot.querySelector(".inputsDiv");
+  let spriteDiv = currentSlot.querySelector(".spriteDiv");
+  let typeAndShiny = currentSlot.querySelector(".typeAndShiny");
+  let typeDiv = currentSlot.querySelector(".typeDiv");
+  let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
   // append child divs
   inputsDiv.appendChild(selectMovesDiv);
   typeAndShiny.appendChild(typeDiv);
   currentSlot.appendChild(loadDiv);
+  // ? Create divs for all other input slots : END
 
   // ? load up pokemon data
   let loadMon;
@@ -260,7 +250,7 @@ const monSelect = async (e, id) => {
   let moveArr = [];
   let arr = [sprites, loadMon.types, loadMon.abilities, loadMon.moves];
 
-  // ! set timeout to allow for load
+  // ! set timeout to allow for load : START
   setTimeout(() => {
     // ? end load
     loadDiv.textContent = "";
@@ -268,35 +258,37 @@ const monSelect = async (e, id) => {
     selectPokemon.classList.remove("displayNone");
     typeDiv.classList.remove("displayNone");
 
-    // ~ if game has abilities, setup input
-    if (!noAbilities.includes(currentGame)) {
-      let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
-      selectAbilityDiv.innerHTML = "";
-      let selectAbility = document.createElement("select");
-      selectAbility.classList.add("selectAbility");
-      selectAbility.setAttribute(
-        "oninput",
-        `selectAbility(this, ${JSON.stringify(currentSlot.id)})`
-      );
-      let option = document.createElement("option");
-      option.value = "selectAbility";
-      option.textContent = "Select Ability";
+    // ~ if abilities are included : START
+    let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
+    selectAbilityDiv.innerHTML = "";
 
-      //append
-      selectAbility.appendChild(option);
-      // ? create divs for mon customization
-      for (let i = 0; i < abilityInputDivs.length; i++) {
-        selectAbilityDiv.append(divCreator(abilityInputDivs[i]));
-      }
-
-      currentSlot
-        .querySelector(".selectAbilitiesWrap")
-        .appendChild(selectAbility);
-
-      inputsDiv.append(selectAbilityDiv);
-      // setup grid
-      inputsDiv.classList.add("inputsDivAbilities");
+    for (let i = 0; i < abilityInputDivs.length; i++) {
+      selectAbilityDiv.append(divCreator(abilityInputDivs[i]));
     }
+    let selectAbility = currentSlot.querySelector(".selectAbility");
+    selectAbility.setAttribute(
+      "oninput",
+      `selectAbility(this, ${JSON.stringify(currentSlot.id)})`
+    );
+    let option = document.createElement("option");
+    option.value = "selectAbility";
+    option.textContent = "Select Ability";
+    selectAbility.appendChild(option);
+
+    currentSlot
+      .querySelector(".selectAbilitiesWrap")
+      .appendChild(selectAbility);
+
+    inputsDiv.append(selectAbilityDiv);
+
+    if (!noAbilities.includes(currentGame)) {
+      inputsDiv.classList.add("inputsDivAbilities");
+      selectAbilityDiv.style.height = "auto";
+    } else {
+      inputsDiv.classList.remove("inputsDivAbilities");
+      selectAbilityDiv.style.height = "0px";
+    }
+    // ~ if abilities are included : END
 
     arr.forEach((d) => {
       for (const key in d) {
@@ -342,6 +334,7 @@ const monSelect = async (e, id) => {
     createMovesDropdown(moveArr, selectMovesDiv);
     createSlots(currentGame);
   }, 2000);
+  // ! set timeout to allow for load : END
 };
 
 // ? When an ability is selected

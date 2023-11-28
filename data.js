@@ -48,6 +48,10 @@ const monInputDivs = [
 
 const abilityInputDivs = [
   {
+    name: "selectAbility",
+    element: "select",
+  },
+  {
     name: "selectAbilitiesWrap",
     element: "div",
   },
