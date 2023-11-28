@@ -322,7 +322,8 @@ select option {
 }
 
 .inputData label {
-    font-size: 18px;
+    font-size: 12px;
+    color: var(--dark);
 }
 
 .inputData input[type="text"], .inputData select {
@@ -394,6 +395,12 @@ input[type="color"] {
     justify-content: center;
     cursor: pointer;
     opacity: 0;
+    flex-direction: column;
+    min-height:115px;
+}
+
+.addFlex {
+    display: flex!important;
 }
 
 .addMonsDivs > div:nth-child(even) {
@@ -700,23 +707,41 @@ input[type="color"] {
     border: 2px solid var(--red)!important;
 }
 
+.bottomButtons {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
 .create {
-    background-color: var(--red);
     padding:.5em 1.5em;
+    background-color: var(--red);
     border: none;
     color: #fff;
     font-family: var(--font);
     font-weight: var(--bold);
     cursor: pointer;
     border-radius: 5px;
-    font-size: 20px;
     margin: 10px 0 0 0;
+    font-size: 20px;
 }
 
 .create:hover {
     background-color: var(--darkRed);
 }
 
+.cancel, .reset {
+    font-size: 16px;
+    padding: .5em;
+    background: transparent;
+    border:2px solid var(--dark);
+    font-family: var(--font);
+    border-radius: 5px;
+    color: var(--dark)
+}
 
 
 /* & BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
@@ -858,5 +883,15 @@ input[type="color"] {
         position:relative;
         top: 5px;
         color: var(--dark);
+    }
+}
+
+/* & MAX WIDTH 425 */
+@media only screen and (max-width: 425px) {
+
+    .inputDataWrapper {
+        height: 100dvh;
+        width: 100%;
+        padding: .5em;
     }
 }

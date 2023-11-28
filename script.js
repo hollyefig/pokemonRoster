@@ -91,7 +91,7 @@ const gameDropdown = (e) => {
   }
 };
 
-// close the add slide
+// ? close the add slide
 const closeAdd = () => {
   fadeInOut
     .to(".inputDataWrapper, .fadeBg", { opacity: 0, delay: 0 })
@@ -106,6 +106,12 @@ window.addEventListener("keydown", (e) => {
 document.querySelector(".fadeBg").addEventListener("click", (e) => {
   inputsOpen && closeAdd();
 });
+
+// ? clear all inputs of pokemon
+const reset = () => {
+  document.querySelector(".addMonsDivs").innerHTML = "";
+  document.getElementById("game").value = "choose";
+};
 
 // & Pokemon Select button
 const addMonsWrapper = document.querySelector(".addMonsWrapper");
@@ -142,7 +148,9 @@ const loadPokedex = async (e) => {
 
   pokedexDropdown(loadPokedex, e);
 
-  // createSlots(selected);
+  e.classList.add("addFlex");
+
+  createSlots(selected);
 };
 
 // * Create inputs for Pokemon Creation
@@ -188,6 +196,8 @@ const monSelect = async (e, id) => {
     currentGame = document.getElementById("game").value,
     loadDiv = currentSlot.querySelector(".loadDiv"),
     selectPokemon = currentSlot.querySelector(".selectPokemon");
+
+  currentSlot.classList.remove("addFlex");
 
   // ? reset all elements
   const elementReset = ["inputsDiv", "spriteDiv", "typeAndShiny"];
@@ -332,7 +342,6 @@ const monSelect = async (e, id) => {
     });
 
     createMovesDropdown(moveArr, selectMovesDiv);
-    createSlots(currentGame);
   }, 2000);
   // ! set timeout to allow for load : END
 };
