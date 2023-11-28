@@ -44,6 +44,10 @@ const monInputDivs = [
     name: "selectMovesDiv",
     element: "div",
   },
+  {
+    name: "removeMon",
+    element: "div",
+  },
 ];
 
 const abilityInputDivs = [
