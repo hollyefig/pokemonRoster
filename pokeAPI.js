@@ -94,4 +94,15 @@ const getMoveData = async (move) => {
   }
 };
 
+// * GRAB SELECTED ABILITY
+const getAbility = async (a) => {
+  try {
+    const response = await axios.get(`https://pokeapi.co/api/v2/ability/${a}/`);
+    // console.log("response", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
 loadVersions();

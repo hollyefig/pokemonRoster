@@ -142,7 +142,7 @@ const loadPokedex = async (e) => {
 
   pokedexDropdown(loadPokedex, e);
 
-  createSlots(selected);
+  // createSlots(selected);
 };
 
 // * Create inputs for Pokemon Creation
@@ -194,7 +194,7 @@ const monSelect = async (e, id) => {
     "inputsDiv",
     "spriteDiv",
     "typeAndShiny",
-    "selectAbilityDiv",
+    // "selectAbilityDiv",
   ];
   if (currentSlot.children.length > 2) {
     elementReset.forEach((e) => {
@@ -202,15 +202,20 @@ const monSelect = async (e, id) => {
     });
   }
 
-  // ? create divs for mon customization
+  // ? create divs for mon customization, depending on whether game has abilities
   for (let i = 0; i < monInputDivs.length; i++) {
-    currentSlot.append(divCreator(monInputDivs[i]));
+    if (!noAbilities.includes(currentGame)) {
+      currentSlot.append(divCreator(monInputDivs[i]));
+    } else {
+      if (monInputDivs[i].name !== "selectAbilityDiv") {
+        currentSlot.append(divCreator(monInputDivs[i]));
+      }
+    }
   }
   inputsDiv = currentSlot.querySelector(".inputsDiv");
   spriteDiv = currentSlot.querySelector(".spriteDiv");
   typeAndShiny = currentSlot.querySelector(".typeAndShiny");
   typeDiv = currentSlot.querySelector(".typeDiv");
-  selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
   selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
   // append child divs
   inputsDiv.appendChild(selectMovesDiv);
@@ -218,7 +223,7 @@ const monSelect = async (e, id) => {
   currentSlot.appendChild(loadDiv);
 
   // ? load up pokemon data
-  let loadMon = "";
+  let loadMon;
   if (e.value !== "chooseMon") {
     loadMon = await getPokemonData(e.value);
   }
@@ -245,7 +250,7 @@ const monSelect = async (e, id) => {
   pokeballLoad.classList.add("pokeballLoad");
   pokeballLoad.src = "./IMGs/pokeballIcon.png";
   loadDiv.appendChild(pokeballLoad);
-  loadDiv.style.height = "100%";
+  loadDiv.style.height = "auto";
   currentSlot.classList.remove("pokemonDataDisplayGrid");
   // display none
   selectPokemon.classList.add("displayNone");
@@ -263,12 +268,31 @@ const monSelect = async (e, id) => {
     selectPokemon.classList.remove("displayNone");
     typeDiv.classList.remove("displayNone");
 
-    // if game has abilities, setup input
+    // ~ if game has abilities, setup input
     if (!noAbilities.includes(currentGame)) {
+      let selectAbilityDiv = currentSlot.querySelector(".selectAbilityDiv");
       selectAbilityDiv.innerHTML = "";
       let selectAbility = document.createElement("select");
       selectAbility.classList.add("selectAbility");
-      selectAbilityDiv.appendChild(selectAbility);
+      selectAbility.setAttribute(
+        "oninput",
+        `selectAbility(this, ${JSON.stringify(currentSlot.id)})`
+      );
+      let option = document.createElement("option");
+      option.value = "selectAbility";
+      option.textContent = "Select Ability";
+
+      //append
+      selectAbility.appendChild(option);
+      // ? create divs for mon customization
+      for (let i = 0; i < abilityInputDivs.length; i++) {
+        selectAbilityDiv.append(divCreator(abilityInputDivs[i]));
+      }
+
+      currentSlot
+        .querySelector(".selectAbilitiesWrap")
+        .appendChild(selectAbility);
+
       inputsDiv.append(selectAbilityDiv);
       // setup grid
       inputsDiv.classList.add("inputsDivAbilities");
@@ -306,7 +330,7 @@ const monSelect = async (e, id) => {
           let option = document.createElement("option");
           option.value = d[key].ability.name;
           option.textContent = d[key].ability.name;
-          selectAbilityDiv.querySelector(".selectAbility").appendChild(option);
+          currentSlot.querySelector(".selectAbility").appendChild(option);
         }
         // ? select the moves of the selected Pokemon
         if (d[key].move !== undefined) {
@@ -316,7 +340,23 @@ const monSelect = async (e, id) => {
     });
 
     createMovesDropdown(moveArr, selectMovesDiv);
+    createSlots(currentGame);
   }, 2000);
+};
+
+// ? When an ability is selected
+const selectAbility = async (e, slotNum) => {
+  if (e.value !== "selectAbility") {
+    let loadAbility = await getAbility(e.value);
+    let parent = document.getElementById(slotNum);
+    let desc = parent.querySelector(".abilitiesDescDiv");
+
+    for (const ent in loadAbility.effect_entries) {
+      if (loadAbility.effect_entries[ent].language.name === "en") {
+        desc.textContent = loadAbility.effect_entries[ent].effect;
+      }
+    }
+  }
 };
 
 // ? create moves dropdown

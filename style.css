@@ -27,6 +27,10 @@ select {
     background:transparent;
 }
 
+select option:first-child {
+    -webkit-text-fill-color: var(--dark)!important;
+}
+
 /* Safari 10.1+ */
 @media not all and (min-resolution:.001dpcm)
 { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
@@ -184,7 +188,7 @@ body {
     display: none;
 }
 
-/* ! WHEN CLICKING ADD POKEMON  */
+/* ! WHEN ADD POKEMON BUTTON APPEARS  */
 .addPokemonTextArea {
     display: grid;
     grid-template-columns: 20px auto;
@@ -216,8 +220,6 @@ body {
 .plusSlot ~ div {
     font-size: 20px;
 }
-
-
 
 
 select option {
@@ -287,6 +289,8 @@ select option {
     width: 100%;
     overflow: hidden;
 }
+
+/* & SELECT MON DROPDOWN */
 
 .selectMons {
     max-width: 200px;
@@ -362,7 +366,7 @@ input[type="color"] {
     width: 100%;
 }
 
-/* & add mons section  */
+/* & ADD MONS SECTION  */
 
 .addMonsWrapper {
     width: 100%;
@@ -425,7 +429,7 @@ input[type="color"] {
 /*  * NEW GRID FOR WHEN POKEMON INPUT DATA DISPLAYS  */
 .pokemonDataDisplayGrid {
     grid-template-columns: 145px 1fr;
-    grid-template-rows: 65px 30px 1fr;
+    grid-template-rows: 65px 30px auto;
 }
 
 .spriteDiv {
@@ -471,13 +475,30 @@ input[type="color"] {
     padding: 10px 0 0 0;
 }
 
+/* * if abilities are included  */
 .inputsDivAbilities {
     grid-template-columns: 1fr 2fr;
-    grid-row: none!important;
+    /* grid-row: none!important; */
+    column-gap: 15px;
 }
 
 .inputsDivAbilities .selectMovesDiv {
     grid-column: 2 / 3;
+}
+
+
+.selectAbility {
+    padding: 7px;
+    border: none;
+    border-bottom: 1px solid var(--grey);
+    width: 100%;
+    font-size: 18px;
+    font-family: var(--font);
+}
+
+.abilitiesDescDiv {
+    padding: 10px 0;
+    font-size: 14px;
 }
 
 /* ^ MOVE DIV STUFF  */
