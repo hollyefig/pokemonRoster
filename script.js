@@ -303,10 +303,7 @@ const monSelect = async (e) => {
         selectAbilityDiv.append(divCreator(abilityInputDivs[i]));
       }
       let selectAbility = currentSlot.querySelector(".selectAbility");
-      selectAbility.setAttribute(
-        "oninput",
-        `selectAbility(this, ${JSON.stringify(currentSlot.id)})`
-      );
+      selectAbility.setAttribute("oninput", `selectAbility(this)`);
       let option = document.createElement("option");
       option.value = "selectAbility";
       option.textContent = "Select Ability";
@@ -374,10 +371,10 @@ const monSelect = async (e) => {
   }
 };
 // ? When an ability is selected
-const selectAbility = async (e, slotNum) => {
+const selectAbility = async (e) => {
   if (e.value !== "selectAbility") {
     let loadAbility = await getAbility(e.value);
-    let parent = document.getElementById(slotNum);
+    let parent = e.closest(".inputsDiv").parentNode;
     let desc = parent.querySelector(".abilitiesDescDiv");
 
     for (const ent in loadAbility.effect_entries) {
@@ -390,7 +387,6 @@ const selectAbility = async (e, slotNum) => {
 
 // ? create moves dropdown
 const createMovesDropdown = (arr, selectDiv) => {
-  let slotNum = selectDiv.parentNode.parentNode.id;
   for (let i = 0; i < 4; i++) {
     // create divs for moves accordian
     let moveDiv = document.createElement("div");
