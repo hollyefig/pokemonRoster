@@ -226,7 +226,7 @@ select option {
     text-transform: capitalize;
 }
 
-/* & INPUTS FOR PARTY CREATION  */
+/* & INPUTS such as Name and Game */
 
 .inputDataWrapper {
     position: fixed;
@@ -470,8 +470,9 @@ input[type="color"] {
     grid-column: 1 / 3;
     grid-row: 3 / 4;
     width: 100%;
-    height: 100%;
-    display: grid;
+    /* height: 100%; */
+    height: auto;
+    display: block;
     padding: 10px 0 0 0;
 }
 
@@ -480,6 +481,7 @@ input[type="color"] {
     grid-template-columns: 1fr 2fr;
     /* grid-row: none!important; */
     column-gap: 15px;
+    display: grid;
 }
 
 .selectAbilityDiv {
@@ -503,6 +505,7 @@ input[type="color"] {
 .abilitiesDescDiv {
     padding: 10px 0;
     font-size: 14px;
+    line-height: 20px;
 }
 
 /* ^ MOVE DIV STUFF  */
@@ -670,6 +673,9 @@ input[type="color"] {
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
 }
 
 .pokeballLoad {
