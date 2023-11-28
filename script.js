@@ -410,7 +410,7 @@ const createMovesDropdown = (arr, selectDiv) => {
     selectMoves.classList.add("selectMoves");
     selectMoves.setAttribute(
       "oninput",
-      `moveSelect(this, ${JSON.stringify(arr)}, ${JSON.stringify(slotNum)})`
+      `moveSelect(this, ${JSON.stringify(arr)})`
     );
     const moveOption = document.createElement("option");
     moveOption.value = "selectMove";
@@ -433,9 +433,9 @@ const createMovesDropdown = (arr, selectDiv) => {
 };
 
 // ? when a move is selected
-const moveSelect = (move, moveArr, slotNum) => {
+const moveSelect = (move, moveArr) => {
   // get exact div to replace title with move
-  let parent = document.getElementById(slotNum);
+  let parent = move.closest(".inputsDiv").parentNode;
   let moveSlot = parent.querySelector(
     `.${move.parentNode.parentNode.getAttribute("class")}`
   );
