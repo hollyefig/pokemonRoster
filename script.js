@@ -249,7 +249,7 @@ const monSelect = async (e) => {
 
     shinySwitch.setAttribute(
       "onclick",
-      `shinySwitchFunc(this, ${JSON.stringify(sprites)}, ${currentSlot.id})`
+      `shinySwitchFunc(this, ${JSON.stringify(sprites)})`
     );
 
     // ** set up loading, animation
@@ -603,7 +603,8 @@ const createSVG = (n) => {
 };
 
 // ? shiny switching
-const shinySwitchFunc = (e, sprites, par) => {
+const shinySwitchFunc = (e, sprites) => {
+  let par = e.closest(".typeAndShiny").parentNode;
   let svg = e.children[0];
   let spriteImg = par.querySelector(".spriteDiv > img");
 
