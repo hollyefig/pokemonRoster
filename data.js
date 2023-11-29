@@ -65,6 +65,8 @@ const abilityInputDivs = [
   },
 ];
 
+// && FOR BOTTOM POSTED CONTENT
+// && FOR BOTTOM POSTED CONTENT
 const postedDivs = [
   {
     name: "postedSettings",
@@ -91,66 +93,82 @@ const postedDivs = [
     element: "div",
   },
 ];
-
+// *
 const postedMon = [
   {
     name: "postedTop",
     element: "div",
   },
   {
+    name: "postedSprite",
+    element: "div",
+    parent: "postedTop",
+  },
+  {
+    name: "postedSpriteImg",
+    element: "img",
+    parent: "postedSprite",
+  },
+  {
     name: "postedTopLeft",
     element: "div",
+    parent: "postedTop",
+  },
+  {
+    name: "postedNameAndShiny",
+    element: "div",
+    parent: "postedTopLeft",
+  },
+  {
+    name: "postedMonName",
+    element: "span",
+    parent: "postedNameAndShiny",
+  },
+  {
+    name: "postedShiny",
+    element: "div",
+    parent: "postedNameAndShiny",
+  },
+  {
+    name: "postedType",
+    element: "div",
+    parent: "postedTopLeft",
   },
   {
     name: "postedBottom",
     element: "div",
   },
   {
-    name: "postedSprite",
+    name: "postedBottomInner",
     element: "div",
-  },
-  {
-    name: "postedSpriteImg",
-    element: "img",
-  },
-  {
-    name: "postedMonName",
-    element: "span",
-  },
-  {
-    name: "postedNameAndShiny",
-    element: "div",
-  },
-  {
-    name: "postedType",
-    element: "div",
-  },
-  {
-    name: "postedShiny",
-    element: "div",
+    parent: "postedBottom",
   },
   {
     name: "postedAbility",
     element: "div",
+    parent: "postedBottomInner",
   },
   {
     name: "postedAbilityName",
     element: "span",
+    parent: "postedAbility",
   },
   {
     name: "postedAbilityDesc",
     element: "div",
+    parent: "postedAbility",
   },
   {
     name: "postedMovesWrap",
     element: "div",
+    parent: "postedBottomInner",
   },
   {
     name: "expand",
     element: "div",
   },
 ];
-
+//*
 const moveDetails = [
   {
     name: "pMoveName",
@@ -163,14 +181,17 @@ const moveDetails = [
   {
     name: "pMovePower",
     element: "div",
+    parent: "pMoveStatsWrap",
   },
   {
     name: "pMoveAccuracy",
     element: "div",
+    parent: "pMoveStatsWrap",
   },
   {
     name: "pMovePp",
     element: "div",
+    parent: "pMoveStatsWrap",
   },
   {
     name: "pMoveType",
@@ -179,13 +200,15 @@ const moveDetails = [
   {
     name: "pMoveTypeSpan",
     element: "span",
-  },
-  {
-    name: "pMoveDesc",
-    element: "div",
+    parent: "pMoveType",
   },
   {
     name: "pMoveEffect",
+    element: "div",
+    parent: "pMoveType",
+  },
+  {
+    name: "pMoveDesc",
     element: "div",
   },
 ];

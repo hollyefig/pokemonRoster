@@ -185,14 +185,6 @@ const divCreator = (e) => {
   let div = document.createElement(e.element);
   div.classList.add(e.name);
 
-  // Check if the element has children and recursively create them
-  if (Array.isArray(e.children)) {
-    e.children.forEach((child) => {
-      let childElement = divCreator(child);
-      div.appendChild(childElement);
-    });
-  }
-
   return div;
 };
 
@@ -878,29 +870,27 @@ const populateDivs = () => {
               let postedMonWrapper = document.createElement("div");
               postedMonWrapper.classList.add("postedMonWrapper");
               postedMonWrapper.setAttribute("id", `posted${n}`);
-
+              // * create divs
               for (let i = 0; i < postedMon.length; i++) {
                 postedMonWrapper.append(divCreator(postedMon[i]));
               }
-              //grab divs
-              let postedTop = postedMonWrapper.querySelector(".postedTop");
-              let postedTopLeft =
-                postedMonWrapper.querySelector(".postedTopLeft");
-              let postedBottom =
-                postedMonWrapper.querySelector(".postedBottom");
-              let postedSprite =
-                postedMonWrapper.querySelector(".postedSprite");
+              // * append divs
+              for (let d = 0; d < postedMon.length; d++) {
+                if (postedMon[d].parent !== undefined) {
+                  postedMonWrapper
+                    .querySelector(`.${postedMon[d].parent}`)
+                    .append(
+                      postedMonWrapper.querySelector(`.${postedMon[d].name}`)
+                    );
+                }
+              }
+              // * grab divs
               let postedSpriteImg =
                 postedMonWrapper.querySelector(".postedSpriteImg");
               let postedMonName =
                 postedMonWrapper.querySelector(".postedMonName");
-              let postedNameAndShiny = postedMonWrapper.querySelector(
-                ".postedNameAndShiny"
-              );
               let postedType = postedMonWrapper.querySelector(".postedType");
               let postedShiny = postedMonWrapper.querySelector(".postedShiny");
-              let postedAbility =
-                postedMonWrapper.querySelector(".postedAbility");
               let postedAbilityName =
                 postedMonWrapper.querySelector(".postedAbilityName");
               let postedAbilityDesc =
@@ -914,7 +904,7 @@ const populateDivs = () => {
               // name
               postedMonName.textContent = party[n].name;
               // shiny
-              postedShiny.append(createSVG("shiny"));
+              // postedShiny.append(createSVG("shiny"));
               party[n].ability !== "selectAbility" &&
                 (postedAbilityName.textContent = party[n].ability);
               postedAbilityDesc.textContent = party[n].abilityDesc;
@@ -948,12 +938,17 @@ const populateDivs = () => {
                   for (let d = 0; d < moveDetails.length; d++) {
                     wrap.append(divCreator(moveDetails[d]));
                   }
+                  for (let d = 0; d < moveDetails.length; d++) {
+                    if (moveDetails[d].parent !== undefined) {
+                      wrap
+                        .querySelector(`.${moveDetails[d].parent}`)
+                        .append(wrap.querySelector(`.${moveDetails[d].name}`));
+                    }
+                  }
                   let pMoveName = wrap.querySelector(".pMoveName");
-                  let pMoveStatsWrap = wrap.querySelector(".pMoveStatsWrap");
                   let pMovePower = wrap.querySelector(".pMovePower");
                   let pMoveAccuracy = wrap.querySelector(".pMoveAccuracy");
                   let pMovePp = wrap.querySelector(".pMovePp");
-                  let pMoveType = wrap.querySelector(".pMoveType");
                   let pMoveDesc = wrap.querySelector(".pMoveDesc");
                   let pMoveEffect = wrap.querySelector(".pMoveEffect");
                   let pMoveTypeSpan = wrap.querySelector(".pMoveTypeSpan");
@@ -977,28 +972,15 @@ const populateDivs = () => {
                   // effect is SVG unless 'status'
 
                   pMoveEffect.append(createSVG(move.effect));
-
-                  //append
-                  pMoveType.append(pMoveTypeSpan, pMoveEffect);
-                  pMoveStatsWrap.append(pMovePower, pMoveAccuracy, pMovePp);
                 } else {
                   wrap.textContent = move;
                 }
                 postedMovesWrap.append(wrap);
               }
 
-              // ~ append
-              postedTop.append(postedSprite, postedTopLeft);
-              postedSprite.append(postedSpriteImg);
-              postedNameAndShiny.append(postedMonName, postedShiny);
-              postedAbility.append(postedAbilityName, postedAbilityDesc);
-              postedTopLeft.append(postedNameAndShiny, postedType);
-              postedBottom.append(postedAbility, postedMovesWrap, expand);
-
               partyList.append(postedMonWrapper);
             }
           }
-          console.log(partyList);
         }
         // !! put together party  : END
       }
@@ -1026,9 +1008,17 @@ const clearStorage = () => {
 };
 
 // && SHOW OR HIDE POSTED MOVESET
-
 const showHideMoves = (e) => {
-  console.log("clicked");
+  let parent = e.parentNode;
+  let bottom = parent.querySelector(".postedBottom");
+
+  if (getComputedStyle(bottom).height === "0px") {
+    gsap.to(bottom, { height: "auto", ease: "power2.out", duration: 0.5 });
+    e.textContent = "Show Less";
+  } else {
+    gsap.to(bottom, { height: "0px", ease: "power2.out", duration: 0.5 });
+    e.textContent = "Show More";
+  }
 };
 
 // & ADJUST TEXT COLOR BASED ON BG
