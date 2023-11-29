@@ -781,12 +781,12 @@ input[type="color"] {
 }
 
 .rosterWrapper > div {
-    --shadowBlur: 6px;
+    --shadowBlur: 0px;
     --shadowAxis: 4px;
     padding: .5em;
-    background-color: var(--mediumLight);
+    background-color: var(--white);
     border-radius: 10px;
-    /* box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) var(--dark), calc(var(--shadowAxis) * -1) calc(var(--shadowAxis) * -1) var(--shadowBlur) var(--white); */
+    box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) #cbcbcb78;
     max-width: 420px;
     width: 100%;
     position:relative;
@@ -798,7 +798,7 @@ input[type="color"] {
     text-transform: capitalize;
 }
 
-.rosterWrapper span.spanName {
+.rosterWrapper span.postedName {
     font-size: 30px;
     font-weight: var(--bold);
     padding: 5px 10px;
@@ -808,8 +808,168 @@ input[type="color"] {
     margin: 0 0 0 var(--leftMarg);
 }
 
-.gameName {
+.postedGame {
     margin: 15px 0 0 var(--leftMarg);
+}
+
+/* * POSTED DIVS CSS  */
+
+.postedTop {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 60px 1fr;
+    height: auto;
+    grid-auto-flow: row;
+}
+
+.postedSprite {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postedSpriteImg {
+    max-width: 96px;
+    width: 100%;
+}
+
+.postedTopLeft {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    display: grid;
+    grid-template-columns: .7fr 1fr;
+    grid-template-rows: 30px auto;
+}
+
+
+.postedNameAndShiny {
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.postedType {
+    width: 100%;
+    grid-column: 1 / 2;
+}
+
+.postedAbility {
+    display: flex;
+    flex-direction: column;
+}
+
+.postedAbilityName {
+    font-weight: var(--bold);
+    font-size: 14px;
+}
+.postedShiny {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 25px;
+}
+
+.postedType {
+    font-size: 12px;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 5px;
+}
+
+.postedType span {
+    padding: 3px 5px;
+    border-radius: 20px;
+}
+
+.postedAbilityDesc {
+    font-size: 12px;
+}
+
+.postedMovesWrap {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.postedMovesWrap > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 25px 18px auto;
+    align-items: center;
+    row-gap: 5px;
+}
+
+.pMoveName {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    font-size: 14px;
+    font-weight: var(--bold);
+}
+.pMoveType {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.pMoveType > span {
+    color: #fff;
+    padding:2px 5px;
+    border-radius: 20px;
+    font-size: 10px;
+}
+
+.pMoveEffect {
+    transform: scale(.8);
+    display: flex;
+    align-items: center;
+}
+.pMoveStatsWrap {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    font-size: 18px;
+    margin: 7px 0 0 0;
+}
+
+.pMovePower, .pMoveAccuracy, .pMovePp {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.pMovePower::before, .pMoveAccuracy::before, .pMovePp::before  {
+    color: var(--dark);
+    font-size: 10px;
+    position: absolute;
+    top: -7px;
+}
+.pMovePower::before {
+    content: 'Power';
+}
+.pMoveAccuracy::before {
+    content: 'Accuracy';
+}
+.pMovePp::before {
+    content: 'PP';
+}
+.pMoveDesc {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    font-size: 12px;
+    color: var(--dark)
 }
 
 

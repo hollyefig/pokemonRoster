@@ -64,3 +64,128 @@ const abilityInputDivs = [
     element: "div",
   },
 ];
+
+const postedDivs = [
+  {
+    name: "postedSettings",
+    element: "div",
+  },
+  {
+    name: "postedEdit",
+    element: "div",
+  },
+  {
+    name: "postedDelete",
+    element: "div",
+  },
+  {
+    name: "postedName",
+    element: "span",
+  },
+  {
+    name: "postedGame",
+    element: "span",
+  },
+  {
+    name: "postedPartyList",
+    element: "div",
+  },
+];
+
+const postedMon = [
+  {
+    name: "postedTop",
+    element: "div",
+  },
+  {
+    name: "postedTopLeft",
+    element: "div",
+  },
+  {
+    name: "postedBottom",
+    element: "div",
+  },
+  {
+    name: "postedSprite",
+    element: "div",
+  },
+  {
+    name: "postedSpriteImg",
+    element: "img",
+  },
+  {
+    name: "postedMonName",
+    element: "span",
+  },
+  {
+    name: "postedNameAndShiny",
+    element: "div",
+  },
+  {
+    name: "postedType",
+    element: "div",
+  },
+  {
+    name: "postedShiny",
+    element: "div",
+  },
+  {
+    name: "postedAbility",
+    element: "div",
+  },
+  {
+    name: "postedAbilityName",
+    element: "span",
+  },
+  {
+    name: "postedAbilityDesc",
+    element: "div",
+  },
+  {
+    name: "postedMovesWrap",
+    element: "div",
+  },
+  {
+    name: "expand",
+    element: "div",
+  },
+];
+
+const moveDetails = [
+  {
+    name: "pMoveName",
+    element: "span",
+  },
+  {
+    name: "pMoveStatsWrap",
+    element: "div",
+  },
+  {
+    name: "pMovePower",
+    element: "div",
+  },
+  {
+    name: "pMoveAccuracy",
+    element: "div",
+  },
+  {
+    name: "pMovePp",
+    element: "div",
+  },
+  {
+    name: "pMoveType",
+    element: "div",
+  },
+  {
+    name: "pMoveTypeSpan",
+    element: "span",
+  },
+  {
+    name: "pMoveDesc",
+    element: "div",
+  },
+  {
+    name: "pMoveEffect",
+    element: "div",
+  },
+];

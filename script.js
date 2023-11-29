@@ -184,6 +184,15 @@ const pokedexDropdown = async (e, slotNum) => {
 const divCreator = (e) => {
   let div = document.createElement(e.element);
   div.classList.add(e.name);
+
+  // Check if the element has children and recursively create them
+  if (Array.isArray(e.children)) {
+    e.children.forEach((child) => {
+      let childElement = divCreator(child);
+      div.appendChild(childElement);
+    });
+  }
+
   return div;
 };
 
@@ -506,12 +515,10 @@ const loadMoveData = async (move, moveSlot) => {
       let div = document.createElement("div");
       div.classList.add("moveDamageClass");
       // if SVG applies
-      if (loadMove[key].name !== "status") {
-        const SVG = createSVG(loadMove[key].name);
-        div.appendChild(SVG);
-      } else {
-        div.textContent = loadMove[key].name;
-      }
+
+      const SVG = createSVG(loadMove[key].name);
+      SVG.setAttribute("id", loadMove[key].name);
+      div.appendChild(SVG);
 
       typeAndDamageClass.append(div);
     }
@@ -535,7 +542,7 @@ const createSVG = (n) => {
   let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("fill", "none");
 
-  if (n === "physical" || n === "special") {
+  if (n === "physical" || n === "special" || n === "status") {
     svg.classList.add("effectSvg");
     svg.setAttribute("width", "25");
     svg.setAttribute("height", "25");
@@ -549,7 +556,7 @@ const createSVG = (n) => {
         "M15.5 7.63759L17.0146 10.5774L17.3053 11.1416L17.9099 10.9482L21.0596 9.94044L20.0518 13.0901L19.8584 13.6947L20.4226 13.9854L23.3624 15.5L20.4226 17.0146L19.8584 17.3053L20.0518 17.9099L21.0596 21.0596L17.9099 20.0518L17.3053 19.8584L17.0146 20.4226L15.5 23.3624L13.9854 20.4226L13.6947 19.8584L13.0901 20.0518L9.94044 21.0596L10.9482 17.9099L11.1416 17.3053L10.5774 17.0146L7.63759 15.5L10.5774 13.9854L11.1416 13.6947L10.9482 13.0901L9.94044 9.94044L13.0901 10.9482L13.6947 11.1416L13.9854 10.5774L15.5 7.63759Z"
       );
 
-      path.setAttribute("stroke", "black");
+      path.setAttribute("stroke", "#a39f9f");
       path.setAttribute("stroke-width", "2");
       svg.appendChild(path);
       return svg;
@@ -569,16 +576,70 @@ const createSVG = (n) => {
       circ1.setAttribute("cx", "12.5");
       circ1.setAttribute("cy", "12.5");
       circ1.setAttribute("r", "3");
-      circ1.setAttribute("stroke", "black");
+      circ1.setAttribute("stroke", "#a39f9f");
       circ1.setAttribute("stroke-width", "2");
 
       circ2.setAttribute("cx", "12.5");
       circ2.setAttribute("cy", "12.5");
       circ2.setAttribute("r", "8");
-      circ2.setAttribute("stroke", "black");
+      circ2.setAttribute("stroke", "#a39f9f");
       circ2.setAttribute("stroke-width", "2");
 
       svg.append(circ1, circ2);
+
+      return svg;
+    }
+    // if special
+    else if (n === "status") {
+      svg.setAttribute("viewBox", "0 0 30 30");
+      let path1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path1.setAttribute("stroke", "#a39f9f");
+      path1.setAttribute("stroke-width", "1.5");
+      path1.setAttribute("stroke-linecap", "round");
+      path1.setAttribute(
+        "d",
+        "M4 5.84L7.24903 8.1793C7.59804 8.43058 8.06863 8.43058 8.41764 8.1793L11.0824 6.2607C11.4314 6.00941 11.902 6.00941 12.251 6.2607L14.9157 8.1793C15.2647 8.43058 15.7353 8.43058 16.0843 8.1793L18.749 6.2607C19.098 6.00941 19.5686 6.00941 19.9176 6.2607L22.5824 8.1793C22.9314 8.43058 23.402 8.43058 23.751 8.1793L27 5.84"
+      );
+
+      let path2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path2.setAttribute("stroke", "#a39f9f");
+      path2.setAttribute("stroke-width", "1.5");
+      path2.setAttribute("stroke-linecap", "round");
+      path2.setAttribute(
+        "d",
+        "M4 16.88L7.24903 19.2193C7.59804 19.4706 8.06863 19.4706 8.41764 19.2193L11.0824 17.3007C11.4314 17.0494 11.902 17.0494 12.251 17.3007L14.9157 19.2193C15.2647 19.4706 15.7353 19.4706 16.0843 19.2193L18.749 17.3007C19.098 17.0494 19.5686 17.0494 19.9176 17.3007L22.5824 19.2193C22.9314 19.4706 23.402 19.4706 23.751 19.2193L27 16.88"
+      );
+
+      let path3 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path3.setAttribute("stroke", "#a39f9f");
+      path3.setAttribute("stroke-width", "1.5");
+      path3.setAttribute("stroke-linecap", "round");
+      path3.setAttribute(
+        "d",
+        "M4 11.36L7.24903 13.6993C7.59804 13.9506 8.06863 13.9506 8.41764 13.6993L11.0824 11.7807C11.4314 11.5294 11.902 11.5294 12.251 11.7807L14.9157 13.6993C15.2647 13.9506 15.7353 13.9506 16.0843 13.6993L18.749 11.7807C19.098 11.5294 19.5686 11.5294 19.9176 11.7807L22.5824 13.6993C22.9314 13.9506 23.402 13.9506 23.751 13.6993L27 11.36"
+      );
+      let path4 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      path4.setAttribute("stroke", "#a39f9f");
+      path4.setAttribute("stroke-width", "1.5");
+      path4.setAttribute("stroke-linecap", "round");
+      path4.setAttribute(
+        "d",
+        "M4 22.4L7.24903 24.7393C7.59804 24.9906 8.06863 24.9906 8.41764 24.7393L11.0824 22.8207C11.4314 22.5694 11.902 22.5694 12.251 22.8207L14.9157 24.7393C15.2647 24.9906 15.7353 24.9906 16.0843 24.7393L18.749 22.8207C19.098 22.5694 19.5686 22.5694 19.9176 22.8207L22.5824 24.7393C22.9314 24.9906 23.402 24.9906 23.751 24.7393L27 22.4"
+      );
+
+      svg.append(path1, path2, path3, path4);
 
       return svg;
     }
@@ -641,9 +702,18 @@ const removeMon = (e, slotNum) => {
 const getPartyData = () => {
   let partyArr = [];
   for (const slots of addMonsDivs.children) {
-    let obj = { name: null, type: null, ability: null, moves: [] };
+    let obj = {
+      name: null,
+      sprite: null,
+      type: [],
+      shiny: null,
+      ability: null,
+      abilityDesc: null,
+      moves: [],
+    };
     for (let i = 0; i < slots.children.length; i++) {
       let value = slots.children[i];
+
       if (
         !value.classList.contains("addPokemonTextArea") &&
         !value.classList.contains("loadDiv")
@@ -652,21 +722,47 @@ const getPartyData = () => {
         if (value.classList.contains("selectPokemon")) {
           obj.name = value.value;
         }
+        // ? get sprite
+        if (value.classList.contains("spriteDiv")) {
+          obj.sprite = value.children[0].src;
+          obj.shiny = value.children[0].src.includes("shiny");
+        }
         // ? get inputs
         if (value.classList.contains("inputsDiv")) {
-          for (let i = 0; i < value.children.length; i++) {
-            const inputs = value.children[i];
-            // ? get type
-            if (inputs.classList.contains("typeDiv")) {
-              obj.type = value.value;
+          // ? get moves
+          let selectMovesDiv = value.querySelector(".selectMovesDiv");
+          // iterate through all 4 moves
+          for (let i = 0; i < selectMovesDiv.children.length; i++) {
+            let parent = selectMovesDiv.children[i];
+
+            if (parent.querySelector(".selectMoves").value !== "selectMove") {
+              let moveObj = {
+                name: parent.querySelector(".selectMoves").value,
+                type: parent.querySelector(".moveType").textContent,
+                effect: parent
+                  .querySelector(".moveDamageClass")
+                  .children[0].getAttribute("id"),
+                power: parent.querySelector(".movePower").textContent,
+                accuracy: parent.querySelector(".moveAccuracy").textContent,
+                pp: parent.querySelector(".movePp").textContent,
+                desc: parent.querySelector(".moveEffect").textContent,
+              };
+              obj.moves.push(moveObj);
+            } else {
+              obj.moves.push("--");
             }
-            // ? get moveset
-            else if (inputs.classList.contains("selectMovesDiv")) {
-              let moveArr = new Array(...inputs.children);
-              moveArr.forEach((e) => {
-                obj.moves.push(e.value);
-              });
-            }
+          }
+          // ? get ability
+          obj.ability = value.querySelector(".selectAbility").value;
+          obj.abilityDesc =
+            value.querySelector(".abilitiesDescDiv").textContent;
+        }
+        // ? get type
+        if (value.classList.contains("typeAndShiny")) {
+          let typeDiv = value.querySelector(".typeDiv");
+          for (let i = 0; i < typeDiv.children.length; i++) {
+            !typeDiv.children[i].classList.contains("shinySwitch") &&
+              obj.type.push(typeDiv.children[i].textContent);
           }
         }
       }
@@ -738,49 +834,201 @@ const sortByKeyNumber = (a, b) => {
 
 // & CREATE FINAL DIV OF INFO ENTERED
 const populateDivs = () => {
-  // console.log(dataArray);
+  console.log("stored", dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
   dataArray.forEach((obj) => {
-    const div = document.createElement("div"),
-      settings = document.createElement("div"),
-      close = document.createElement("div"),
-      name = document.createElement("span"),
-      game = document.createElement("span");
+    // ? create divs
+    const postedRoster = document.createElement("div");
+    postedRoster.classList.add("postedRoster");
+    rosterWrapper.appendChild(postedRoster);
+    for (let i = 0; i < postedDivs.length; i++) {
+      postedRoster.append(divCreator(postedDivs[i]));
+    }
+    let name = postedRoster.querySelector(".postedName"),
+      game = postedRoster.querySelector(".postedGame"),
+      settings = postedRoster.querySelector(".postedSettings"),
+      edit = postedRoster.querySelector(".postedEdit"),
+      remove = postedRoster.querySelector(".postedDelete"),
+      partyList = postedRoster.querySelector(".postedPartyList");
+
     for (const k in obj) {
       if (k !== "") {
         if (k === "key") {
-          div.classList.add(obj[k]);
+          postedRoster.setAttribute("id", obj[k]);
         } else if (k === "name") {
           name.classList.add(obj[k].replace(/ /g, "-"));
           name.classList.add("spanName");
           name.textContent = obj[k];
         } else if (k === "game") {
-          game.classList.add(obj[k].replace(/ /g, "-"));
-          game.classList.add("gameName");
           game.textContent = obj[k];
         } else if (k === "color") {
           name.style.backgroundColor = obj[k];
-          div.style.borderTop = `18px solid ${obj[k]}`;
+          postedRoster.style.borderTop = `18px solid ${obj[k]}`;
         } else if (k === "textColor") {
           name.style.color = obj[k];
         }
+        // !! put together party  : START
+        else if (k == "party") {
+          let party = obj[k];
+          // ~ iterate through each selected pokemon
+          for (let n = 0; n < party.length; n++) {
+            if (party[n].name !== null) {
+              let postedMonWrapper = document.createElement("div");
+              postedMonWrapper.classList.add("postedMonWrapper");
+              postedMonWrapper.setAttribute("id", `posted${n}`);
+
+              for (let i = 0; i < postedMon.length; i++) {
+                postedMonWrapper.append(divCreator(postedMon[i]));
+              }
+              //grab divs
+              let postedTop = postedMonWrapper.querySelector(".postedTop");
+              let postedTopLeft =
+                postedMonWrapper.querySelector(".postedTopLeft");
+              let postedBottom =
+                postedMonWrapper.querySelector(".postedBottom");
+              let postedSprite =
+                postedMonWrapper.querySelector(".postedSprite");
+              let postedSpriteImg =
+                postedMonWrapper.querySelector(".postedSpriteImg");
+              let postedMonName =
+                postedMonWrapper.querySelector(".postedMonName");
+              let postedNameAndShiny = postedMonWrapper.querySelector(
+                ".postedNameAndShiny"
+              );
+              let postedType = postedMonWrapper.querySelector(".postedType");
+              let postedShiny = postedMonWrapper.querySelector(".postedShiny");
+              let postedAbility =
+                postedMonWrapper.querySelector(".postedAbility");
+              let postedAbilityName =
+                postedMonWrapper.querySelector(".postedAbilityName");
+              let postedAbilityDesc =
+                postedMonWrapper.querySelector(".postedAbilityDesc");
+              let postedMovesWrap =
+                postedMonWrapper.querySelector(".postedMovesWrap");
+              let expand = postedMonWrapper.querySelector(".expand");
+
+              // image
+              postedSpriteImg.src = party[n].sprite;
+              // name
+              postedMonName.textContent = party[n].name;
+              // shiny
+              postedShiny.append(createSVG("shiny"));
+              party[n].ability !== "selectAbility" &&
+                (postedAbilityName.textContent = party[n].ability);
+              postedAbilityDesc.textContent = party[n].abilityDesc;
+              // type
+              party[n].type.forEach((e) => {
+                let span = document.createElement("span");
+                span.textContent = e;
+                for (const k in typeColors) {
+                  if (k === e) {
+                    span.style.backgroundColor = typeColors[k];
+                  }
+                }
+                postedType.appendChild(span);
+              });
+              // svg
+              let svg = postedShiny.children[0];
+              postedSpriteImg.src.includes("shiny") &&
+                svg.setAttribute("fill", "#DFAB0A");
+
+              //expand button
+              expand.textContent = "Show More";
+              expand.setAttribute("onclick", "showHideMoves(this)");
+
+              // ! Iterate through each move
+              for (let i = 0; i < party[n].moves.length; i++) {
+                let move = party[n].moves[i];
+                let wrap = document.createElement("div");
+                wrap.setAttribute("id", `move${i}`);
+
+                if (move !== "--") {
+                  for (let d = 0; d < moveDetails.length; d++) {
+                    wrap.append(divCreator(moveDetails[d]));
+                  }
+                  let pMoveName = wrap.querySelector(".pMoveName");
+                  let pMoveStatsWrap = wrap.querySelector(".pMoveStatsWrap");
+                  let pMovePower = wrap.querySelector(".pMovePower");
+                  let pMoveAccuracy = wrap.querySelector(".pMoveAccuracy");
+                  let pMovePp = wrap.querySelector(".pMovePp");
+                  let pMoveType = wrap.querySelector(".pMoveType");
+                  let pMoveDesc = wrap.querySelector(".pMoveDesc");
+                  let pMoveEffect = wrap.querySelector(".pMoveEffect");
+                  let pMoveTypeSpan = wrap.querySelector(".pMoveTypeSpan");
+
+                  // input entries
+                  //name
+                  pMoveName.textContent = move.name;
+                  //type
+                  pMoveTypeSpan.textContent = move.type;
+                  for (let k in typeColors) {
+                    k === move.type &&
+                      (pMoveTypeSpan.style.backgroundColor = typeColors[k]);
+                  }
+                  pMovePower.textContent = move.power;
+
+                  pMoveAccuracy.textContent = move.accuracy;
+
+                  pMovePp.textContent = move.pp;
+
+                  pMoveDesc.textContent = move.desc;
+                  // effect is SVG unless 'status'
+
+                  pMoveEffect.append(createSVG(move.effect));
+
+                  //append
+                  pMoveType.append(pMoveTypeSpan, pMoveEffect);
+                  pMoveStatsWrap.append(pMovePower, pMoveAccuracy, pMovePp);
+                } else {
+                  wrap.textContent = move;
+                }
+                postedMovesWrap.append(wrap);
+              }
+
+              // ~ append
+              postedTop.append(postedSprite, postedTopLeft);
+              postedSprite.append(postedSpriteImg);
+              postedNameAndShiny.append(postedMonName, postedShiny);
+              postedAbility.append(postedAbilityName, postedAbilityDesc);
+              postedTopLeft.append(postedNameAndShiny, postedType);
+              postedBottom.append(postedAbility, postedMovesWrap, expand);
+
+              partyList.append(postedMonWrapper);
+            }
+          }
+          console.log(partyList);
+        }
+        // !! put together party  : END
       }
     }
-    settings.classList.add("settings");
-    close.classList.add("close");
-    settings.appendChild(close);
 
-    div.append(name, settings, game);
-    rosterWrapper.appendChild(div);
+    settings.append(edit, remove);
   });
 };
 
+//  ~ loop through children to create divs
+const loopFunc = (c, n) => {
+  let divs = [];
+  for (let i = 0; i < n; i++) {
+    divs.push(divCreator(c[i]));
+  }
+
+  return divs;
+};
+
+// clear
 const clearStorage = () => {
   localStorage.clear();
   document.getElementById("rosterWrapper").innerHTML = "";
   dataArray = [];
+};
+
+// && SHOW OR HIDE POSTED MOVESET
+
+const showHideMoves = (e) => {
+  console.log("clicked");
 };
 
 // & ADJUST TEXT COLOR BASED ON BG
