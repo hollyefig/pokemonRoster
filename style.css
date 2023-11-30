@@ -886,6 +886,7 @@ input[type="color"] {
 .postedAbility {
     display: flex;
     flex-direction: column;
+    padding: 0 0 20px 0;
 }
 
 .postedAbilityName {

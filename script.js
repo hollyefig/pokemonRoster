@@ -904,7 +904,7 @@ const populateDivs = () => {
               // name
               postedMonName.textContent = party[n].name;
               // shiny
-              // postedShiny.append(createSVG("shiny"));
+              postedShiny.append(createSVG("shiny"));
               party[n].ability !== "selectAbility" &&
                 (postedAbilityName.textContent = party[n].ability);
               postedAbilityDesc.textContent = party[n].abilityDesc;
