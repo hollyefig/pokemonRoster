@@ -19,6 +19,27 @@ const typeColors = {
   fairy: "#EE99AC",
 };
 
+const gameColors = {
+  red: "#F95B5B",
+  blue: "#5B75F9",
+  yellow: "#F9D75B",
+  gold: "#DEAD6A",
+  silver: "#CFDDDE",
+  crystal: "#98E3DC",
+  ruby: "#BA3126",
+  sapphire: "#2679BA",
+  emerald: "#26BA5E",
+  fireRed: "#D30202",
+  leafGreen: "#61D302",
+  diamond: "#CBE3E1",
+  pearl: "#E3CBD4",
+  platinum: "#868C91",
+  heartGold: "#B67128",
+  soulSilver: "#A4B0B2",
+  black: "#2F2F2F",
+  white: "#D8D8D8",
+};
+
 const monInputDivs = [
   {
     name: "inputsDiv",
@@ -35,6 +56,7 @@ const monInputDivs = [
   {
     name: "typeDiv",
     element: "div",
+    parent: "typeAndShiny",
   },
   {
     name: "selectAbilityDiv",
@@ -43,6 +65,7 @@ const monInputDivs = [
   {
     name: "selectMovesDiv",
     element: "div",
+    parent: "inputsDiv",
   },
   {
     name: "removeMon",
@@ -54,6 +77,7 @@ const abilityInputDivs = [
   {
     name: "selectAbility",
     element: "select",
+    parent: "selectAbilitiesWrap",
   },
   {
     name: "selectAbilitiesWrap",
@@ -75,10 +99,12 @@ const postedDivs = [
   {
     name: "postedEdit",
     element: "div",
+    parent: "postedSettings",
   },
   {
     name: "postedDelete",
     element: "div",
+    parent: "postedSettings",
   },
   {
     name: "postedName",

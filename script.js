@@ -211,6 +211,7 @@ const monSelect = async (e) => {
     for (let i = 0; i < monInputDivs.length; i++) {
       currentSlot.append(divCreator(monInputDivs[i]));
     }
+
     // ? add display none
     for (let i = 0; i < currentSlot.children.length; i++) {
       if (!currentSlot.children[i].classList.contains("displayNone")) {
@@ -303,16 +304,21 @@ const monSelect = async (e) => {
       for (let i = 0; i < abilityInputDivs.length; i++) {
         selectAbilityDiv.append(divCreator(abilityInputDivs[i]));
       }
+      for (let i = 0; i < abilityInputDivs.length; i++) {
+        if (abilityInputDivs[i].parent !== undefined) {
+          selectAbilityDiv
+            .querySelector(`.${abilityInputDivs[i].parent}`)
+            .append(
+              selectAbilityDiv.querySelector(`.${abilityInputDivs[i].name}`)
+            );
+        }
+      }
       let selectAbility = currentSlot.querySelector(".selectAbility");
       selectAbility.setAttribute("oninput", `selectAbility(this)`);
       let option = document.createElement("option");
       option.value = "selectAbility";
       option.textContent = "Select Ability";
       selectAbility.appendChild(option);
-
-      currentSlot
-        .querySelector(".selectAbilitiesWrap")
-        .appendChild(selectAbility);
 
       inputsDiv.append(selectAbilityDiv);
 
@@ -776,7 +782,7 @@ let counter = parseInt(localStorage.getItem("counter")) || 1;
 const confirmData = (color, num) => {
   let inputs = {
     name: document.getElementById("name").value,
-    game: document.getElementById("game").value,
+    game: `${document.getElementById("game").value} Version`,
     key: `key${counter}`,
     color: color,
     textColor: null,
@@ -838,11 +844,19 @@ const populateDivs = () => {
     for (let i = 0; i < postedDivs.length; i++) {
       postedRoster.append(divCreator(postedDivs[i]));
     }
+    // ? append children
+    for (let i = 0; i < postedDivs.length; i++) {
+      if (postedDivs[i].parent !== undefined) {
+        postedRoster
+          .querySelector(`.${postedDivs[i].parent}`)
+          .append(postedRoster.querySelector(`.${postedDivs[i].name}`));
+      }
+    }
     let name = postedRoster.querySelector(".postedName"),
       game = postedRoster.querySelector(".postedGame"),
-      settings = postedRoster.querySelector(".postedSettings"),
-      edit = postedRoster.querySelector(".postedEdit"),
-      remove = postedRoster.querySelector(".postedDelete"),
+      // settings = postedRoster.querySelector(".postedSettings"),
+      // edit = postedRoster.querySelector(".postedEdit"),
+      // remove = postedRoster.querySelector(".postedDelete"),
       partyList = postedRoster.querySelector(".postedPartyList");
 
     for (const k in obj) {
@@ -925,7 +939,8 @@ const populateDivs = () => {
                 svg.setAttribute("fill", "#DFAB0A");
 
               //expand button
-              expand.textContent = "Show More";
+              expand.classList.add("material-symbols-outlined");
+              expand.textContent = "keyboard_double_arrow_down";
               expand.setAttribute("onclick", "showHideMoves(this)");
 
               // ! Iterate through each move
@@ -985,8 +1000,6 @@ const populateDivs = () => {
         // !! put together party  : END
       }
     }
-
-    settings.append(edit, remove);
   });
 };
 
@@ -1014,10 +1027,10 @@ const showHideMoves = (e) => {
 
   if (getComputedStyle(bottom).height === "0px") {
     gsap.to(bottom, { height: "auto", ease: "power2.out", duration: 0.5 });
-    e.textContent = "Show Less";
+    e.textContent = "keyboard_double_arrow_up";
   } else {
     gsap.to(bottom, { height: "0px", ease: "power2.out", duration: 0.5 });
-    e.textContent = "Show More";
+    e.textContent = "keyboard_double_arrow_down";
   }
 };
 
