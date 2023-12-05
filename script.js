@@ -890,7 +890,7 @@ const populateDivs = () => {
           game.textContent = obj[k];
         } else if (k === "color") {
           name.style.backgroundColor = obj[k];
-          postedRoster.style.borderTop = `18px solid ${obj[k]}`;
+          postedRoster.style.borderTop = `5px solid ${obj[k]}`;
         } else if (k === "textColor") {
           name.style.color = obj[k];
         }

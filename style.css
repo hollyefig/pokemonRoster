@@ -765,7 +765,7 @@ input[type="color"] {
 /* & BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
 
 .bottom {
-    --nameTagSpacing: 33px;
+    --nameTagSpacing: 24px;
     margin: calc(var(--topBarHeight) + var(--nameTagSpacing)) 0 0 0;
     width: 100%;
     height: calc(100dvh - var(--topBarHeight))
@@ -787,7 +787,8 @@ input[type="color"] {
     --shadowAxis: 4px;
     padding: .5em;
     background-color: var(--white);
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) #cbcbcb78;
     max-width: 420px;
     width: 100%;
@@ -803,7 +804,7 @@ input[type="color"] {
 /* * POSTED DIVS CSS  */
 
 .rosterWrapper span.postedName {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: var(--bold);
     padding: 5px 10px;
     border-radius: 10px;
@@ -839,9 +840,25 @@ input[type="color"] {
     column-gap: 5px;
 }
 
+.editAndDelete > div {
+    transform: scale(.8);
+}
+
 .editAndDelete > * {
     color: var(--grey);
     cursor: pointer;
+}
+
+.postedEdit, .postedDelete {
+    transition: color .2s ease-out;
+}
+
+.postedEdit:hover {
+    color: var(--dark);
+}
+
+.postedDelete:hover {
+    color: var(--red);
 }
 
 .postedSprite {
@@ -1034,6 +1051,7 @@ input[type="color"] {
 /* & REPONSIVE  */
 /* & MAX WIDTH 680  */
 @media only screen and (max-width: 680px) {
+
     
     .inputsDivAbilities {
         display: flex;
