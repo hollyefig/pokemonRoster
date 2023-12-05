@@ -777,13 +777,14 @@ const rosterWrapper = document.querySelector(".rosterWrapper");
 let dataArray = [];
 
 // Initialize the counter from localStorage or set it to 1 if not present
-let counter = parseInt(localStorage.getItem("counter")) || 1;
+let counter = parseInt(localStorage.getItem("counter")) || 0;
 
 const confirmData = (color, num) => {
   let inputs = {
     name: document.getElementById("name").value,
     game: `${document.getElementById("game").value} Version`,
-    key: `key${counter}`,
+    // key: `key${counter}`,
+    key: null,
     color: color,
     textColor: null,
     party: getPartyData(),
@@ -794,8 +795,9 @@ const confirmData = (color, num) => {
   // to string
   const JSONstring = JSON.stringify(inputs);
 
-  // Create  key
   const key = `key${counter}`;
+
+  //set key
   localStorage.setItem(key, JSONstring);
 
   // Increment the counter for the next unique key
@@ -811,13 +813,24 @@ const confirmData = (color, num) => {
 // & store data to array
 const storeToArray = () => {
   dataArray = [];
-  Object.entries(localStorage).forEach(([key, value]) => {
-    let toObj = JSON.parse(value);
-    typeof toObj !== "number" && dataArray.push(toObj);
+
+  console.log(localStorage);
+
+  Object.entries(localStorage).forEach(([key, value], index) => {
+    // update key in storage
+    let v = JSON.parse(localStorage.getItem(`key${index}`));
+    if (v !== null) {
+      v.key = `key${index}`;
+      localStorage.setItem(`key${index}`, JSON.stringify(v));
+
+      // push to array
+      dataArray.push(v);
+    }
   });
 
   // Sort the array
   dataArray.sort(sortByKeyNumber);
+
   populateDivs();
 };
 
@@ -832,7 +845,7 @@ const sortByKeyNumber = (a, b) => {
 
 // & CREATE FINAL DIV OF INFO ENTERED
 const populateDivs = () => {
-  console.log("stored", dataArray);
+  console.log("Data array", dataArray);
   const rosterWrapper = document.querySelector(".rosterWrapper");
   rosterWrapper.innerHTML = "";
 
@@ -855,9 +868,15 @@ const populateDivs = () => {
     let name = postedRoster.querySelector(".postedName"),
       game = postedRoster.querySelector(".postedGame"),
       // settings = postedRoster.querySelector(".postedSettings"),
-      // edit = postedRoster.querySelector(".postedEdit"),
-      // remove = postedRoster.querySelector(".postedDelete"),
+      edit = postedRoster.querySelector(".postedEdit"),
+      remove = postedRoster.querySelector(".postedDelete"),
       partyList = postedRoster.querySelector(".postedPartyList");
+
+    edit.classList.add("material-symbols-outlined");
+    edit.textContent = "edit_square";
+    remove.classList.add("material-symbols-outlined");
+    remove.setAttribute("onclick", "removePost(this)");
+    remove.textContent = "delete";
 
     for (const k in obj) {
       if (k !== "") {
@@ -1013,11 +1032,40 @@ const loopFunc = (c, n) => {
   return divs;
 };
 
-// clear
+// ! clear
 const clearStorage = () => {
   localStorage.clear();
   document.getElementById("rosterWrapper").innerHTML = "";
   dataArray = [];
+};
+
+// ! REMOVE A POST
+const removePost = (e) => {
+  let id = e.closest(".postedSettings").parentNode.id;
+  let currentNum = parseInt(localStorage.getItem("counter"));
+  let numRemoved = parseInt(id[id.length - 1]);
+
+  let result = window.confirm("Delete this roster?");
+  // if deleted
+  if (result) {
+    // loop to reassign key order
+    for (let k = 0; k < currentNum; k++) {
+      if (k > numRemoved) {
+        let val = localStorage.getItem(`key${k}`);
+
+        localStorage.removeItem(`key${k}`);
+        localStorage.setItem(`key${k - 1}`, val);
+      } else if (k === numRemoved) {
+        localStorage.removeItem(`key${numRemoved}`);
+      }
+    }
+    // update counter
+    localStorage.setItem("counter", currentNum - 1);
+    // run storage update
+    storeToArray();
+  } else {
+    console.log("you clicked no");
+  }
 };
 
 // && SHOW OR HIDE POSTED MOVESET

@@ -99,12 +99,12 @@ const postedDivs = [
   {
     name: "postedEdit",
     element: "div",
-    parent: "postedSettings",
+    parent: "editAndDelete",
   },
   {
     name: "postedDelete",
     element: "div",
-    parent: "postedSettings",
+    parent: "editAndDelete",
   },
   {
     name: "postedName",
@@ -113,10 +113,16 @@ const postedDivs = [
   {
     name: "postedGame",
     element: "span",
+    parent: "postedSettings",
   },
   {
     name: "postedPartyList",
     element: "div",
+  },
+  {
+    name: "editAndDelete",
+    element: "div",
+    parent: "postedSettings",
   },
 ];
 // *

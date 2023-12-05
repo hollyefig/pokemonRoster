@@ -800,6 +800,8 @@ input[type="color"] {
     text-transform: capitalize;
 }
 
+/* * POSTED DIVS CSS  */
+
 .rosterWrapper span.postedName {
     font-size: 30px;
     font-weight: var(--bold);
@@ -810,16 +812,6 @@ input[type="color"] {
     margin: 0 0 0 var(--leftMarg);
 }
 
-.postedGame {
-    margin: 15px 0 0 var(--leftMarg);
-    font-weight: var(--bold);
-    width: 100%;
-    border-bottom: 1px solid #dfdfdf;
-    padding: 0 0 10px 0;
-}
-
-/* * POSTED DIVS CSS  */
-
 .postedTop {
     display: grid;
     width: 100%;
@@ -827,6 +819,29 @@ input[type="color"] {
     height: auto;
     grid-auto-flow: row;
     column-gap: 10px;
+}
+
+.postedSettings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #dfdfdf;
+    padding: 0.5em 0.5em 0.3em 0.5em;
+}
+.postedGame {
+    font-weight: var(--bold);  
+}
+.editAndDelete {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    column-gap: 5px;
+}
+
+.editAndDelete > * {
+    color: var(--grey);
+    cursor: pointer;
 }
 
 .postedSprite {
