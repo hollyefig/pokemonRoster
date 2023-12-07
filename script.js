@@ -1,4 +1,5 @@
 let inputsOpen = false;
+let editActive = false;
 const addBtn = document.querySelector(".addNewButtonWrapper"),
   colors = {
     green: "rgb(71, 140, 71)",
@@ -18,12 +19,11 @@ const addNew = () => {
   allInputs.forEach((e, index) => {
     allInputs[index] = e.value !== "" && gameOption.value !== "choose";
   });
+  document.querySelector(".create").textContent = "CREATE";
+  editActive = false;
 
   if (!inputsOpen) {
-    inputsOpen = true;
-    fadeInOut
-      .to(".inputDataWrapper, .fadeBg", { display: "flex" })
-      .to(".inputDataWrapper, .fadeBg", { opacity: 1, delay: 0 }, "<.1");
+    openInputs();
   } else {
     if (allInputs.includes(false)) {
       let chkInputs = new Array(...document.querySelectorAll(".selection"));
@@ -52,6 +52,14 @@ const addNew = () => {
   }
 };
 
+const openInputs = () => {
+  inputsOpen = true;
+  fadeInOut
+    .to(".inputDataWrapper, .fadeBg", { display: "flex" })
+    .to(".inputDataWrapper, .fadeBg", { opacity: 1, delay: 0 }, "<.1");
+  reset();
+};
+
 // & NAME INPUT CHANGE, removing the 'required' class
 const inputShift = (e) => {
   if (e.value !== "" || e.id !== "choose") {
@@ -66,7 +74,7 @@ document.getElementById("game").addEventListener("click", (e) => {
 const gameDropdown = (e) => {
   inputShift(e);
   addMonsDivs.innerHTML = "";
-  partyLimit = 1;
+  partyLimit = 0;
   createSlots(e.value);
 
   // make add mon button appear
@@ -112,18 +120,22 @@ document.querySelector(".fadeBg").addEventListener("click", (e) => {
 const reset = () => {
   document.querySelector(".addMonsDivs").innerHTML = "";
   document.getElementById("game").value = "choose";
-  partyLimit = 1;
+  document.getElementById("name").value = "";
+  document.getElementById("rosterColor").value = "#393232";
+  partyLimit = 0;
 };
 
 // & Pokemon Select button
 const addMonsWrapper = document.querySelector(".addMonsWrapper");
 
-let partyLimit = 1;
+let partyLimit = 0;
 
 const createSlots = (game) => {
-  if (partyLimit <= 6) {
+  let amount = 6 - addMonsDivs.childElementCount;
+
+  for (let i = 0; i < amount; i++) {
     const div = document.createElement("div");
-    div.setAttribute("id", `slot${partyLimit}`);
+    div.setAttribute("id", `slot${i}`);
     div.classList.add(game);
     div.setAttribute("onclick", "loadPokedex(this)");
     const innerDiv = document.createElement("div");
@@ -139,7 +151,6 @@ const createSlots = (game) => {
     addMonsDivs.appendChild(div);
     gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
   }
-  partyLimit++;
 };
 
 // & GRAB POKEDEX DATA
@@ -152,7 +163,7 @@ const loadPokedex = async (e) => {
 
   e.classList.add("addFlex");
 
-  createSlots(selected);
+  // createSlots(selected);
 };
 
 // * Create inputs for Pokemon Creation
@@ -397,7 +408,7 @@ const createMovesDropdown = (arr, selectDiv) => {
   for (let i = 0; i < 4; i++) {
     // create divs for moves accordian
     let moveDiv = document.createElement("div");
-    moveDiv.classList.add(`moveDiv${i + 1}`);
+    moveDiv.classList.add(`moveDiv${i}`);
 
     let moveDivTop = document.createElement("div");
     moveDivTop.classList.add("moveDivTop");
@@ -436,7 +447,7 @@ const createMovesDropdown = (arr, selectDiv) => {
 };
 
 // ? when a move is selected
-const moveSelect = (move, moveArr) => {
+const moveSelect = async (move, moveArr) => {
   // get exact div to replace title with move
   let parent = move.closest(".inputsDiv").parentNode;
   let moveSlot = parent.querySelector(
@@ -446,10 +457,7 @@ const moveSelect = (move, moveArr) => {
   let desc = moveSlot.querySelector(".moveDivDesc");
   desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
 
-  loadMoveData(move.value.replace(" ", "-"), moveSlot);
-
-  // remove selected move from movepool
-  moveArr = moveArr.filter((e) => e !== move.value);
+  await loadMoveData(move.value.replace(" ", "-"), moveSlot);
 };
 
 // ? Load move data
@@ -687,9 +695,9 @@ const removeMon = (e, slotNum) => {
     // User clicked "OK" (Yes)
     parent.remove();
     for (let i = 0; i < addMonsDivs.children.length; i++) {
-      addMonsDivs.children[i].setAttribute("id", `slot${i + 1}`);
+      addMonsDivs.children[i].setAttribute("id", `slot${i}`);
     }
-    partyLimit = addMonsDivs.children.length + 1;
+    createSlots(document.getElementById("game").value);
   } else {
     // User clicked "Cancel" (No)
     null;
@@ -718,7 +726,7 @@ const getPartyData = () => {
       ) {
         // ? get pokemon name
         if (value.classList.contains("selectPokemon")) {
-          obj.name = value.value;
+          value.value !== "chooseMon" && (obj.name = value.value);
         }
         // ? get sprite
         if (value.classList.contains("spriteDiv")) {
@@ -814,19 +822,23 @@ const confirmData = (color, num) => {
 const storeToArray = () => {
   dataArray = [];
 
-  console.log(localStorage);
-
   Object.entries(localStorage).forEach(([key, value], index) => {
     // update key in storage
     let v = JSON.parse(localStorage.getItem(`key${index}`));
     if (v !== null) {
       v.key = `key${index}`;
-      localStorage.setItem(`key${index}`, JSON.stringify(v));
 
+      // filter empty slots in party
+      let filtered = v.party.filter((f) => f.name !== null);
+      v.party = filtered;
+
+      localStorage.setItem(`key${index}`, JSON.stringify(v));
       // push to array
       dataArray.push(v);
     }
   });
+
+  console.log(localStorage);
 
   // Sort the array
   dataArray.sort(sortByKeyNumber);
@@ -873,6 +885,7 @@ const populateDivs = () => {
       partyList = postedRoster.querySelector(".postedPartyList");
 
     edit.classList.add("material-symbols-outlined");
+    edit.setAttribute("onclick", "editRoster(this)");
     edit.textContent = "edit_square";
     remove.classList.add("material-symbols-outlined");
     remove.setAttribute("onclick", "removePost(this)");
@@ -1066,6 +1079,93 @@ const removePost = (e) => {
   } else {
     console.log("you clicked no");
   }
+};
+
+// ! EDIT A POST
+const editRoster = async (e) => {
+  editActive = true;
+  const parent = e.closest(".postedSettings").parentNode;
+  const id = parent.id;
+  const obj = JSON.parse(localStorage.getItem(id));
+  const addMonsWrapper = document.querySelector(".addMonsWrapper");
+  const addMonsDivs = document.querySelector(".addMonsDivs");
+  // hide this module everytime inputs open
+  addMonsDivs.setAttribute("style", "opacity: 0 ; height: 0");
+
+  openInputs();
+  for (const k in obj) {
+    k === "name" && (document.getElementById(k).value = obj[k]);
+    k === "game" &&
+      (document.getElementById(k).value = obj.game.replace(" Version", ""));
+    k === "color" && (document.getElementById("rosterColor").value = obj[k]);
+  }
+
+  // ? add loading visual
+  const loadDiv = document.createElement("div");
+  loadDiv.setAttribute(
+    "style",
+    "width: 100% ; display: flex; align-items: center; justify-content: center;"
+  );
+  const pokeballLoad = document.createElement("img");
+  pokeballLoad.classList.add("pokeballLoad");
+  pokeballLoad.src = "./IMGs/pokeballIcon.png";
+
+  loadDiv.append(pokeballLoad);
+  addMonsWrapper.append(loadDiv);
+
+  createSlots(document.getElementById("game").value);
+  // ~ iterate through each pokemon
+  for (let i = 0; i < obj.party.length; i++) {
+    if (obj.party[i].name !== null) {
+      await loadPokedex(addMonsDivs.children[i]);
+
+      addMonsDivs.children[i].firstChild.value = obj.party[i].name;
+      await monSelect(addMonsDivs.children[i].firstChild);
+
+      // ~ allow time for pokedex, pokemon to load
+      setTimeout(() => {
+        gsap
+          .timeline()
+          .to(".addMonsDivs", {
+            height: "auto",
+            duration: 0.1,
+          })
+          .to(".addMonsDivs, .addMonsDivs > div", {
+            opacity: 1,
+            duration: 0.2,
+          });
+
+        let moveDivParent = document.getElementById(`slot${i}`);
+
+        // iterate through moves
+        let movepool = obj.party[i].moves;
+
+        movepool.forEach((m, index) => {
+          moveDivParent
+            .querySelector(`.moveDiv${index}`)
+            .querySelector(".moveDivTop")
+            .querySelector(".selectMoves").value = m.name;
+
+          moveSelect(
+            moveDivParent
+              .querySelector(`.moveDiv${index}`)
+              .querySelector(".moveDivTop")
+              .querySelector(".selectMoves")
+          );
+
+          let desc = moveDivParent
+            .querySelector(`.moveDiv${index}`)
+            .querySelector(".moveDivDesc");
+          desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+        });
+
+        addMonsWrapper.children[1].remove();
+      }, 2000);
+    }
+  }
+
+  // change button text
+  document.querySelector(".create").textContent = "UPDATE";
 };
 
 // && SHOW OR HIDE POSTED MOVESET

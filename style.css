@@ -688,6 +688,7 @@ input[type="color"] {
     align-items: center;
     flex-direction: row;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 /* ! LOAD section  */
@@ -908,7 +909,10 @@ input[type="color"] {
 .postedPartyList {
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
+}
+
+.postedPartyList > div {
+    margin: 5px 0;
 }
 
 .expand {
@@ -947,6 +951,7 @@ input[type="color"] {
     justify-content: center;
     overflow: hidden;
     height: 25px;
+    transform: scale(.7);
 }
 
 .postedType {
@@ -1142,6 +1147,7 @@ input[type="color"] {
 
     .removeMon {
         grid-row: 5 / 6;
+
     }
 }
 
