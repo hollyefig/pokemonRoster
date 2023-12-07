@@ -148,7 +148,7 @@ const createSlots = (game) => {
     innerDiv.append(plusIcon, msg);
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
-    gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
+    // gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
   }
 };
 
@@ -161,8 +161,6 @@ const loadPokedex = async (e) => {
   pokedexDropdown(loadPokedex, e);
 
   e.classList.add("addFlex");
-
-  // createSlots(selected);
 };
 
 // * Create inputs for Pokemon Creation
@@ -679,6 +677,7 @@ const shinySwitchFunc = (e, sprites) => {
   let par = e.closest(".typeAndShiny").parentNode;
   let svg = e.children[0];
   let spriteImg = par.querySelector(".spriteDiv > img");
+  console.log("what is par", par);
 
   if (!svg.classList.contains("shinyOn")) {
     spriteImg.setAttribute("src", sprites[0].shiny);
@@ -1149,9 +1148,18 @@ const editRoster = async (e) => {
             duration: 0.2,
           });
 
+        // parent
         let moveDivParent = document.getElementById(`slot${i}`);
-        let ability = moveDivParent.querySelector(".selectAbility");
 
+        // input sprite if shiny
+        if (obj.party[i].shiny) {
+          moveDivParent.querySelector(".spriteDiv > img").src =
+            obj.party[i].sprite;
+          moveDivParent.querySelector(".shinySvg").classList.add("shinyOn");
+        }
+
+        // input ability
+        let ability = moveDivParent.querySelector(".selectAbility");
         ability.value = obj.party[i].ability;
         selectAbility(ability);
 

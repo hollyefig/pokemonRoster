@@ -38,6 +38,7 @@ select option:first-child {
   /* Safari 10.1+ specific CSS here */
   select {
     -webkit-appearance: none!important;
+    appearance: none;
   }
 
   .inputDataWrapper {
