@@ -1105,8 +1105,6 @@ const editRoster = async (e) => {
   const obj = JSON.parse(localStorage.getItem(id));
   const addMonsWrapper = document.querySelector(".addMonsWrapper");
   const addMonsDivs = document.querySelector(".addMonsDivs");
-  // hide this module everytime inputs open
-  addMonsDivs.setAttribute("style", "opacity: 0 ; height: 0");
 
   openInputs();
   for (const k in obj) {
@@ -1125,7 +1123,7 @@ const editRoster = async (e) => {
   const pokeballLoad = document.createElement("img");
   pokeballLoad.classList.add("pokeballLoad");
   pokeballLoad.src = "./IMGs/pokeballIcon.png";
-
+  // ?
   loadDiv.append(pokeballLoad);
   addMonsWrapper.append(loadDiv);
 
@@ -1152,27 +1150,23 @@ const editRoster = async (e) => {
           });
 
         let moveDivParent = document.getElementById(`slot${i}`);
+        let ability = moveDivParent.querySelector(".selectAbility");
+
+        ability.value = obj.party[i].ability;
+        selectAbility(ability);
 
         // iterate through moves
         let movepool = obj.party[i].moves;
-
         movepool.forEach((m, index) => {
           if (m.name !== undefined) {
-            moveDivParent
-              .querySelector(`.moveDiv${index}`)
-              .querySelector(".moveDivTop")
-              .querySelector(".selectMoves").value = m.name;
-
-            moveSelect(
-              moveDivParent
-                .querySelector(`.moveDiv${index}`)
-                .querySelector(".moveDivTop")
-                .querySelector(".selectMoves")
-            );
-
-            let desc = moveDivParent
-              .querySelector(`.moveDiv${index}`)
-              .querySelector(".moveDivDesc");
+            //get specific div # for move
+            let moveDiv = moveDivParent.querySelector(`.moveDiv${index}`);
+            // update move value name
+            moveDiv.querySelector(".selectMoves").value = m.name;
+            // run function
+            moveSelect(moveDiv.querySelector(".selectMoves"));
+            // get description
+            let desc = moveDiv.querySelector(".moveDivDesc");
             desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
           }
         });
