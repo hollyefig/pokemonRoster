@@ -106,6 +106,7 @@ const closeAdd = () => {
     .to(".inputDataWrapper, .fadeBg", { display: "none" }, "<");
   inputsOpen = false;
   addBtn.classList.remove("btnBlink");
+  addMonsDivs.innerHTML = "";
 };
 window.addEventListener("keydown", (e) => {
   e.key === "Escape" && inputsOpen && closeAdd();
@@ -1125,6 +1126,7 @@ const editRoster = async (e) => {
   // ?
   loadDiv.append(pokeballLoad);
   addMonsWrapper.append(loadDiv);
+  addMonsDivs.style.height = "0px";
 
   createSlots(document.getElementById("game").value);
   // ~ iterate through each pokemon
@@ -1181,7 +1183,8 @@ const editRoster = async (e) => {
 
         // remove load
         addMonsWrapper.children[1] !== undefined &&
-          addMonsWrapper.children[1].remove();
+          (addMonsWrapper.children[1].remove(),
+          (addMonsDivs.style.height = "auto"));
       }, 2000);
     }
   }
