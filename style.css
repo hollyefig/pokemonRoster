@@ -78,7 +78,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
     background-color: var(--mediumLight);
     position:fixed;
     top: 0;
@@ -87,13 +87,14 @@ body {
 }
 
 .topContent {
-    width: 80%;
+    width: fit-content;
     height: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
     position: relative;
+    column-gap: 15px;
 }
 
 .addNewWrapper {
@@ -112,6 +113,7 @@ body {
     grid-template-columns: 20px 1fr;
     justify-content: center;
     align-items: center;
+    justify-items: center;
     text-transform: uppercase;
     padding: .5em 1em;
     background-color: var(--green);
@@ -120,8 +122,7 @@ body {
     column-gap:8px;
     overflow: hidden;
     position: relative;
-    max-width: 210px;
-    width: 100%;
+    width: 195px;
     height: 45px;
 }
 
@@ -182,6 +183,23 @@ body {
 
 .addNewText {
     grid-column: 2 / 3;
+}
+
+.clearButton {
+    font-size: 14px;
+    width: 120px;
+    padding: 5px;
+    border: 2px solid var(--grey);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--grey);
+    cursor: pointer;
+}
+
+.clearButton:hover {
+    color: var(--red);
+    border-color: var(--red);
 }
 
 .fadeBg {
@@ -766,14 +784,15 @@ input[type="color"] {
     border:2px solid var(--dark);
     font-family: var(--font);
     border-radius: 5px;
-    color: var(--dark)
+    color: var(--dark);
+    cursor: pointer;
 }
 
 
 /* & BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM BOTTOM */
 
 .bottom {
-    --nameTagSpacing: 24px;
+    --nameTagSpacing: 19px;
     margin: calc(var(--topBarHeight) + var(--nameTagSpacing)) 0 0 0;
     width: 100%;
     height: calc(100dvh - var(--topBarHeight))
@@ -812,13 +831,17 @@ input[type="color"] {
 /* * POSTED DIVS CSS  */
 
 .rosterWrapper span.postedName {
-    font-size: 24px;
+    height: 34px;
+    font-size: 18px;
     font-weight: var(--bold);
     padding: 5px 10px;
-    border-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     position: absolute;
     top: calc(var(--nameTagSpacing) * -1);
-    margin: 0 0 0 var(--leftMarg);
+    left: 0;
+    display: flex;
+    align-items: center;
 }
 
 .postedTop {

@@ -28,17 +28,16 @@
                     </span>
                 </div>
                 <div class="addNewText">
-                    Add New Roster
+                    Create Roster
                 </div>
             </div>
         </div>
+        <div class="clearButton" onclick="clearStorage()">Clear All</div>
         </div>
     </div>
     <!-- ! bottom section -->
     <div class="bottom">
         <div class="rosterWrapper" id="rosterWrapper"></div>
-        <div class="clearButton" onclick="clearStorage()">Clear</div>
-        
     </div>
 </div>
 
@@ -48,7 +47,7 @@
     <form class="inputData">
         <div>
             <label for="name">Roster Name</label>
-            <input type="text" id="name" maxlength="19" class="selection" placeholder="Max 19 characters" oninput="inputShift(this)" />
+            <input type="text" id="name" maxlength="35" class="selection" placeholder="Max 35 characters" oninput="inputShift(this)" />
             <input type="color" id="rosterColor" class="rosterColor" name="rosterColor" value="#393232">
         </div>
 

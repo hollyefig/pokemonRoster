@@ -678,7 +678,6 @@ const shinySwitchFunc = (e, sprites) => {
   let par = e.closest(".typeAndShiny").parentNode;
   let svg = e.children[0];
   let spriteImg = par.querySelector(".spriteDiv > img");
-  console.log("what is par", par);
 
   if (!svg.classList.contains("shinyOn")) {
     spriteImg.setAttribute("src", sprites[0].shiny);
@@ -1061,13 +1060,6 @@ const loopFunc = (c, n) => {
   return divs;
 };
 
-// ! clear
-const clearStorage = () => {
-  localStorage.clear();
-  document.getElementById("rosterWrapper").innerHTML = "";
-  dataArray = [];
-};
-
 // ! REMOVE A POST
 const removePost = (e) => {
   let id = e.closest(".postedSettings").parentNode.id;
@@ -1226,6 +1218,16 @@ const setTextColor = (color) => {
   // Set text color based on brightness
   let finalColor = brightness > 128 ? "#353535" : "#ffffff";
   return finalColor;
+};
+
+// ! clear
+const clearStorage = () => {
+  let result = window.confirm("Remove all rosters?");
+  if (result) {
+    localStorage.clear();
+    document.getElementById("rosterWrapper").innerHTML = "";
+    dataArray = [];
+  }
 };
 
 // ^ Call the fetchData function when the page loads
