@@ -39,6 +39,10 @@ select option:first-child {
   select {
     -webkit-appearance: none!important;
   }
+
+  .inputDataWrapper {
+    height: 90vh;
+  }
 }}
 
 
