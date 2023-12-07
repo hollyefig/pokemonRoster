@@ -446,7 +446,7 @@ const createMovesDropdown = (arr, selectDiv) => {
 };
 
 // ? when a move is selected
-const moveSelect = async (move, moveArr) => {
+const moveSelect = async (move) => {
   // get exact div to replace title with move
   let parent = move.closest(".inputsDiv").parentNode;
   let moveSlot = parent.querySelector(
@@ -454,9 +454,15 @@ const moveSelect = async (move, moveArr) => {
   );
 
   let desc = moveSlot.querySelector(".moveDivDesc");
-  desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
-
-  await loadMoveData(move.value.replace(" ", "-"), moveSlot);
+  let stats = moveSlot.querySelector(".moveDivStats");
+  if (move.value !== "selectMove") {
+    desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+    await loadMoveData(move.value.replace(" ", "-"), moveSlot);
+  } else {
+    desc.innerHTML = "";
+    desc.setAttribute("style", "padding: 0 ");
+    stats.innerHTML = "";
+  }
 };
 
 // ? Load move data
@@ -1094,8 +1100,6 @@ const editRoster = async (e) => {
   // hide this module everytime inputs open
   addMonsDivs.setAttribute("style", "opacity: 0 ; height: 0");
 
-  console.log(id);
-
   openInputs();
   for (const k in obj) {
     k === "name" && (document.getElementById(k).value = obj[k]);
@@ -1145,22 +1149,24 @@ const editRoster = async (e) => {
         let movepool = obj.party[i].moves;
 
         movepool.forEach((m, index) => {
-          moveDivParent
-            .querySelector(`.moveDiv${index}`)
-            .querySelector(".moveDivTop")
-            .querySelector(".selectMoves").value = m.name;
-
-          moveSelect(
+          if (m.name !== undefined) {
             moveDivParent
               .querySelector(`.moveDiv${index}`)
               .querySelector(".moveDivTop")
-              .querySelector(".selectMoves")
-          );
+              .querySelector(".selectMoves").value = m.name;
 
-          let desc = moveDivParent
-            .querySelector(`.moveDiv${index}`)
-            .querySelector(".moveDivDesc");
-          desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+            moveSelect(
+              moveDivParent
+                .querySelector(`.moveDiv${index}`)
+                .querySelector(".moveDivTop")
+                .querySelector(".selectMoves")
+            );
+
+            let desc = moveDivParent
+              .querySelector(`.moveDiv${index}`)
+              .querySelector(".moveDivDesc");
+            desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+          }
         });
 
         // remove load
