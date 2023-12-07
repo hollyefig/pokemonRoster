@@ -14,13 +14,12 @@ let gameOption = document.getElementById("game");
 let currentGameSelect;
 
 // & ADD NEW ROSTER
-const addNew = () => {
+const addNew = (id) => {
   let allInputs = new Array(...document.querySelectorAll(".selection"));
   allInputs.forEach((e, index) => {
     allInputs[index] = e.value !== "" && gameOption.value !== "choose";
   });
   document.querySelector(".create").textContent = "CREATE";
-  editActive = false;
 
   if (!inputsOpen) {
     openInputs();
@@ -46,7 +45,7 @@ const addNew = () => {
 
       const rosterColor = document.getElementById("rosterColor").value;
       addBtn.classList.remove("btnBlink");
-      confirmData(rosterColor, dataArray.length - 1);
+      confirmData(rosterColor, editActive && id);
       reset();
     }
   }
@@ -787,7 +786,7 @@ let dataArray = [];
 // Initialize the counter from localStorage or set it to 1 if not present
 let counter = parseInt(localStorage.getItem("counter")) || 0;
 
-const confirmData = (color, num) => {
+const confirmData = (color, edit) => {
   let inputs = {
     name: document.getElementById("name").value,
     game: `${document.getElementById("game").value} Version`,
@@ -806,16 +805,19 @@ const confirmData = (color, num) => {
   const key = `key${counter}`;
 
   //set key
-  localStorage.setItem(key, JSONstring);
+  !editActive
+    ? localStorage.setItem(key, JSONstring)
+    : localStorage.setItem(edit.id, JSONstring);
 
   // Increment the counter for the next unique key
-  counter++;
+  !editActive && counter++;
 
   // Save the updated counter to localStorage
   localStorage.setItem("counter", counter.toString());
 
   // Display the stored value
   storeToArray();
+  editActive = false;
 };
 
 // & store data to array
@@ -1092,6 +1094,8 @@ const editRoster = async (e) => {
   // hide this module everytime inputs open
   addMonsDivs.setAttribute("style", "opacity: 0 ; height: 0");
 
+  console.log(id);
+
   openInputs();
   for (const k in obj) {
     k === "name" && (document.getElementById(k).value = obj[k]);
@@ -1159,13 +1163,17 @@ const editRoster = async (e) => {
           desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
         });
 
-        addMonsWrapper.children[1].remove();
+        // remove load
+        addMonsWrapper.children[1] !== undefined &&
+          addMonsWrapper.children[1].remove();
       }, 2000);
     }
   }
 
   // change button text
-  document.querySelector(".create").textContent = "UPDATE";
+  const updateBtn = document.querySelector(".create");
+  updateBtn.textContent = "UPDATE";
+  updateBtn.setAttribute("onclick", `addNew(${id})`);
 };
 
 // && SHOW OR HIDE POSTED MOVESET
