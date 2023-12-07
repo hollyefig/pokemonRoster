@@ -152,6 +152,21 @@ const postedMon = [
     parent: "postedTopLeft",
   },
   {
+    name: "bulbaDiv",
+    element: "div",
+    parent: "postedTopLeft",
+  },
+  {
+    name: "bulbaLink",
+    element: "a",
+    parent: "bulbaDiv",
+  },
+  {
+    name: "bulbaIcon",
+    element: "span",
+    parent: "bulbaDiv",
+  },
+  {
     name: "postedMonName",
     element: "span",
     parent: "postedNameAndShiny",

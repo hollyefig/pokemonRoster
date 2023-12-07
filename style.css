@@ -892,6 +892,36 @@ input[type="color"] {
     justify-content: flex-start;
 }
 
+.bulbaDiv {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--grey);
+    column-gap: 5px;
+}
+
+.bulbaLink {
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--grey);
+    transition: color .2s ease-out;
+}
+
+.bulbaIcon {
+    font-size: 14px!important;
+    cursor: pointer;
+    transition: color .2s ease-out;
+}
+
+.bulbaLink:hover {
+    color: var(--dark);
+}
+.bulbaLink:hover ~ .bulbaIcon {
+    color: var(--dark);
+}
+
 .postedType {
     width: 100%;
     grid-column: 1 / 2;

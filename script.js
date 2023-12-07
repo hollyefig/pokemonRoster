@@ -945,6 +945,8 @@ const populateDivs = () => {
                 postedMonWrapper.querySelector(".postedMonName");
               let postedType = postedMonWrapper.querySelector(".postedType");
               let postedShiny = postedMonWrapper.querySelector(".postedShiny");
+              let bulbaLink = postedMonWrapper.querySelector(".bulbaLink");
+              let bulbaIcon = postedMonWrapper.querySelector(".bulbaIcon");
               let postedAbilityName =
                 postedMonWrapper.querySelector(".postedAbilityName");
               let postedAbilityDesc =
@@ -978,6 +980,12 @@ const populateDivs = () => {
               postedSpriteImg.src.includes("shiny") &&
                 svg.setAttribute("fill", "#DFAB0A");
 
+              // bulba Link, icon
+              bulbaLink.textContent = "Bulbapedia";
+              bulbaLink.href = `https://bulbapedia.bulbagarden.net/wiki/${party[n].name}_(Pok%C3%A9mon)`;
+              bulbaLink.setAttribute("target", "_blank");
+              bulbaIcon.classList.add("material-symbols-outlined");
+              bulbaIcon.textContent = "open_in_new";
               //expand button
               expand.classList.add("material-symbols-outlined");
               expand.textContent = "keyboard_double_arrow_down";
