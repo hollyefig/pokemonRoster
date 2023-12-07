@@ -41,6 +41,8 @@ select option:first-child {
   }
 }}
 
+
+
 body {
     background-color: var(--white);
     font-family: var(--font);
@@ -1084,6 +1086,26 @@ input[type="color"] {
 
 
 /* & REPONSIVE  */
+
+@media only screen and (min-width: 1440px) {
+    .rosterWrapper {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media only screen and (max-width: 1439px) {
+    .rosterWrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media only screen and (max-width: 1080px) {
+    .rosterWrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 /* & MAX WIDTH 680  */
 @media only screen and (max-width: 680px) {
 
@@ -1184,11 +1206,45 @@ input[type="color"] {
 /* & MAX WIDTH 425 */
 @media only screen and (max-width: 425px) {
 
+    .bottom {
+        padding: 0!important;
+    }
+
+    .rosterWrapper > div {
+        padding: .5em 5px 5px 5px;
+     }
+
     .inputDataWrapper {
         height: 100dvh;
         width: 100%;
         padding: .5em;
         border-radius: 0;
+    }
+    .bulbaLink {
+        font-size: 12px;
+    }
+
+    .addNewText {
+        font-size: 16px;
+    }
+
+    .postedTopLeft {
+        display: flex;
+        flex-direction: column;
+        row-gap: 7px;
+    }
+
+    .postedTopLeft > div {
+        grid-row: none;
+        grid-column: none;
+    }
+
+    .bulbaDiv {
+        justify-content: flex-start;
+    }
+
+    .pMoveStatsWrap {
+        justify-content: space-between;
     }
     
 }
