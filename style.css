@@ -1292,19 +1292,6 @@ input[type="color"] {
         font-size: 16px;
     }
 
-    .postedTopLeft {
-        display: flex;
-        flex-direction: column;
-        row-gap: 7px;
-    }
-
-    .postedTopLeft > div {
-        grid-row: none;
-        grid-column: none;
-    }
-
-  
-
     .pMoveStatsWrap {
         justify-content: space-between;
     }
