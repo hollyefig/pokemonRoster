@@ -76,7 +76,7 @@ body {
     width: 100%;
     height: var(--topBarHeight);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: flex-start;
     align-items: flex-end;
     background-color: var(--mediumLight);
@@ -84,6 +84,42 @@ body {
     top: 0;
     left: 0;
     z-index: 3;   
+}
+
+.logoWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logoDiv {
+    width: 35px;
+    aspect-ratio: 1 / 1;
+    position: relative;
+}
+
+.logoDiv > svg {
+    width: 100%;
+    position: absolute;
+    transition: top .2s ease-out;
+    stroke: var(--deepDark);
+}
+
+.logoTop {
+    top: -10px;
+}
+
+.logoBottom {
+    top: 10px;
+}
+
+.logoDiv:hover .logoTop {
+    top: -15px;
+}
+
+.logoDiv:hover .logoBottom {
+    top: 15px;
 }
 
 .topContent {
@@ -1267,9 +1303,7 @@ input[type="color"] {
         grid-column: none;
     }
 
-    .bulbaDiv {
-        justify-content: flex-start;
-    }
+  
 
     .pMoveStatsWrap {
         justify-content: space-between;
