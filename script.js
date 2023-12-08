@@ -13,6 +13,20 @@ const noAbilities = ["red", "blue", "yellow", "gold", "silver", "crystal"],
 let gameOption = document.getElementById("game");
 let currentGameSelect;
 
+// & theme switch
+let doc = document.documentElement;
+doc.classList.add("default");
+const themeSwitch = () => {
+  let width = 45;
+  let btn = document.querySelector(".themeSwitchCirc");
+  const newTheme = doc.className === "default" ? "dark" : "default";
+
+  doc.className = newTheme;
+  newTheme === "dark"
+    ? (btn.style.left = `${width / 2}` + "px")
+    : (btn.style.left = "0px");
+};
+
 // & ADD NEW ROSTER
 const addNew = (id) => {
   let allInputs = new Array(...document.querySelectorAll(".selection"));

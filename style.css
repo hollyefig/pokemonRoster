@@ -1,17 +1,41 @@
-:root {
+:root.default {
     --white: #ffffff;
     --mediumLight: #f4f4f4;
     --mediumGrey: #f0f0f0;
-    --grey: #cbcbcb;
+    --grey: #b9b8b8;
     --dark: #a39f9f;
-    --deepDark: #3c3c3b;
-    --font: 'Signika Negative', sans-serif;;
+    --mainText: ;
+    --font: 'Signika Negative', sans-serif;
     --light: 300;
     --regular: 400;
     --bold: 700;
     --topBarHeight: 70px;
     --red: #da0000;
     --darkRed: #8e081a;
+    --rosterText : #000000;
+    --rosterSubText : #a39f9f;
+    --rosterShadow: #cbcbcb78;
+    --borderColor: #dfdfdf
+}
+
+:root.dark {
+    --white: #1d1d30;
+    --mediumLight: #15151e;
+    --mediumGrey: #0f1011;
+    --grey: #4c4f6a;
+    --dark: #060609;
+    --deepDark: #3c3c3b;
+    --font: 'Signika Negative', sans-serif;
+    --light: 300;
+    --regular: 400;
+    --bold: 700;
+    --topBarHeight: 70px;
+    --red: #da0000;
+    --darkRed: #8e081a;
+    --rosterText : #c0c1d2;
+    --rosterSubText : #58596e;
+    --rosterShadow: #09090978;
+    --borderColor: #31323f;
 }
 
 * {
@@ -46,7 +70,9 @@ select option:first-child {
   }
 }}
 
-
+input[type="text"]:focus {
+    background: transparent;
+}
 
 body {
     background-color: var(--white);
@@ -78,7 +104,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: center;
     background-color: var(--mediumLight);
     position:fixed;
     top: 0;
@@ -223,7 +249,8 @@ body {
 
 .clearButton {
     font-size: 14px;
-    width: 120px;
+    max-width: 120px;
+    min-width: 75px;
     padding: 5px;
     border: 2px solid var(--grey);
     display: flex;
@@ -236,6 +263,37 @@ body {
 .clearButton:hover {
     color: var(--red);
     border-color: var(--red);
+}
+
+.themeSwitch {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.themeSwitchWrap {
+    --width: 45px;
+    border:1px solid var(--grey);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--width);
+    height: calc(var(--width) / 2);
+    border-radius: calc(var(--width) / 2);
+    position: relative;
+    padding: 1px 7px;
+    cursor: pointer;
+}
+
+.themeSwitchCirc {
+    background-color: var(--grey);
+    width: calc(var(--width) / 2);
+    aspect-ratio: 1 / 1;
+    border-radius: calc(var(--width) / 4);
+    position: absolute;
+    left: 0;
+    transition: left .3s ease-out;
 }
 
 .fadeBg {
@@ -257,7 +315,7 @@ body {
     column-gap: 10px;
     align-items: center;
     justify-content: center;
-    color: var(--dark);
+    color: var(--rosterSubText);
     width: 100%;
     height: auto;
     min-height: 100px;
@@ -275,7 +333,7 @@ body {
     width: var(--dim);
     height: var(--dim);
     border-radius: var(--dim);
-    border:2px solid var(--dark);
+    border:2px solid var(--rosterSubText);
     position: absolute;
 }
 
@@ -385,13 +443,13 @@ select option {
 
 .inputData label {
     font-size: 12px;
-    color: var(--dark);
+    color: var(--rosterSubText);
 }
 
 .inputData input[type="text"], .inputData select {
     padding: 5px;
     border: none;
-    color: var(--deepDark);
+    color: var(--rosterText);
     background: transparent;
     border-bottom: 1px solid var(--deepDark);
     border-top:2px solid transparent;
@@ -473,6 +531,7 @@ input[type="color"] {
 
 .addMonsDivs select {
     text-transform: capitalize;
+    color: var(--rosterText);
 }
 
 .typeDiv {
@@ -521,7 +580,7 @@ input[type="color"] {
     top: -7px;
     right: 3px;
     font-size: 12px;
-    color: var(--dark);
+    color: var(--rosterSubText);
 }
 
 .shinyOn {
@@ -584,7 +643,7 @@ input[type="color"] {
     flex-direction: column;
     align-items: stretch;
     width: 100%;   
-    color: var(--deepDark);
+    color: var(--rosterText);
 }
 
 .selectMovesDiv div {
@@ -664,6 +723,7 @@ input[type="color"] {
 
 .movePower, .moveAccuracy, .movePp {
     font-size: 23px;
+    color: var(--rosterText);
 }
 
 .moveAccuracy {
@@ -696,7 +756,7 @@ input[type="color"] {
     display: block;
     position:relative;
     top: 5px;
-    color: var(--dark);
+    color: var(--rosterSubText);
 }
 
 .typeAndDamageClass {
@@ -817,11 +877,16 @@ input[type="color"] {
     font-size: 16px;
     padding: .5em;
     background: transparent;
-    border:2px solid var(--dark);
+    border:2px solid var(--rosterSubText);
     font-family: var(--font);
     border-radius: 5px;
-    color: var(--dark);
+    color: var(--rosterSubText);
     cursor: pointer;
+}
+
+.cancel:hover, .reset:hover {
+    border:2px solid var(--rosterText);
+    color: var(--rosterText);
 }
 
 
@@ -852,11 +917,12 @@ input[type="color"] {
     background-color: var(--white);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) #cbcbcb78;
+    box-shadow: var(--shadowAxis) var(--shadowAxis) var(--shadowBlur) var(--rosterShadow);
     max-width: 420px;
     width: 100%;
     position:relative;
     --leftMarg: 10px;
+    color: var(--rosterText);
 }
 
 .rosterWrapper span {
@@ -894,7 +960,7 @@ input[type="color"] {
     flex-direction: row;
     align-items: center;
     width: 100%;
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: 1px solid var(--borderColor);
     padding: 0.5em 0.5em 0.3em 0.5em;
 }
 .postedGame {
@@ -921,7 +987,7 @@ input[type="color"] {
 }
 
 .postedEdit:hover {
-    color: var(--dark);
+    color: var(--rosterText);
 }
 
 .postedDelete:hover {
@@ -982,10 +1048,10 @@ input[type="color"] {
 }
 
 .bulbaLink:hover {
-    color: var(--dark);
+    color: var(--rosterText);
 }
 .bulbaLink:hover ~ .bulbaIcon {
-    color: var(--dark);
+    color: var(--rosterText);
 }
 
 .postedType {
@@ -1019,12 +1085,13 @@ input[type="color"] {
     justify-content: center;
     font-size: 14px!important;
     background-color: transparent;
-    color: var(--dark);
+    color: var(--rosterSubText);
     padding: 12px 0;
-    box-shadow: 0 2px 1px #f0f0f0;
+    box-shadow: 0 2px 1px var(--mediumGrey);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     cursor: pointer;
+    
 }
 
 .expand:active {
@@ -1127,7 +1194,7 @@ input[type="color"] {
 }
 
 .pMovePower::before, .pMoveAccuracy::before, .pMovePp::before  {
-    color: var(--dark);
+    color: var(--rosterSubText);
     font-size: 10px;
     position: absolute;
     top: -7px;
@@ -1145,7 +1212,7 @@ input[type="color"] {
     grid-column: 1 / 3;
     grid-row: 3 / 4;
     font-size: 12px;
-    color: var(--dark)
+    color: var(--grey)
 }
 
 
@@ -1258,7 +1325,7 @@ input[type="color"] {
         display: block;
         position:relative;
         top: 5px;
-        color: var(--dark);
+        color: var(--grey);
     }
 
     .removeMon {
@@ -1287,9 +1354,25 @@ input[type="color"] {
     .bulbaLink {
         font-size: 12px;
     }
+    
+    .topContent {
+        column-gap: 10px;
+    }
+    
+    .addNewWrapper {
+        width: fit-content;
+    }
+
+    .addNewButtonWrapper {
+        display: flex;
+        padding: 0.5em 1em;
+        border-radius: 33px; 
+        width: 65px;
+        height: 45px;
+    }
 
     .addNewText {
-        font-size: 16px;
+        display: none;
     }
 
     .pMoveStatsWrap {
