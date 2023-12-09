@@ -15,7 +15,8 @@
     --rosterText : #000000;
     --rosterSubText : #a39f9f;
     --rosterShadow: #cbcbcb78;
-    --borderColor: #dfdfdf
+    --borderColor: #dfdfdf;
+    --blue: #17A3FF;
 }
 
 :root.dark {
@@ -36,6 +37,7 @@
     --rosterSubText : #58596e;
     --rosterShadow: #09090978;
     --borderColor: #31323f;
+    --blue: #17A3FF;
 }
 
 * {
@@ -1086,7 +1088,7 @@ input[type="color"] {
     justify-content: center;
     font-size: 14px!important;
     background-color: transparent;
-    color: var(--rosterSubText);
+    color: var(--blue);
     padding: 12px 0;
     box-shadow: 0 2px 1px var(--mediumGrey);
     border-bottom-left-radius: 10px;

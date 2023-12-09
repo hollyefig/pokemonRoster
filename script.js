@@ -175,6 +175,11 @@ const loadPokedex = async (e) => {
 
   pokedexDropdown(loadPokedex, e);
 
+  console.log(
+    "loaded",
+    loadPokedex[Math.floor(Math.random() * loadPokedex.length)]
+  );
+
   e.classList.add("addFlex");
 };
 
