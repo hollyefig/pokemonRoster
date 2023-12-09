@@ -634,6 +634,7 @@ input[type="color"] {
     padding: 10px 0;
     font-size: 14px;
     line-height: 20px;
+    color: var(--rosterSubText)
 }
 
 /* ^ MOVE DIV STUFF  */
