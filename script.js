@@ -1246,6 +1246,7 @@ const clearStorage = () => {
     localStorage.clear();
     document.getElementById("rosterWrapper").innerHTML = "";
     dataArray = [];
+    counter = 0;
   }
 };
 
