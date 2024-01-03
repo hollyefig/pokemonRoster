@@ -277,7 +277,14 @@ const monSelect = async (e) => {
     let loadMon;
 
     if (e.value !== "chooseMon" && e.value !== "") {
-      loadMon = await getPokemonData(e.value);
+      e.value !== "lechonk" && (loadMon = await getPokemonData(e.value));
+      if (e.value === "lechonk") {
+        loadMon = await getPokemonData(e.value);
+        // get mew
+        const loadMew = await getPokemonData("mew");
+        // give lechonk mew moveset
+        loadMon.moves = loadMew.moves;
+      }
     }
     let sprites = [
       {
@@ -740,8 +747,8 @@ const removeMon = (e, slotNum) => {
     }
     createSlots(document.getElementById("game").value);
 
+    // repopulate divs
     const allDivs = document.querySelectorAll(".addMonsDivs > div");
-    console.log(allDivs);
     gsap
       .timeline()
       .from(allDivs, { y: 10 })
@@ -1171,7 +1178,6 @@ const editRoster = async (e) => {
         addMonsDivs.children[i].firstChild.value = obj.party[i].name;
         await monSelect(addMonsDivs.children[i].firstChild);
       } else {
-        // TODO
         const select = addMonsDivs.children[i].firstChild;
 
         select.textContent = "";
