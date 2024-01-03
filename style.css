@@ -1354,9 +1354,8 @@ input[type="color"] {
         color: var(--grey);
     }
 
-    .removeMon {
-        grid-row: 5 / 6;
-
+    .removeAndImproveDiv {
+        grid-row: none;
     }
 }
 
