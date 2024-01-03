@@ -173,13 +173,18 @@ const loadPokedex = async (e) => {
   const selected = document.getElementById("game").value;
   const loadPokedex = await getSelectedGameURL(selected);
 
-  pokedexDropdown(loadPokedex, e);
+  const randomBtn = document.createElement("div");
+  randomBtn.classList.add("randomMon");
+  randomBtn.setAttribute("onclick", "randomize(this)");
+  randomBtn.textContent = "Randomize!";
+
+  pokedexDropdown(loadPokedex, e, randomBtn);
 
   e.classList.add("addFlex");
 };
 
 // * Create inputs for Pokemon Creation
-const pokedexDropdown = async (e, slotNum) => {
+const pokedexDropdown = async (e, slotNum, randomBtn) => {
   if (slotNum.children.length > 0) {
     slotNum.children[0].remove();
     slotNum.removeAttribute("onclick");
@@ -208,7 +213,7 @@ const pokedexDropdown = async (e, slotNum) => {
     selectName.setAttribute("oninput", `monSelect(this)`);
     selectName.classList.add("selectPokemon");
   }
-  slotNum.append(selectName);
+  slotNum.append(selectName, randomBtn);
 };
 
 // & CREATE DIVS
@@ -220,7 +225,7 @@ const divCreator = (e) => {
 };
 
 // && Pokemon Selected from dropdown
-const monSelect = async (e) => {
+const monSelect = async (e, rand) => {
   if (e.value !== "chooseMon") {
     e.value === "chooseMon" && (e.disabled = true);
     // grab data
@@ -269,7 +274,13 @@ const monSelect = async (e) => {
     let typeDiv = currentSlot.querySelector(".typeDiv");
     let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
     let removeMon = currentSlot.querySelector(".removeMon");
+    let removeAndImproveDiv = currentSlot.querySelector(".removeAndImproveDiv");
     // append child divs
+    for (let i = 0; i < e.parentNode.children.length; i++) {
+      if (e.parentNode.children[i].classList.contains("randomMon")) {
+        removeAndImproveDiv.append(e.parentNode.children[i]);
+      }
+    }
 
     // ? Create divs for all other input slots : END
 
@@ -490,7 +501,7 @@ const createMovesDropdown = (arr, selectDiv) => {
 };
 
 // ? when a move is selected
-const moveSelect = async (move) => {
+const moveSelect = async (move, rand) => {
   // get exact div to replace title with move
   let parent = move.closest(".inputsDiv").parentNode;
   let moveSlot = parent.querySelector(
@@ -499,13 +510,17 @@ const moveSelect = async (move) => {
 
   let desc = moveSlot.querySelector(".moveDivDesc");
   let stats = moveSlot.querySelector(".moveDivStats");
-  if (move.value !== "selectMove") {
-    desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
-    await loadMoveData(move.value.replace(" ", "-"), moveSlot);
-  } else {
-    desc.innerHTML = "";
-    desc.setAttribute("style", "padding: 0 ");
-    stats.innerHTML = "";
+
+  // if not randomly chosen
+  if (!rand) {
+    if (move.value !== "selectMove") {
+      desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+      await loadMoveData(move.value.replace(" ", "-"), moveSlot);
+    } else {
+      desc.innerHTML = "";
+      desc.setAttribute("style", "padding: 0 ");
+      stats.innerHTML = "";
+    }
   }
 };
 
@@ -1221,8 +1236,6 @@ const editRoster = async (e) => {
           selectAbility(ability);
         }
 
-        console.log("moves", obj.party[i].moves);
-
         // iterate through moves
         let movepool = obj.party[i].moves;
         movepool.forEach((m, index) => {
@@ -1286,15 +1299,30 @@ const setTextColor = (color) => {
   return finalColor;
 };
 
-// ! clear
-const clearStorage = () => {
-  let result = window.confirm("Remove all rosters?");
-  if (result) {
-    localStorage.clear();
-    document.getElementById("rosterWrapper").innerHTML = "";
-    dataArray = [];
-    counter = 0;
+// ! randomize mon
+const randomize = async (e) => {
+  let parent;
+  let selector;
+  // if mon has not been selected
+  if (!e.parentNode.classList.contains("removeAndImproveDiv")) {
+    parent = e.parentNode;
+    selector = parent.querySelector(".selectPokemon");
   }
+  // if mon has been selected
+  else {
+    parent = e.parentNode.parentNode;
+    selector = parent.querySelector(".selectPokemon");
+  }
+
+  const fetchDex = await getSelectedGameURL(
+    document.getElementById("game").value
+  );
+  const loadDex = fetchDex;
+  const randMon = loadDex[Math.floor(Math.random() * loadDex.length)];
+
+  selector.value = randMon.pokemon_species.name;
+
+  monSelect(selector, "random");
 };
 
 // ! improve by adding LECHONK!!!
@@ -1383,6 +1411,17 @@ const improve = async (e) => {
         createMovesDropdown(moveArr, selectMovesDiv);
       }
     }
+  }
+};
+
+// ! clear
+const clearStorage = () => {
+  let result = window.confirm("Remove all rosters?");
+  if (result) {
+    localStorage.clear();
+    document.getElementById("rosterWrapper").innerHTML = "";
+    dataArray = [];
+    counter = 0;
   }
 };
 
