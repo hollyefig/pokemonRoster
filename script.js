@@ -163,7 +163,7 @@ const createSlots = (game) => {
     innerDiv.append(plusIcon, msg);
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
-    gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
+    // gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
   }
 };
 
@@ -739,6 +739,13 @@ const removeMon = (e, slotNum) => {
       addMonsDivs.children[i].setAttribute("id", `slot${i}`);
     }
     createSlots(document.getElementById("game").value);
+
+    const allDivs = document.querySelectorAll(".addMonsDivs > div");
+    console.log(allDivs);
+    gsap
+      .timeline()
+      .from(allDivs, { y: 10 })
+      .to(allDivs, { opacity: 1, delay: 0 }, "<");
   } else {
     // User clicked "Cancel" (No)
     null;
