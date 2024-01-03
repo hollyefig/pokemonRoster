@@ -278,6 +278,7 @@ const monSelect = async (e) => {
 
     if (e.value !== "chooseMon" && e.value !== "") {
       e.value !== "lechonk" && (loadMon = await getPokemonData(e.value));
+      // ? if pokemon is lechonk
       if (e.value === "lechonk") {
         loadMon = await getPokemonData(e.value);
         // get mew
