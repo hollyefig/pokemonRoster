@@ -501,7 +501,7 @@ const createMovesDropdown = (arr, selectDiv) => {
 };
 
 // ? when a move is selected
-const moveSelect = async (move, rand) => {
+const moveSelect = async (move) => {
   // get exact div to replace title with move
   let parent = move.closest(".inputsDiv").parentNode;
   let moveSlot = parent.querySelector(
@@ -511,16 +511,13 @@ const moveSelect = async (move, rand) => {
   let desc = moveSlot.querySelector(".moveDivDesc");
   let stats = moveSlot.querySelector(".moveDivStats");
 
-  // if not randomly chosen
-  if (!rand) {
-    if (move.value !== "selectMove") {
-      desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
-      await loadMoveData(move.value.replace(" ", "-"), moveSlot);
-    } else {
-      desc.innerHTML = "";
-      desc.setAttribute("style", "padding: 0 ");
-      stats.innerHTML = "";
-    }
+  if (move.value !== "selectMove") {
+    desc.setAttribute("style", "height: auto; padding: 0 0 10px 10px");
+    await loadMoveData(move.value.replace(" ", "-"), moveSlot);
+  } else {
+    desc.innerHTML = "";
+    desc.setAttribute("style", "padding: 0 ");
+    stats.innerHTML = "";
   }
 };
 
