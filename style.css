@@ -18,6 +18,7 @@
     --borderColor: #dfdfdf;
     --blue: #17A3FF;
     --yellow: #DFAB0A;
+    --lightYellow: #ffdd61;
 }
 
 :root.dark {
@@ -40,6 +41,7 @@
     --borderColor: #31323f;
     --blue: #17A3FF;
     --yellow: #DFAB0A;
+    --lightYellow: #ffdd61;
 }
 
 * {
@@ -827,6 +829,13 @@ input[type="color"] {
 
 .improveMon {
     background-color: var(--yellow);
+    transition: all .2s ease-out;
+}
+
+.improveMon:hover {
+    background-color: var(--lightYellow);
+    box-shadow: 0 0 8px var(--lightYellow);
+    color: var(--rosterText);
 }
 
 /* ! LOAD section  */
