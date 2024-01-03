@@ -68,8 +68,20 @@ const monInputDivs = [
     parent: "inputsDiv",
   },
   {
+    name: "removeAndImproveDiv",
+    element: "div",
+  },
+  {
     name: "removeMon",
     element: "div",
+    parent: "removeAndImproveDiv",
+  },
+  {
+    name: "improveMon",
+    element: "div",
+    parent: "removeAndImproveDiv",
+    text: "Improve",
+    attr: ["onclick", "improve(this)"],
   },
 ];
 

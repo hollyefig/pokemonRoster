@@ -17,6 +17,7 @@
     --rosterShadow: #cbcbcb78;
     --borderColor: #dfdfdf;
     --blue: #17A3FF;
+    --yellow: #DFAB0A;
 }
 
 :root.dark {
@@ -38,6 +39,7 @@
     --rosterShadow: #09090978;
     --borderColor: #31323f;
     --blue: #17A3FF;
+    --yellow: #DFAB0A;
 }
 
 * {
@@ -586,7 +588,6 @@ input[type="color"] {
 }
 
 .shinyOn {
-    --yellow: #DFAB0A;
     fill: var(--yellow);
 }
 
@@ -797,22 +798,35 @@ input[type="color"] {
     line-height: 20px;
 }
 
-.removeMon {
+.removeAndImproveDiv {
     grid-column: 1 / 3;
     grid-row: 4 / 5;
-    background-color: var(--red);
-    color: #fff;
-    /* width: 100%; */
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.removeAndImproveDiv > div {
+    cursor: pointer;
     padding: 10px;
     display: flex;
-    margin: 10px 0 0 0;
-    height: 15px;
-    font-size: 12px;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
-    border-radius: 8px;
-    cursor: pointer;
+    height: 15px;
+    font-size: 12px;
+    border-radius: 8px; 
+    color: #fff;
+}
+
+.removeMon {
+    background-color: var(--red);
+}
+
+.improveMon {
+    background-color: var(--yellow);
 }
 
 /* ! LOAD section  */

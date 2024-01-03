@@ -163,7 +163,7 @@ const createSlots = (game) => {
     innerDiv.append(plusIcon, msg);
     div.appendChild(innerDiv);
     addMonsDivs.appendChild(div);
-    // gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
+    gsap.timeline().from(div, { y: 10 }).to(div, { opacity: 1, delay: 0 }, "<");
   }
 };
 
@@ -174,11 +174,6 @@ const loadPokedex = async (e) => {
   const loadPokedex = await getSelectedGameURL(selected);
 
   pokedexDropdown(loadPokedex, e);
-
-  console.log(
-    "loaded",
-    loadPokedex[Math.floor(Math.random() * loadPokedex.length)]
-  );
 
   e.classList.add("addFlex");
 };
@@ -196,15 +191,23 @@ const pokedexDropdown = async (e, slotNum) => {
   option.textContent = "Select Pokemon";
   selectName.appendChild(option);
 
-  e.forEach((p) => {
+  if (e.length > 1) {
+    e.forEach((p) => {
+      const option = document.createElement("option");
+      option.value = p.pokemon_species.name;
+      option.textContent = p.pokemon_species.name;
+      selectName.appendChild(option);
+      selectName.setAttribute("oninput", `monSelect(this)`);
+      selectName.classList.add("selectPokemon");
+    });
+  } else if (e.length === 1) {
     const option = document.createElement("option");
-    option.value = p.pokemon_species.name;
-    option.textContent = p.pokemon_species.name;
+    option.value = e[0];
+    option.textContent = e[0];
     selectName.appendChild(option);
     selectName.setAttribute("oninput", `monSelect(this)`);
     selectName.classList.add("selectPokemon");
-  });
-
+  }
   slotNum.append(selectName);
 };
 
@@ -238,6 +241,20 @@ const monSelect = async (e) => {
     // ? Create divs for all other input slots : START
     for (let i = 0; i < monInputDivs.length; i++) {
       currentSlot.append(divCreator(monInputDivs[i]));
+      if (monInputDivs[i].parent) {
+        const parent = currentSlot.querySelector(`.${monInputDivs[i].parent}`);
+        parent.append(currentSlot.querySelector(`.${monInputDivs[i].name}`));
+      }
+
+      if (monInputDivs[i].text) {
+        const div = currentSlot.querySelector(`.${monInputDivs[i].name}`);
+        div.textContent = monInputDivs[i].text;
+      }
+
+      if (monInputDivs[i].attr) {
+        const div = currentSlot.querySelector(`.${monInputDivs[i].name}`);
+        div.setAttribute(monInputDivs[i].attr[0], monInputDivs[i].attr[1]);
+      }
     }
 
     // ? add display none
@@ -249,33 +266,35 @@ const monSelect = async (e) => {
 
     let inputsDiv = currentSlot.querySelector(".inputsDiv");
     let spriteDiv = currentSlot.querySelector(".spriteDiv");
-    let typeAndShiny = currentSlot.querySelector(".typeAndShiny");
     let typeDiv = currentSlot.querySelector(".typeDiv");
     let selectMovesDiv = currentSlot.querySelector(".selectMovesDiv");
     let removeMon = currentSlot.querySelector(".removeMon");
     // append child divs
-    inputsDiv.appendChild(selectMovesDiv);
-    typeAndShiny.appendChild(typeDiv);
 
     // ? Create divs for all other input slots : END
 
     // ? load up pokemon data
     let loadMon;
-    if (e.value !== "chooseMon") {
+
+    if (e.value !== "chooseMon" && e.value !== "") {
       loadMon = await getPokemonData(e.value);
     }
     let sprites = [
       {
         default: loadMon.sprites.front_default,
-        shiny: loadMon.sprites.front_shiny,
+        shiny:
+          loadMon.sprites.front_shiny !== null
+            ? loadMon.sprites.front_shiny
+            : null,
       },
     ];
     let arr = [sprites, loadMon.types, loadMon.abilities, loadMon.moves];
 
     // create DIV for shiny switch
     let shinySwitch = document.createElement("div");
-    shinySwitch.setAttribute("class", "shinySwitch");
-    shinySwitch.appendChild(createSVG("shiny"));
+    loadMon.sprites.front_shiny !== null &&
+      (shinySwitch.setAttribute("class", "shinySwitch"),
+      shinySwitch.appendChild(createSVG("shiny")));
 
     shinySwitch.setAttribute(
       "onclick",
@@ -361,7 +380,6 @@ const monSelect = async (e) => {
 
       arr.forEach((d) => {
         for (const key in d) {
-          // console.log(d[key]);
           // ? apply sprite image
           if (d[key].default !== undefined) {
             let img = document.createElement("img");
@@ -864,7 +882,7 @@ const storeToArray = () => {
     }
   });
 
-  console.log(localStorage);
+  // console.log(localStorage);
 
   // Sort the array
   dataArray.sort(sortByKeyNumber);
@@ -1103,8 +1121,6 @@ const removePost = (e) => {
     localStorage.setItem("counter", currentNum - 1);
     // run storage update
     storeToArray();
-  } else {
-    console.log("you clicked no");
   }
 };
 
@@ -1144,9 +1160,22 @@ const editRoster = async (e) => {
   for (let i = 0; i < obj.party.length; i++) {
     if (obj.party[i].name !== null) {
       await loadPokedex(addMonsDivs.children[i]);
+      if (obj.party[i].name !== "lechonk") {
+        addMonsDivs.children[i].firstChild.value = obj.party[i].name;
+        await monSelect(addMonsDivs.children[i].firstChild);
+      } else {
+        // TODO
+        const select = addMonsDivs.children[i].firstChild;
 
-      addMonsDivs.children[i].firstChild.value = obj.party[i].name;
-      await monSelect(addMonsDivs.children[i].firstChild);
+        select.textContent = "";
+        const option = document.createElement("option");
+        option.textContent = "Lechonk";
+        option.value = "lechonk";
+        select.appendChild(option);
+
+        addMonsDivs.children[i].firstChild.value = obj.party[i].name;
+        await monSelect(addMonsDivs.children[i].firstChild);
+      }
 
       // ~ allow time for pokedex, pokemon to load
       setTimeout(() => {
@@ -1172,9 +1201,13 @@ const editRoster = async (e) => {
         }
 
         // input ability
-        let ability = moveDivParent.querySelector(".selectAbility");
-        ability.value = obj.party[i].ability;
-        selectAbility(ability);
+        if (obj.party[i].name !== "Lechonk") {
+          let ability = moveDivParent.querySelector(".selectAbility");
+          ability.value = obj.party[i].ability;
+          selectAbility(ability);
+        }
+
+        console.log("moves", obj.party[i].moves);
 
         // iterate through moves
         let movepool = obj.party[i].moves;
@@ -1247,6 +1280,95 @@ const clearStorage = () => {
     document.getElementById("rosterWrapper").innerHTML = "";
     dataArray = [];
     counter = 0;
+  }
+};
+
+// ! improve by adding LECHONK!!!
+const improve = async (e) => {
+  // get data
+  let parent;
+
+  if (e.classList.contains("improveMon")) {
+    parent = e.parentNode.parentNode;
+  } else {
+    parent = e;
+  }
+
+  const fetchChonk = await getPokemonData("lechonk");
+  const loadChonk = fetchChonk;
+
+  const fetchMew = await getPokemonData("mew");
+  const loadMew = fetchMew;
+
+  const select = parent.children[0];
+  const option = document.createElement("option");
+
+  // ? if lechonk is selected
+  if (select.children.length === 1) {
+    alert("You cannot improve upon perfection");
+  }
+  // ? apply new data
+  else {
+    // update select
+    select.textContent = "";
+
+    option.setAttribute("value", "lechonk");
+    option.textContent = "Lechonk";
+
+    select.appendChild(option);
+
+    // set data into variables
+    const sprite = loadChonk.sprites.front_default;
+    const type = loadChonk.types[0].type.name;
+
+    // grab divs from existing slot
+    let spriteDiv;
+    let typeDiv;
+
+    // loop
+    for (let i = 0; i < parent.children.length; i++) {
+      // adjust sprite
+      if (parent.children[i].classList.contains("spriteDiv")) {
+        spriteDiv = parent.children[i].children[0];
+        spriteDiv.src = sprite;
+      }
+      // adjust type
+      if (parent.children[i].classList.contains("typeAndShiny")) {
+        typeDiv = parent.children[i].children[0];
+        typeDiv.textContent = "";
+        let span = document.createElement("span");
+        span.textContent = type;
+        for (const key in typeColors) {
+          if (key === type) {
+            span.style.backgroundColor = typeColors[key];
+          }
+        }
+        typeDiv.appendChild(span);
+      }
+      // set moveset
+      if (parent.children[i].classList.contains("inputsDiv")) {
+        const selectMovesDiv = parent.children[i].children[0];
+        const mewMoveset = loadMew.moves;
+        let moveArr = [];
+
+        for (let i = 0; i < selectMovesDiv.children.length; i++) {
+          const moveSelection =
+            selectMovesDiv.children[i].children[0].children[0];
+          const selectOpt = document.createElement("option");
+          moveSelection.textContent = "";
+          selectOpt.textContent = "Select Move";
+          selectOpt.value = "selectMove";
+
+          moveSelection.appendChild(selectOpt);
+
+          for (let m = 0; m < mewMoveset.length; m++) {
+            moveArr.push(mewMoveset[m].move.name);
+          }
+        }
+        selectMovesDiv.textContent = "";
+        createMovesDropdown(moveArr, selectMovesDiv);
+      }
+    }
   }
 };
 
