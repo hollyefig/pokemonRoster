@@ -1333,6 +1333,14 @@ const improve = async (e) => {
     parent = e;
   }
 
+  // turn off randomize option
+  const randomizeBtn = parent.querySelector(".randomMon");
+  randomizeBtn.removeAttribute("onclick");
+  randomizeBtn.setAttribute(
+    "style",
+    "background-color: #CFD9DF; cursor: default"
+  );
+
   const fetchChonk = await getPokemonData("lechonk");
   const loadChonk = fetchChonk;
 
